@@ -1,0 +1,26 @@
+﻿LISTBOX NOTES
+	Let's approach this from two perspectives.  First, what interaction behavior does a user expect from this control;
+	then, what does a programmer expect to be able to do with it?
+
+	User:
+	 - Definite:
+	    - Select a certain item [x]
+	    - User up/down arrow keys to move selection [x]
+		- If there are more items than can fit, scroll to see all of them [x]
+	 - Possible:
+		- Highlight hovered item [x]
+	    - Select multiple items by holding shift [ ]
+		   - Discontinuous?
+	    - Drag items to move [ ]
+		   - Within ListBox [ ]
+		   - Between controls [ ]
+	Programmer:
+	 - Definite:
+	    - Know what item is selected [x]
+		   - Know when selection is changed [x]
+		- Add and remove items [x]
+		   - Ensure selected item is the same, unless it is removed [ ]
+	 - Possible:
+		- Reorder items [ ]
+	    - Multiple Selection [ ]
+		- Change visual behavior [x]

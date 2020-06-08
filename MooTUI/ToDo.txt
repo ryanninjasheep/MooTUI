@@ -1,0 +1,26 @@
+﻿Short-Term:
+
+Long-Term:
+ - Add more controls
+    - Grid (will be difficult!!!)
+    - Radio Button
+       -> actually, "radio group" makes more sense
+    - Slider
+       -> needs drag support!
+    - NumberBox - there's a better name
+    - ProgressBar
+    - Terminal?
+    - Modal
+       - DropdownMenu
+    - TreeView
+    - TabWindow?
+    - Expander
+       - Accordion
+ - Work on size changes
+ - Outline label acts as button?
+ - Mouse drag to select in any selectable span
+ - Animation support?  Particle support?
+ - More involved info panel
+    - Debug Mode
+ - Perhaps separate mouseDown and mouseUp to allow for dragging
+    - When something is clicked, it receives the mouseUp signal even if the mouse has moved away!
