@@ -461,7 +461,7 @@ namespace MooTUI.Widgets
                 return s;
             }
 
-            protected override void Resized()
+            protected override void AdjustResize()
             {
                 Length = Math.Max(Width, Height);
             }

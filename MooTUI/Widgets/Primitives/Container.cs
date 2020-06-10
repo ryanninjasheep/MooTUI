@@ -16,25 +16,43 @@ namespace MooTUI.Widgets.Primitives
         public Container(int width, int height) : base(width, height) { }
 
         /// <summary>
-        /// Attempts to link the specified widget to this Container.  Only works 
-        /// if logical child is already contained and doesn't have another parent.
+        /// Sets this container as an observer for the specified child.
         /// </summary>
         protected void LinkChild(Widget child)
         {
-            AssertContains(child);
-
-            child.LinkParent(this);
+            child.ClaimAsChild();
             child.SetStyle(Style, false);
+
+            child.Resized += Child_Resized;
+            child.MessageReceived += Child_MessageReceived;
+            child.BubbleInput += Child_BubbleInput;
+            child.ClaimFocusEventHandler += Child_ClaimFocus;
+            child.Rendered += Child_Rendered;
         }
+
         /// <summary>
-        /// Unlinks the specified child, allowing it to be linked to another Container.
+        /// Unlinks the specified child.
         /// </summary>
         protected void UnlinkChild(Widget child)
         {
-            AssertContains(child);
+            child.ReleaseAsChild();
 
-            child.UnlinkParent();
+            child.Resized -= Child_Resized;
+            child.MessageReceived -= Child_MessageReceived;
+            child.BubbleInput -= Child_BubbleInput;
+            child.ClaimFocusEventHandler -= Child_ClaimFocus;
+            child.Rendered -= Child_Rendered;
         }
+
+        private void Child_Resized(object sender, EventArgs e) => OnChildResize();
+
+        private void Child_MessageReceived(object sender, MessageEventArgs e) => BubbleMessage(e);
+
+        private void Child_ClaimFocus(object sender, FocusEventArgs e) => OnClaimFocus(e);
+
+        private void Child_BubbleInput(object sender, InputEventArgs e) => HandleInput(e);
+
+        private void Child_Rendered(object sender, EventArgs e) => Render();
 
         /// <summary>
         /// Attempts to populate Style change to children.
@@ -54,55 +72,6 @@ namespace MooTUI.Widgets.Primitives
         /// </summary>
         internal bool Contains(Widget w) => GetLogicalChildren().Contains(w);
 
-        /// <summary>
-        /// Throws an exception if the specified Widget is not a child of this Container.
-        /// </summary>
-        protected void AssertContains(Widget w)
-        {
-            if (!Contains(w))
-                throw new InvalidOperationException("Parent does not contain child.");
-        }
-
-        /// <summary>
-        /// Ensures the given widget is a logical child of this Container, then calls OnChildResize().
-        /// </summary>
-        /// <remarks>
-        /// Should only be called by a child!
-        /// </remarks>
-        internal void OnChildResize(Widget child)
-        {
-            AssertContains(child);
-
-            OnChildResize();
-        }
-
-        /// <summary>
-        /// Ensures the given widget is a logical child of this Container, then renders this Widget.
-        /// </summary>
-        /// <remarks>
-        /// Should only be called by a child!
-        /// </remarks>
-        internal void OnChildRender(Widget child)
-        {
-            AssertContains(child);
-
-            Render();
-        }
-        
-        /// <summary>
-        /// Ensures the given widget is a logical child of this Container, then attempts to handle
-        /// the given input.
-        /// </summary>
-        /// <remarks>
-        /// Should only be called by a child!
-        /// </remarks>
-        internal void OnChildInput(Widget child, InputEventArgs e)
-        {
-            AssertContains(child);
-
-            HandleInput(e);
-        }
-
         #region ABSTRACT METHODS
 
         /// <summary>
@@ -111,7 +80,9 @@ namespace MooTUI.Widgets.Primitives
         public abstract Widget GetHoveredWidget(MouseContext m);
 
         /// <summary>
-        /// Returns an unordered list of all logical children.
+        /// Returns an unordered list of all logical children.  When implementing, ensure
+        /// that the method doesn't return null and also that none of the elements in
+        /// the list are null.
         /// </summary>
         protected abstract IEnumerable<Widget> GetLogicalChildren();
 

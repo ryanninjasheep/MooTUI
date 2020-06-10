@@ -31,13 +31,13 @@ namespace MooTUI.IO
             if (Content != null)
             {
                 Content.Rendered -= Content_RenderEventHandler;
-                Content.ClaimFocus -= Content_ClaimFocus;
+                Content.ClaimFocusEventHandler -= Content_ClaimFocus;
             }
 
             Content = w;
             Content.SetStyle(Style.SimpleLight, false); // Temp
             Content.Rendered += Content_RenderEventHandler;
-            Content.ClaimFocus += Content_ClaimFocus;
+            Content.ClaimFocusEventHandler += Content_ClaimFocus;
         }
 
         private void SetViewer(MooViewer v)
