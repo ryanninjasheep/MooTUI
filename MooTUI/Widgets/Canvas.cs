@@ -3,7 +3,6 @@ using MooTUI.IO;
 using MooTUI.Widgets.Primitives;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace MooTUI.Widgets
@@ -19,8 +18,8 @@ namespace MooTUI.Widgets
 
         public void AddChild(Widget w, int x, int y)
         {
-            Children.Add(new WidgetWithLocation(w, x, y));
             LinkChild(w);
+            Children.Add(new WidgetWithLocation(w, x, y));
             w.Render();
         }
         public void RemoveChild(Widget w)
@@ -36,25 +35,22 @@ namespace MooTUI.Widgets
                     return;
                 }
             }
-
-            throw new InvalidOperationException("Parent does not contain child.");
-        }
-
-        protected override IEnumerable<Widget> GetLogicalChildren()
-        {
-            List<Widget> toReturn = new List<Widget>();
-
-            foreach(WidgetWithLocation w in Children)
-            {
-                toReturn.Add(w.Widget);
-            }
-
-            return toReturn;
         }
 
         protected override void OnChildResize()
         {
             Render();
+        }
+
+        protected override void SetChildStyle(Style style, bool overrideDefault)
+        {
+            if (overrideDefault)
+            {
+                foreach (WidgetWithLocation w in Children)
+                {
+                    w.Widget.SetStyle(style, overrideDefault);
+                }
+            }
         }
 
         protected override void Draw()
