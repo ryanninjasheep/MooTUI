@@ -31,20 +31,11 @@ namespace MooTUI.Widgets
             }
         }
 
+        protected override IEnumerable<Widget> GetLogicalChildren() => Children;
+
         protected override void OnChildResize()
         {
             Render();
-        }
-
-        protected override void SetChildStyle(Style style, bool overrideDefault)
-        {
-            if (overrideDefault)
-            {
-                foreach (Widget w in Children)
-                {
-                    w.SetStyle(style, overrideDefault);
-                }
-            }
         }
 
         protected override void Draw()

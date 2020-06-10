@@ -30,13 +30,13 @@ namespace MooTUI.IO
         {
             if (Content != null)
             {
-                Content.RenderEventHandler -= Content_RenderEventHandler;
+                Content.Rendered -= Content_RenderEventHandler;
                 Content.ClaimFocus -= Content_ClaimFocus;
             }
 
             Content = w;
             Content.SetStyle(Style.SimpleLight, false); // Temp
-            Content.RenderEventHandler += Content_RenderEventHandler;
+            Content.Rendered += Content_RenderEventHandler;
             Content.ClaimFocus += Content_ClaimFocus;
         }
 
