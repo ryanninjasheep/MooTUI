@@ -19,13 +19,10 @@ namespace MooTUI.Widgets.Primitives
         public bool IsEnabled { get; protected set; }
         public bool IsVisible { get; protected set; }
 
+        protected bool HasParent { get; private set; }
+
         protected Style Style { get; private set; }
         private bool IsDefaultStyle { get; set; }
-
-        // Think VERY HARD before you attempt to make this protected.  Marking it as private ensures
-        // that children cannot interact with parents except in very specific circumstances.
-        // ALSO: Don't set internally -- use SetParent() instead.
-        private Container Parent { get; set; }
 
         public Widget(int width, int height)
         {
@@ -38,49 +35,72 @@ namespace MooTUI.Widgets.Primitives
             IsVisible = true;
         }
 
-        public virtual void Resize(int width, int height)
+        /// <summary>
+        /// Adjusts the width and height of this Widget and then renders it.
+        /// </summary>
+        /// <remarks>
+        /// If any internal changes need to take place before rendering, override OnResize().
+        /// </remarks>
+        public void Resize(int width, int height)
         {
             if (Width == width && Height == height)
                 return;
 
             View = new View(width, height);
 
-            OnResize(EventArgs.Empty);
+            AdjustResize();
+
+            OnResized(EventArgs.Empty);
 
             Render();
         }
 
-        public event EventHandler ResizeEventHandler;
-        private void OnResize(EventArgs e)
+        /// <remarks>
+        /// Override if any additional behavior is needed when resizing.
+        /// </remarks>
+        protected virtual void AdjustResize() { }
+
+        internal void ClaimAsChild()
         {
-            EventHandler handler = ResizeEventHandler;
-            handler?.Invoke(this, e);
+            if (HasParent)
+                throw new InvalidOperationException("This Widget already has a parent!");
+
+            HasParent = true;
         }
+        internal void ReleaseAsChild() => HasParent = false;
 
         #region RENDERING and STYLE
 
+        /// <summary>
+        /// Contains all logic for manipulating the View.  In general, assume that it should be completely
+        /// recreated every time this Widget is rendered.  By default, clears all chars.
+        /// </summary>
         protected virtual void Draw() 
         {
             View.FillChar(' ');
         }
 
+        /// <summary>
+        /// Redraws View and bubbles, making parents render, too.
+        /// </summary>
         public View Render()
         {
             if (!IsVisible)
                 return new View(Width, Height);
 
             Draw();
-            OnRender(EventArgs.Empty);
+
+            OnRendered(EventArgs.Empty);
+
             return View;
         }
 
-        public event EventHandler RenderEventHandler;
-        private void OnRender(EventArgs e)
-        {
-            EventHandler handler = RenderEventHandler;
-            handler?.Invoke(this, e);
-        }
-
+        /// <summary>
+        /// Sets this Widget's style unless it already isn't default.
+        /// </summary>
+        /// <remarks>
+        /// Theoretically, this will only be overridden by Container.
+        /// </remarks>
         public virtual void SetStyle(Style style, bool overrideDefault)
         {
             if (overrideDefault)
@@ -100,91 +120,116 @@ namespace MooTUI.Widgets.Primitives
 
         #endregion
 
-        #region LOGICAL TREE MANIPULATION
-
         /// <summary>
-        /// Finds the root of the logical tree.
+        /// Generate a message and begin bubbling it up the logical tree.
         /// </summary>
-        public event EventHandler<LogicalBubbleEventArgs> LogicalBubble;
+        public void GenerateMessage(Message.MessageType type, string message) =>
+            BubbleMessage(new MessageEventArgs(new Message(type, message, this)));
 
-        protected void BubbleLogicalRoot(LogicalBubbleEventArgs e)
+        /// <remarks>
+        /// Only marked internal so that Container has access.
+        /// </remarks>
+        internal void BubbleMessage(MessageEventArgs e)
         {
-            e.Root = this;
-
-            EventHandler<LogicalBubbleEventArgs> handler = LogicalBubble;
-            handler?.Invoke(this, e);
+            if (this is IPushMessage pushMessage)
+                pushMessage.PushMessage(e.Message);
+            else
+                OnMessageReceived(e);
         }
-
-        protected Widget GetLogicalRoot()
-        {
-            LogicalBubbleEventArgs e = new LogicalBubbleEventArgs();
-
-            BubbleLogicalRoot(e);
-
-            return e.Root;
-        }
-
-        protected Window GetWindow()
-        {
-            if (GetLogicalRoot() is Window w)
-                return w;
-
-            return null;
-        }
-
-        #endregion
-
-        #region MESSAGING and MODALS
-
-        public void BubbleMessage(Message m)
-        {
-            GetWindow()?.ReceiveMessage(m);
-        }
-
-        // Not yet implemented
-        //public void BubbleModal(Modal m)
-        //{
-        //    if (GetLogicalRoot() is Window w)
-        //    {
-        //        w.PushModal(m);
-        //    }
-        //}
-
-        #endregion
 
         #region INPUT
 
+        /// <summary>
+        /// Attempts to handle the given InputEventArgs.  Bubbles up to parent is this Widget has one.
+        /// </summary>
         public void HandleInput(InputEventArgs e)
         {
             if (!IsEnabled)
                 return;
 
             Input(e);
-            OnInput(e);
+
+            OnInputReceived(e);
+
+            OnBubbleInput(e);
         }
 
+        /// <summary>
+        /// Override if this Widget responds to any input.
+        /// </summary>
         protected virtual void Input(InputEventArgs e) { }
 
-        public event EventHandler<InputEventArgs> InputEventHandler;
-        private void OnInput(InputEventArgs e)
-        {
-            EventHandler<InputEventArgs> handler = InputEventHandler;
-            handler?.Invoke(this, e);
-        }
-
-        public event EventHandler<FocusEventArgs> ClaimFocus;
-        protected void OnClaimFocus(FocusEventArgs e)
-        {
-            EventHandler<FocusEventArgs> handler = ClaimFocus;
-            handler?.Invoke(this, e);
-        }
+        protected void ClaimFocus() => OnClaimFocus(new FocusEventArgs(this));
 
         #endregion
 
         /// <summary>
         /// Returns true if a point is within bounds.
         /// </summary>
-        public bool HitTest(int x, int y) =>
+        public bool HitTest(int x, int y) => 
             (x >= 0 && x < Width) && (y >= 0 && y < Height);
+
+        #region EVENTS
+
+        // The following events exist only in conjunction with 
+        // Containers and MooInterfaces.  Do not observe them.
+
+        internal event EventHandler Resized;
+        internal event EventHandler<MessageEventArgs> MessageReceived;
+        internal event EventHandler<InputEventArgs> BubbleInput;
+        internal event EventHandler<FocusEventArgs> ClaimFocusEventHandler;
+
+        // The following events are public, and can be observed 
+        // if they are relevant
+
+        /// <summary>
+        /// Raised whenever this Widget is rendered.
+        /// </summary>
+        public event EventHandler Rendered;
+
+        /// <summary>
+        /// Raised after this Widget handles input, but before it bubbles the input
+        /// to its parent.
+        /// </summary>
+        public event EventHandler<InputEventArgs> InputReceived;
+
+        // The following methods are ways to raise events.  In some
+        // cases, they are private; in other cases, they are protected.
+        // This is based on whether they should be accessed from
+        // derived classes.
+
+        private void OnResized(EventArgs e)
+        {
+            EventHandler hander = Resized;
+            hander?.Invoke(this, e);
+        }
+        private void OnMessageReceived(MessageEventArgs e)
+        {
+            EventHandler<MessageEventArgs> handler = MessageReceived;
+            handler?.Invoke(this, e);
+        }
+        private void OnBubbleInput(InputEventArgs e)
+        {
+            EventHandler<InputEventArgs> handler = BubbleInput;
+            handler?.Invoke(this, e);
+        }
+        internal void OnClaimFocus(FocusEventArgs e)
+        {
+            EventHandler<FocusEventArgs> handler = ClaimFocusEventHandler;
+            handler?.Invoke(this, e);
+        }
+
+        private void OnRendered(EventArgs e)
+        {
+            EventHandler handler = Rendered;
+            handler?.Invoke(this, e);
+        }
+        private void OnInputReceived(InputEventArgs e)
+        {
+            EventHandler<InputEventArgs> handler = InputReceived;
+            handler?.Invoke(this, e);
+        }
+
+        #endregion EVENTS
     }
 }

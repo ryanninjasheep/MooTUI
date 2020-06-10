@@ -86,11 +86,18 @@ namespace MooTUI.Widgets
             CalculateScrollInfo();
         }
 
-        protected override void SetChildStyle(Style style, bool overrideDefault)
+        protected override IEnumerable<Widget> GetLogicalChildren()
         {
-            Content.SetStyle(style, overrideDefault);
-            HScrollBar?.SetStyle(style, overrideDefault);
-            VScrollBar?.SetStyle(style, overrideDefault);
+            List<Widget> toReturn = new List<Widget>();
+
+            if (Content != null)
+                toReturn.Add(Content);
+            if (HScrollBar != null)
+                toReturn.Add(HScrollBar);
+            if (VScrollBar != null)
+                toReturn.Add(VScrollBar);
+
+            return toReturn;
         }
 
         protected override void OnChildResize()
@@ -454,11 +461,9 @@ namespace MooTUI.Widgets
                 return s;
             }
 
-            public override void Resize(int width, int height)
+            protected override void AdjustResize()
             {
-                base.Resize(width, height);
-
-                Length = Math.Max(width, height);
+                Length = Math.Max(Width, Height);
             }
 
             public void LoadScrollInfo(ScrollInfo s)

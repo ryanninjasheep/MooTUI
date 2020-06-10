@@ -42,12 +42,12 @@ namespace MooTUI_Test
 
             Button_Create = new Button("[ Create Button ]");
             Button_Create.Click += A_Click;
-            Button_Create.InputEventHandler += A_Input;
+            Button_Create.InputReceived += A_Input;
             Canvas.AddChild(Button_Create, 10, 3);
 
             Button_Destroy = new Button("[ Destroy This Button ]");
             Button_Destroy.Click += B_Click;
-            Button_Destroy.InputEventHandler += B_Input;
+            Button_Destroy.InputReceived += B_Input;
 
             ListBox = new ListBox(20, 4);
             ListBox.Add("Item 1");
@@ -76,7 +76,7 @@ namespace MooTUI_Test
             if (ListBox.SelectedIndex != -1)
             {
                 ListBox.RemoveAt(ListBox.SelectedIndex);
-                ListBox.BubbleMessage(new Message(Message.MessageType.WARNING, "Item removed from ListBox", ListBox));
+                ListBox.GenerateMessage(Message.MessageType.WARNING, "Item removed from ListBox");
             }
         }
 
@@ -84,8 +84,7 @@ namespace MooTUI_Test
         {
             if (sender is ListBox b)
             {
-                b.BubbleMessage(new Message(Message.MessageType.MESSAGE,
-                    "The selected index is " + b.SelectedIndex.ToString(), b));
+                b.GenerateMessage(Message.MessageType.MESSAGE, "The selected index is " + b.SelectedIndex.ToString());
             }
         }
 
@@ -96,7 +95,7 @@ namespace MooTUI_Test
                 switch (e.InputType)
                 {
                     case InputTypes.MOUSE_ENTER:
-                        Button_Create.BubbleMessage(new Message(Message.MessageType.INFO, "This will create a new button!", Button_Create));
+                        Button_Create.GenerateMessage(Message.MessageType.INFO, "This will create a new button!");
                         break;
                 }
             }
@@ -104,7 +103,7 @@ namespace MooTUI_Test
 
         private void A_Click(object sender, EventArgs e)
         {
-            Button_Create.BubbleMessage(new Message(Message.MessageType.INFO, "New button created!", Button_Create));
+            Button_Create.GenerateMessage(Message.MessageType.INFO, "New button created!");
             Canvas.AddChild(Button_Destroy, 5, 5);
         }
 
@@ -115,8 +114,7 @@ namespace MooTUI_Test
                 switch (e.InputType)
                 {
                     case InputTypes.MOUSE_ENTER:
-                        Button_Destroy.BubbleMessage(new Message(Message.MessageType.WARNING, 
-                            "Are you sure you want to destroy this button?", Button_Destroy));
+                        Button_Destroy.GenerateMessage(Message.MessageType.WARNING, "Are you sure you want to destroy this button?");
                         break;
                 }
             }
@@ -124,7 +122,7 @@ namespace MooTUI_Test
 
         private void B_Click(object sender, EventArgs e)
         {
-            Button_Destroy.BubbleMessage(new Message(Message.MessageType.ERROR, "BUTTON DESTROYED", Button_Destroy));
+            Button_Destroy.GenerateMessage(Message.MessageType.ERROR, "BUTTON DESTROYED");
             Canvas.RemoveChild(Button_Destroy);
         }
     }

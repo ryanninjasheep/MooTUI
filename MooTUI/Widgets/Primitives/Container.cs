@@ -2,73 +2,75 @@
 using MooTUI.IO;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace MooTUI.Widgets.Primitives
 {
     /// <summary>
-    /// Provides functionality to recieve events from a specified child.
+    /// Includes a number of abstract methods that interact with children, in addition to providing a
+    /// way to link and unlink children.
     /// </summary>
     public abstract class Container : Widget
     {
         public Container(int width, int height) : base(width, height) { }
 
         /// <summary>
-        /// Set object as an observer for a particular child.  Ensures that child has same Style and InputContext.
+        /// Sets this container as an observer for the specified child.
         /// </summary>
         protected void LinkChild(Widget child)
         {
-            child.RenderEventHandler += Child_RenderEventHandler;
-            child.ResizeEventHandler += Child_ResizeEventHandler;
-            child.InputEventHandler += Child_InputEventHandler;
-            child.LogicalBubble += Child_LogicalBubble;
-            child.ClaimFocus += Child_ClaimFocus;
+            child.ClaimAsChild();
             child.SetStyle(Style, false);
+
+            child.Resized += Child_Resized;
+            child.MessageReceived += Child_MessageReceived;
+            child.BubbleInput += Child_BubbleInput;
+            child.ClaimFocusEventHandler += Child_ClaimFocus;
+            child.Rendered += Child_Rendered;
         }
 
         /// <summary>
-        /// Stop observing a particular child.  No effect if it already wasn't being observed.
+        /// Unlinks the specified child.
         /// </summary>
         protected void UnlinkChild(Widget child)
         {
-            child.RenderEventHandler -= Child_RenderEventHandler;
-            child.ResizeEventHandler -= Child_ResizeEventHandler;
-            child.InputEventHandler -= Child_InputEventHandler;
-            child.LogicalBubble -= Child_LogicalBubble;
-            child.ClaimFocus -= Child_ClaimFocus;
+            child.ReleaseAsChild();
+
+            child.Resized -= Child_Resized;
+            child.MessageReceived -= Child_MessageReceived;
+            child.BubbleInput -= Child_BubbleInput;
+            child.ClaimFocusEventHandler -= Child_ClaimFocus;
+            child.Rendered -= Child_Rendered;
         }
 
-        #region EVENT HANDLERS
+        private void Child_Resized(object sender, EventArgs e) => OnChildResize();
 
-        private void Child_RenderEventHandler(object sender, EventArgs e)
-        {
-            Render();
-        }
-        private void Child_ResizeEventHandler(object sender, EventArgs e)
-        {
-            OnChildResize();
-        }
-        private void Child_InputEventHandler(object sender, InputEventArgs e)
-        {
-            Input(e);
-        }
-        private void Child_LogicalBubble(object sender, LogicalBubbleEventArgs e)
-        {
-            BubbleLogicalRoot(e);
-        }
-        private void Child_ClaimFocus(object sender, FocusEventArgs e)
-        {
-            OnClaimFocus(e);
-        }
+        private void Child_MessageReceived(object sender, MessageEventArgs e) => BubbleMessage(e);
 
-        #endregion
+        private void Child_ClaimFocus(object sender, FocusEventArgs e) => OnClaimFocus(e);
 
+        private void Child_BubbleInput(object sender, InputEventArgs e) => HandleInput(e);
+
+        private void Child_Rendered(object sender, EventArgs e) => Render();
+
+        /// <summary>
+        /// Attempts to populate Style change to children.
+        /// </summary>
         public override void SetStyle(Style style, bool overrideDefault)
         {
             base.SetStyle(style, overrideDefault);
 
-            SetChildStyle(style, overrideDefault);
+            foreach (Widget w in GetLogicalChildren())
+            {
+                w.SetStyle(style, false);
+            }
         }
+
+        /// <summary>
+        /// Determines if the specified Widget is a child of this Container.
+        /// </summary>
+        internal bool Contains(Widget w) => GetLogicalChildren().Contains(w);
 
         #region ABSTRACT METHODS
 
@@ -76,15 +78,20 @@ namespace MooTUI.Widgets.Primitives
         /// Updates relative mouse position and returns Widget directly under mouse.
         /// </summary>
         public abstract Widget GetHoveredWidget(MouseContext m);
-        protected abstract void SetChildStyle(Style style, bool overrideDefault);
-
-        #endregion
-
-        #region PROTECTED METHODS
 
         /// <summary>
-        /// Called when a child changes size.
+        /// Returns an unordered list of all logical children.  When implementing, ensure
+        /// that the method doesn't return null and also that none of the elements in
+        /// the list are null.
         /// </summary>
+        protected abstract IEnumerable<Widget> GetLogicalChildren();
+
+        /// <summary>
+        /// Called whenever a logical child is resized.
+        /// </summary>
+        /// <remarks>
+        /// Do not call manually.
+        /// </remarks>
         protected abstract void OnChildResize();
 
         #endregion

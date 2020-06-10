@@ -46,11 +46,9 @@ namespace MooTUI.Widgets
             handler?.Invoke(this, EventArgs.Empty);
         }
 
-        public override void Resize(int width, int height)
+        protected override void AdjustResize()
         {
-            base.Resize(width, height);
-
-            Span.SetDisplayWidth(width);
+            Span.SetDisplayWidth(Width);
         }
 
         public void Write(string text)
