@@ -9,7 +9,7 @@ using MooTUI.IO;
 
 namespace MooTUI.Widgets
 {
-    public class Window : MonoContainer
+    public class Window : MonoContainer, IPushMessage
     {
         public bool IsMessageEnabled { get; private set; }
         public Message CurrentMessage { get; private set; }
@@ -26,7 +26,7 @@ namespace MooTUI.Widgets
             Render();
         }
 
-        public void ReceiveMessage(Message m)
+        public void PushMessage(Message m)
         {
             if (IsMessageEnabled)
             {

@@ -24,9 +24,12 @@ namespace MooTUI.Widgets.Primitives
             Content.Render();
         }
 
-        protected override void SetChildStyle(Style style, bool overrideDefault)
+        protected override IEnumerable<Widget> GetLogicalChildren()
         {
-            Content?.SetStyle(style, overrideDefault);
+            if (Content != null)
+                return new List<Widget>() { Content };
+            else
+                return new List<Widget>();
         }
     }
 }

@@ -37,20 +37,19 @@ namespace MooTUI.Widgets
             }
         }
 
+        protected override IEnumerable<Widget> GetLogicalChildren()
+        {
+            List<Widget> toReturn = new List<Widget>();
+            foreach(WidgetWithLocation w in Children)
+            {
+                toReturn.Add(w.Widget);
+            }
+            return toReturn;
+        }
+
         protected override void OnChildResize()
         {
             Render();
-        }
-
-        protected override void SetChildStyle(Style style, bool overrideDefault)
-        {
-            if (overrideDefault)
-            {
-                foreach (WidgetWithLocation w in Children)
-                {
-                    w.Widget.SetStyle(style, overrideDefault);
-                }
-            }
         }
 
         protected override void Draw()

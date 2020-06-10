@@ -57,8 +57,7 @@ namespace MooTUI.Widgets
 
         public override Widget GetHoveredWidget(MouseContext m) => ScrollViewer;
 
-        protected override void SetChildStyle(Style style, bool overrideDefault) =>
-            ScrollViewer.SetStyle(style, overrideDefault);
+        protected override IEnumerable<Widget> GetLogicalChildren() => new List<Widget>() { ScrollViewer };
 
         protected override void OnChildResize() => Render(); // This shouldn't happen
 
@@ -224,18 +223,12 @@ namespace MooTUI.Widgets
                 return this;
             }
 
+            protected override IEnumerable<Widget> GetLogicalChildren() => Items;
+
             protected override void OnChildResize()
             {
                 // This shouldn't happen????
                 Render();
-            }
-
-            protected override void SetChildStyle(Style style, bool overrideDefault)
-            {
-                foreach (Widget w in Items)
-                {
-                    w.SetStyle(style, overrideDefault);
-                }
             }
 
             protected override void Draw()
