@@ -52,15 +52,16 @@ namespace MooTUI.IO
         });
         public static readonly Style Test = new Style(new Dictionary<string, ColorScheme>()
         {
-            { "Default",  new ColorScheme(Colors.White,         Colors.Black)         },
-            { "Disabled", new ColorScheme(Colors.LightGray,     Colors.Black)         },
-            { "Hover",    new ColorScheme(Colors.White,         Colors.DarkSlateBlue) },
-            { "Active",   new ColorScheme(Colors.DarkSlateGray, Colors.White)         },
-            { "Cursor",   new ColorScheme(Colors.White,         Colors.BlueViolet)         },
-            { "Selection", new ColorScheme(Colors.Black,     Colors.LightBlue)   },
-            { "Error",     new ColorScheme(Colors.White,     Colors.Red)         },
-            { "Warning",   new ColorScheme(Colors.Black,     Colors.Yellow)      },
-            { "Info",      new ColorScheme(Colors.Black,     Colors.LightBlue)   },
+            { "Default",   new ColorScheme(Color.FromRgb(0x9b, 0x90, 0x81), Color.FromRgb(0x18, 0x1b, 0x20)) },
+            { "Disabled",  new ColorScheme(Color.FromRgb(0x5f, 0x5f, 0x5f), Color.FromRgb(0x18, 0x1b, 0x20)) },
+            { "Hover",     new ColorScheme(Color.FromRgb(0x9b, 0x90, 0x81), Color.FromRgb(0x35, 0x35, 0x35)) },
+            { "Active",    new ColorScheme(Color.FromRgb(0xcd, 0xcd, 0xcd), Color.FromRgb(0x35, 0x35, 0x35)) },
+            { "Cursor",    new ColorScheme(Color.FromRgb(0xcd, 0xcd, 0xcd), Color.FromRgb(0x5f, 0x5f, 0x5f)) },
+            { "Selection", new ColorScheme(Color.FromRgb(0xcd, 0xcd, 0xcd), Color.FromRgb(0x43, 0x58, 0x61)) },
+            { "Message",   new ColorScheme(Color.FromRgb(0x35, 0x35, 0x35), Color.FromRgb(0x18, 0x1b, 0x20)) },
+            { "Error",     new ColorScheme(Color.FromRgb(0x6d, 0x61, 0x37), Color.FromRgb(0x18, 0x1b, 0x20)) },
+            { "Warning",   new ColorScheme(Color.FromRgb(0xcd, 0xcd, 0xcd), Color.FromRgb(0x18, 0x1b, 0x20)) },
+            { "Info",      new ColorScheme(Color.FromRgb(0x43, 0x58, 0x61), Color.FromRgb(0x18, 0x1b, 0x20)) },
         });
     }
 

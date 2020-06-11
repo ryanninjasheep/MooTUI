@@ -34,7 +34,7 @@ namespace MooTUI_Test
             MooViewer viewer = new MooViewer();
             Content = viewer;
             Window window = new Window(viewer.MaxContentWidth, viewer.MaxContentHeight);
-            // window.SetStyle(MooTUI.IO.Style.Test, true);
+            window.SetStyle(MooTUI.IO.Style.Test, true);
             MooInterface @interface = new MooInterface(viewer, window);
 
             Canvas = new Canvas(100, 50);
