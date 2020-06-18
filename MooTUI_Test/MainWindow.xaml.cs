@@ -31,9 +31,9 @@ namespace MooTUI_Test
         {
             InitializeComponent();
 
-            MooViewer viewer = new MooViewer();
+            WPFMooViewer viewer = new WPFMooViewer();
             Content = viewer;
-            Window window = new Window(viewer.MaxContentWidth, viewer.MaxContentHeight);
+            Window window = new Window(900, 500);
             window.SetStyle(MooTUI.IO.Style.Test, true);
             MooInterface @interface = new MooInterface(viewer, window);
 

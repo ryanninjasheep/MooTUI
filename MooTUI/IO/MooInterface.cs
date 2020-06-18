@@ -9,7 +9,7 @@ namespace MooTUI.IO
     public class MooInterface
     {
         public Widget Content { get; private set; }
-        private MooViewer Viewer { get; set; }
+        private IMooViewer Viewer { get; set; }
 
         private MouseContext MouseContext { get; set; }
         private KeyboardContext KeyboardContext { get; set; }
@@ -17,13 +17,13 @@ namespace MooTUI.IO
         public Widget HoveredWidget { get; private set; }
         public Widget FocusedWidget { get; private set; }
 
-        public MooInterface(MooViewer viewer, Widget content)
+        public MooInterface(IMooViewer viewer, Widget content)
         {
             SetContent(content);
             SetViewer(viewer);
 
-            MouseContext = Viewer.MouseContext;
-            KeyboardContext = Viewer.KeyboardContext;
+            MouseContext = Viewer.GetMouseContext();
+            KeyboardContext = Viewer.GetKeyboardContext();
         }
 
         public void SetContent(Widget w)
@@ -40,7 +40,7 @@ namespace MooTUI.IO
             Content.ClaimFocusEventHandler += Content_ClaimFocus;
         }
 
-        private void SetViewer(MooViewer v)
+        private void SetViewer(IMooViewer v)
         {
             Viewer = v;
             Viewer.InputEventHandler += Viewer_InputEventHandler;
@@ -49,7 +49,6 @@ namespace MooTUI.IO
         private void Content_RenderEventHandler(object sender, EventArgs e)
         {
             Viewer.SetVisual(Content.View.Visual);
-            Viewer.InvalidateVisual();
         }
 
         private void Content_ClaimFocus(object sender, FocusEventArgs e)
