@@ -1,5 +1,5 @@
 ﻿using MooTUI.Widgets.Primitives;
-using MooTUI.Core;
+using MooTUI.Input;
 using System;
 using System.Collections.Generic;
 using System.Windows.Media;
@@ -145,7 +145,7 @@ namespace MooTUI.Widgets
                 View.SetColorScheme(x, y, Style.GetColorScheme(Cursor));
         }
 
-        protected override void Input(Core.InputEventArgs e)
+        protected override void Input(Input.InputEventArgs e)
         {
             switch (e.InputType)
             {
@@ -199,7 +199,7 @@ namespace MooTUI.Widgets
             Render();
         }
 
-        private void OnLeftClick(Core.InputEventArgs e)
+        private void OnLeftClick(Input.InputEventArgs e)
         {
             OnClaimFocus(new FocusEventArgs(this));
 
@@ -209,7 +209,7 @@ namespace MooTUI.Widgets
             e.Handled = true;
         }
 
-        private void OnKeyDown(Core.InputEventArgs e)
+        private void OnKeyDown(Input.InputEventArgs e)
         {
             bool hadEffect;
 

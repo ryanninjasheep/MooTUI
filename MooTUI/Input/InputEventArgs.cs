@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MooTUI.Core
+namespace MooTUI.Input
 {
     public enum InputTypes
     {

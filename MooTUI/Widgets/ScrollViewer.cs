@@ -1,5 +1,5 @@
 ﻿using MooTUI.Widgets.Primitives;
-using MooTUI.Core;
+using MooTUI.Input;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -335,7 +335,7 @@ namespace MooTUI.Widgets
             }
         }
 
-        protected override void Input(Core.InputEventArgs e)
+        protected override void Input(Input.InputEventArgs e)
         {
             if (e.Handled)
                 return;
@@ -354,7 +354,7 @@ namespace MooTUI.Widgets
             }
         }
 
-        private void OnScroll(Core.InputEventArgs e)
+        private void OnScroll(Input.InputEventArgs e)
         {
             int delta = e.Mouse.ScrollDelta;
 
@@ -374,7 +374,7 @@ namespace MooTUI.Widgets
             }
         }
 
-        private void OnKeyDown(Core.InputEventArgs e)
+        private void OnKeyDown(Input.InputEventArgs e)
         {
             switch (e.Keyboard.LastKeyPressed)
             {
@@ -575,7 +575,7 @@ namespace MooTUI.Widgets
                 }
             }
 
-            protected override void Input(Core.InputEventArgs e)
+            protected override void Input(Input.InputEventArgs e)
             {
                 base.Input(e);
 
@@ -599,7 +599,7 @@ namespace MooTUI.Widgets
                 }
             }
 
-            private void OnMouseMove(Core.InputEventArgs e)
+            private void OnMouseMove(Input.InputEventArgs e)
             {
                 int index = Orientation switch
                 {
@@ -643,7 +643,7 @@ namespace MooTUI.Widgets
                 Render();
             }
 
-            private void OnLeftClick(Core.InputEventArgs e)
+            private void OnLeftClick(Input.InputEventArgs e)
             {
                 if (Orientation == ScrollBarOrientation.HORIZONTAL)
                 {
@@ -669,7 +669,7 @@ namespace MooTUI.Widgets
                 }
             }
 
-            private void OnScroll(Core.InputEventArgs e)
+            private void OnScroll(Input.InputEventArgs e)
             {
                 int delta = e.Mouse.ScrollDelta;
 

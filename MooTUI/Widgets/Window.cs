@@ -4,7 +4,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Media;
 using MooTUI.Widgets.Primitives;
-using MooTUI.Core;
+using MooTUI.Input;
 using MooTUI.IO;
 
 namespace MooTUI.Widgets

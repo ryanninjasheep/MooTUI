@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Media;
-using MooTUI.Core;
+using MooTUI.Input;
 using MooTUI.IO;
 
 namespace MooTUI.Widgets.Primitives

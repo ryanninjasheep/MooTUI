@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using MooTUI.Core;
 using MooTUI.Widgets.Primitives;
+using MooTUI.Input;
 
 namespace MooTUI.IO
 {

@@ -1,4 +1,4 @@
-﻿using MooTUI.Core;
+﻿using MooTUI.Input;
 using MooTUI.IO;
 using MooTUI.Widgets.Primitives;
 using System;

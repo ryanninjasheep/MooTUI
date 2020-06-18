@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Input;
 
-namespace MooTUI.Core
+namespace MooTUI.Input
 {
     public enum Command { COPY, CUT, PASTE, NONE }
 

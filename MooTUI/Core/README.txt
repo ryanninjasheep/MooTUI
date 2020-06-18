@@ -1,8 +1,5 @@
 MOOTUI CORE
 
-MooTUI Core provides the lowest-level interaction with WPF and other forms of input.  While IO and
-Widgets contain a specific implementation of a particular UI paradigm, Core can be reused in completely
-different circumstances.
-
-MooViewer can be used to display any Visual.  It also provides InputEventArgs (and translates mouse and keyboard
-input as appropriate) if user interaction is desired.
+MooTUI Core provides low-level TUI display data in the form of a Visual.  It also contains namespaces with specific
+implementations of MooViewer for various scenarios.  Right now, only WPF is supported, but MooViewer can be
+implemented in other classes to integrate into other systems.

@@ -1,11 +1,12 @@
 using System;
 using System.Windows;
 using System.Windows.Media;
-using System.Windows.Input;
+using SystemInput = System.Windows.Input;
 using System.ComponentModel;
 using System.Windows.Navigation;
+using MooTUI.Input;
 
-namespace MooTUI.Core
+namespace MooTUI.Core.WPF
 {
     /// <summary>
     /// Intermediary between WPF and MooTUI
@@ -31,9 +32,9 @@ namespace MooTUI.Core
             LoadTypeface("Consolas", 13, 7, 15);
 
             EventManager.RegisterClassHandler(typeof(Window), 
-                Keyboard.KeyDownEvent, new KeyEventHandler(OnKeyDown), true);
+                SystemInput.Keyboard.KeyDownEvent, new SystemInput.KeyEventHandler(OnKeyDown), true);
             EventManager.RegisterClassHandler(typeof(Window), 
-                Keyboard.KeyUpEvent, new KeyEventHandler(OnKeyUp), true);
+                SystemInput.Keyboard.KeyUpEvent, new SystemInput.KeyEventHandler(OnKeyUp), true);
 
             MouseContext = new MouseContext();
             KeyboardContext = new KeyboardContext();
@@ -62,6 +63,12 @@ namespace MooTUI.Core
         public MouseContext GetMouseContext() => MouseContext;
 
         public KeyboardContext GetKeyboardContext() => KeyboardContext;
+
+        public void SetSize(int width, int height)
+        {
+            Width = width * cellWidth;
+            Height = height * cellHeight;
+        }
 
         #region RENDERING
 
@@ -143,12 +150,6 @@ namespace MooTUI.Core
                 new Rect(xIndex * cellWidth, yIndex * cellHeight, length * cellWidth + 1, cellHeight + 1));
         }
 
-        public void SetSize(int width, int height)
-        {
-            Width = width * cellWidth;
-            Height = height * cellHeight;
-        }
-
         #endregion
 
         #region INPUT HANDLING
@@ -163,17 +164,17 @@ namespace MooTUI.Core
         public InputEventArgs GenerateInputContext(InputTypes i) =>
             new InputEventArgs(i, MouseContext, KeyboardContext);
 
-        public void OnKeyDown(object sender, KeyEventArgs e)
+        public void OnKeyDown(object sender, SystemInput.KeyEventArgs e)
         {
             KeyboardContext.HandleKeyDown(e);
             OnInputReceived(GenerateInputContext(InputTypes.KEY_DOWN));
         }
-        protected void OnKeyUp(object sender, KeyEventArgs e)
+        protected void OnKeyUp(object sender, SystemInput.KeyEventArgs e)
         {
             KeyboardContext.HandleKeyUp(e);
         }
 
-        protected override void OnMouseEnter(MouseEventArgs e)
+        protected override void OnMouseEnter(SystemInput.MouseEventArgs e)
         {
             base.OnMouseEnter(e);
 
@@ -182,7 +183,7 @@ namespace MooTUI.Core
             OnInputReceived(GenerateInputContext(InputTypes.MOUSE_ENTER));
 
         }
-        protected override void OnMouseLeave(MouseEventArgs e)
+        protected override void OnMouseLeave(SystemInput.MouseEventArgs e)
         {
             base.OnMouseLeave(e);
 
@@ -191,7 +192,7 @@ namespace MooTUI.Core
 
             OnInputReceived(GenerateInputContext(InputTypes.MOUSE_LEAVE));
         }
-        protected override void OnMouseMove(MouseEventArgs e)
+        protected override void OnMouseMove(SystemInput.MouseEventArgs e)
         {
             base.OnMouseMove(e);
 
@@ -206,20 +207,20 @@ namespace MooTUI.Core
             }
         }
 
-        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+        protected override void OnMouseLeftButtonDown(SystemInput.MouseButtonEventArgs e)
         {
             base.OnMouseLeftButtonDown(e);
 
             OnInputReceived(GenerateInputContext(InputTypes.LEFT_CLICK));
         }
-        protected override void OnMouseRightButtonDown(MouseButtonEventArgs e)
+        protected override void OnMouseRightButtonDown(SystemInput.MouseButtonEventArgs e)
         {
             base.OnMouseRightButtonDown(e);
 
             OnInputReceived(GenerateInputContext(InputTypes.RIGHT_CLICK));
         }
 
-        protected override void OnMouseWheel(MouseWheelEventArgs e)
+        protected override void OnMouseWheel(SystemInput.MouseWheelEventArgs e)
         {
             base.OnMouseWheel(e);
 
@@ -230,7 +231,7 @@ namespace MooTUI.Core
 
         private (int x, int y) GetCellAtMousePosition()
         {
-            Point p = Mouse.GetPosition(this);
+            Point p = SystemInput.Mouse.GetPosition(this);
             int x = (int)Math.Floor(p.X / cellWidth);
             int y = (int)Math.Floor(p.Y / cellHeight);
             return (x, y);

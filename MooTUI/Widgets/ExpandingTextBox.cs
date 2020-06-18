@@ -2,8 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Windows.Input;
-using MooTUI.Core;
+using MooTUI.Input;
 using MooTUI.IO;
 
 namespace MooTUI.Widgets
@@ -31,7 +30,7 @@ namespace MooTUI.Widgets
             MinSize = minHeight;
         }
 
-        protected override void Input(Core.InputEventArgs e)
+        protected override void Input(InputEventArgs e)
         {
             base.Input(e);
 

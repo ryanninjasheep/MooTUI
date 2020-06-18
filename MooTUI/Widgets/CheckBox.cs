@@ -1,5 +1,5 @@
 ﻿using MooTUI.Widgets.Primitives;
-using MooTUI.Core;
+using MooTUI.Input;
 using System;
 using System.Collections.Generic;
 using System.Text;

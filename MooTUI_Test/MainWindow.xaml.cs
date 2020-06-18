@@ -1,4 +1,5 @@
-﻿using MooTUI.Core;
+﻿using MooTUI.Input;
+using MooTUI.Core.WPF;
 using MooTUI.IO;
 using MooTUI.Widgets;
 using MooTUI.Widgets.Primitives;
@@ -31,15 +32,15 @@ namespace MooTUI_Test
         {
             InitializeComponent();
 
-            WPFMooViewer viewer = new WPFMooViewer(100, 50, Colors.White);
+            WPFMooViewer viewer = new WPFMooViewer(150, 30, Colors.White);
             Content = viewer;
 
-            Window window = new Window(100, 50);
+            Window window = new Window(150, 30);
             window.SetStyle(MooTUI.IO.Style.Test, true);
 
             MooInterface @interface = new MooInterface(viewer, window);
 
-            Canvas = new Canvas(100, 50);
+            Canvas = new Canvas(150, 30);
             window.SetContent(Canvas);
 
             Button_Create = new Button("[ Create Button ]");
@@ -90,7 +91,7 @@ namespace MooTUI_Test
             }
         }
 
-        private void A_Input(object sender, MooTUI.Core.InputEventArgs e)
+        private void A_Input(object sender, MooTUI.Input.InputEventArgs e)
         {
             if (sender == Button_Create)
             {
@@ -109,7 +110,7 @@ namespace MooTUI_Test
             Canvas.AddChild(Button_Destroy, 5, 5);
         }
 
-        private void B_Input(object sender, MooTUI.Core.InputEventArgs e)
+        private void B_Input(object sender, MooTUI.Input.InputEventArgs e)
         {
             if (sender == Button_Destroy)
             {
