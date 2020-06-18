@@ -31,10 +31,12 @@ namespace MooTUI_Test
         {
             InitializeComponent();
 
-            WPFMooViewer viewer = new WPFMooViewer();
+            WPFMooViewer viewer = new WPFMooViewer(100, 50, Colors.White);
             Content = viewer;
-            Window window = new Window(900, 500);
+
+            Window window = new Window(100, 50);
             window.SetStyle(MooTUI.IO.Style.Test, true);
+
             MooInterface @interface = new MooInterface(viewer, window);
 
             Canvas = new Canvas(100, 50);

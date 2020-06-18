@@ -23,10 +23,10 @@ namespace MooTUI.Core
         public MouseContext MouseContext { get; private set; }
         public KeyboardContext KeyboardContext { get; private set; }
 
-        public int MaxContentWidth { get; private set; }
-        public int MaxContentHeight { get; private set; }
-
-        public WPFMooViewer()
+        /// <summary>
+        /// Width and height in terms of CELLS, not pixels.
+        /// </summary>
+        public WPFMooViewer(int width, int height, Color baseColor)
         {
             LoadTypeface("Consolas", 13, 7, 15);
 
@@ -39,11 +39,9 @@ namespace MooTUI.Core
             KeyboardContext = new KeyboardContext();
 
             //TEMP
-            BaseColor = Colors.White;
+            BaseColor = baseColor;
 
-            HorizontalAlignment = HorizontalAlignment.Stretch;
-            VerticalAlignment = VerticalAlignment.Stretch;
-            UpdateSize();
+            SetSize(width, height);
         }
 
         private void LoadTypeface(string getFamily, int getFontSize, int getCellWidth, int getCellHeight)
@@ -145,22 +143,10 @@ namespace MooTUI.Core
                 new Rect(xIndex * cellWidth, yIndex * cellHeight, length * cellWidth + 1, cellHeight + 1));
         }
 
-        protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
+        public void SetSize(int width, int height)
         {
-            base.OnRenderSizeChanged(sizeInfo);
-
-            UpdateSize();
-        }
-        public void UpdateSize()
-        {
-            if (Parent == null)
-            {
-                Width = 900;
-                Height = 500;
-            }
-
-            MaxContentWidth = (int)Math.Floor(Width / cellWidth);
-            MaxContentHeight = (int)Math.Floor(Height / cellHeight);
+            Width = width * cellWidth;
+            Height = height * cellHeight;
         }
 
         #endregion
