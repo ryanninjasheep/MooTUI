@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows.Controls;
 using Media = System.Windows.Media;
 
 namespace MooTUI.IO
@@ -43,33 +44,21 @@ namespace MooTUI.IO
             FillForeColor(fill.Fore, xStart, yStart, width, height);
             FillBackColor(fill.Back, xStart, yStart, width, height);
         }
-        public void FillForeColor(Media.Color fill, int xStart, int yStart, int width, int height)
-        {
-            ApplyShader(Shaders.Fill(fill), true, false, xStart, yStart, width, height);
-        }
-        public void FillBackColor(Media.Color fill, int xStart, int yStart, int width, int height)
-        {
-            ApplyShader(Shaders.Fill(fill), false, true, xStart, yStart, width, height);
-        }
-        public void FillChar(char fill, int xStart, int yStart, int width, int height)
-        {
-            for (int i = xStart; i < Width && i - xStart < width; i++)
-            {
-                for (int j = yStart; j < Height && j - yStart < height; j++)
-                {
-                    Visual.SetChar(i, j, fill);
-                }
-            }
-        }
+        public void FillForeColor(Media.Color fill, int xStart, int yStart, int width, int height) =>
+            ApplyShader(Shaders.Fill(fill), false, true, false, xStart, yStart, width, height);
+        public void FillBackColor(Media.Color fill, int xStart, int yStart, int width, int height) => 
+            ApplyShader(Shaders.Fill(fill), false, false, true, xStart, yStart, width, height);
+        public void FillChar(char fill, int xStart, int yStart, int width, int height) =>
+            ApplyShader(Shaders.FillChar(fill), true, false, false, xStart, yStart, width, height);
 
         public void SetColorScheme(int x, int y, ColorScheme c)
         {
-            Visual.SetForeColor(x, y, c.Fore);
-            Visual.SetBackColor(x, y, c.Back);
+            SetForeColor(x, y, c.Fore);
+            SetBackColor(x, y, c.Back);
         }
-        public void SetForeColor(int x, int y, Media.Color c) => Visual.SetForeColor(x, y, c);
-        public void SetBackColor(int x, int y, Media.Color c) => Visual.SetBackColor(x, y, c);
-        public void SetChar(int x, int y, char c) => Visual.SetChar(x, y, c);
+        public void SetForeColor(int x, int y, Media.Color c) => Visual[x, y] = Visual[x, y].WithFore(c);
+        public void SetBackColor(int x, int y, Media.Color c) => Visual[x, y] = Visual[x, y].WithBack(c);
+        public void SetChar(int x, int y, char c) => Visual[x, y] = Visual[x, y].WithChar(c);
 
         public void SetText(string s) => SetText(s, 0, 0);
         public void SetText(string s, int xStart, int yStart)
@@ -83,7 +72,7 @@ namespace MooTUI.IO
                     return;
                 }
 
-                Visual.SetChar(x, y, c);
+                Visual[x, y] = Visual[x, y].WithChar(c);
                 x++;
             }
         }
@@ -136,18 +125,9 @@ namespace MooTUI.IO
             {
                 for (int i = 0; i + xStart < v.Width && i + xIndex < Width && i < width; i++)
                 {
-                    Media.Color back = v.GetBackColor(i + xStart, j + yStart);
-                    Media.Color fore = v.GetForeColor(i + xStart, j + yStart);
+                    Cell top = v[i + xStart, j + yStart];
 
-                    if (back != Media.Colors.Transparent)
-                    {
-                        Visual.SetBackColor(i + xIndex, j + yIndex, back);
-                    }
-                    if (fore != Media.Colors.Transparent)
-                    {
-                        Visual.SetForeColor(i + xIndex, j + yIndex, fore);
-                        Visual.SetChar(i + xIndex, j + yIndex, v.GetChar(i + xStart, j + yStart));
-                    }
+                    Visual[i + xIndex, j + yIndex] = Visual[i + xIndex, j + yIndex].Overlay(top);
                 }
             }
         }
@@ -155,40 +135,41 @@ namespace MooTUI.IO
         /// <summary>
         /// Applies a particular function to all cells in the View.
         /// </summary>
-        public void ApplyShader(Func<Media.Color[,], int, int, Media.Color> shader, bool fore, bool back)
-        {
-            ApplyShader(shader, fore, back, 0, 0, Width, Height);
-        }
+        public void ApplyShader(Func<Cell[,], int, int, Cell> shader, 
+            bool affectChar, bool affectFore, bool affectBack) =>
+            ApplyShader(shader, affectChar, affectFore, affectBack, 0, 0, Width, Height);
         /// <summary>
         /// Applies a particular function to a certain range of cells in the View.
         /// </summary>
-        public void ApplyShader(Func<Media.Color[,], int, int, Media.Color> shader, bool fore, bool back, 
+        public void ApplyShader(Func<Cell[,], int, int, Cell> shader, 
+            bool affectChar, bool affectFore, bool affectBack,
             int xStart, int yStart, int width, int height)
         {
+            Visual buffer = new Visual(width, height);
+
             for (int i = xStart; i < Width && i - xStart < width; i++)
             {
                 for (int j = yStart; j < Height && j - yStart < height; j++)
                 {
-                    if (fore)
-                    {
-                        Visual.SetForeColor(i, j, shader(Visual.GetForeColors(), i, j));
-                    }
-                    if (back)
-                    {
-                        Visual.SetBackColor(i, j, shader(Visual.GetBackColors(), i, j));
-                    }
+                    Cell shaded = shader(Visual.Cells, i, j);
+
+                    char? c = affectChar ? shaded.Char : null;
+                    Media.Color? fore = affectFore ? shaded.Fore : null;
+                    Media.Color? back = affectBack ? shaded.Back : null;
+
+                    buffer[i - xStart, j - yStart] = new Cell(c, fore, back);
                 }
             }
+
+            Merge(buffer, xStart, yStart);
         }
 
         #endregion
 
         #region PRIVATE HELPER FUNCTIONS
 
-        private int GetCenterStart(int baseLength, int overlayLength)
-        {
-            return (int)Math.Floor((double)(baseLength - overlayLength) / 2);
-        }
+        private int GetCenterStart(int baseLength, int overlayLength) =>
+            (int)Math.Floor((double)(baseLength - overlayLength) / 2);
 
         #endregion
     }

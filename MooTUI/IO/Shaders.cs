@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Media;
+using MooTUI.Core;
 
 namespace MooTUI.IO
 {
@@ -10,7 +11,7 @@ namespace MooTUI.IO
         /// <summary>
         /// Factor < 1 darkens, > 1 lightens.
         /// </summary>
-        public static Func<Color[,], int, int, Color> Lighten(double factor)
+        public static Func<Cell[,], int, int, Cell> Lighten(double factor)
         {
             if (factor < 0)
             {
@@ -18,15 +19,25 @@ namespace MooTUI.IO
             }
             else
             {
-                return (colors, x, y) =>
+                return (cells, x, y) =>
                 {
-                    Color c = colors[x, y];
+                    Color fore = cells[x, y].Fore ?? Colors.Transparent;
 
-                    double r = c.R * factor > 255 ? 255 : c.R * factor;
-                    double g = c.G * factor > 255 ? 255 : c.G * factor;
-                    double b = c.B * factor > 255 ? 255 : c.B * factor;
+                    double r = fore.R * factor > 255 ? 255 : fore.R * factor;
+                    double g = fore.G * factor > 255 ? 255 : fore.G * factor;
+                    double b = fore.B * factor > 255 ? 255 : fore.B * factor;
 
-                    return Color.FromRgb((byte)r, (byte)g, (byte)b);
+                    fore = Color.FromRgb((byte)r, (byte)g, (byte)b);
+
+                    Color back = cells[x, y].Back ?? Colors.Transparent;
+
+                    r = back.R * factor > 255 ? 255 : back.R * factor;
+                    g = back.G * factor > 255 ? 255 : back.G * factor;
+                    b = back.B * factor > 255 ? 255 : back.B * factor;
+
+                    back = Color.FromRgb((byte)r, (byte)g, (byte)b);
+
+                    return new Cell(cells[x, y].Char, fore, back);
                 };
             }
         }
@@ -34,12 +45,9 @@ namespace MooTUI.IO
         /// <summary>
         /// Fills with one color.
         /// </summary>
-        public static Func<Color[,], int, int, Color> Fill(Color fill)
-        {
-            return (colors, x, y) =>
-            {
-                return fill;
-            };
-        }
+        public static Func<Cell[,], int, int, Cell> Fill(Color fill) => 
+            (cells, x, y) => new Cell(cells[x, y].Char, fill, fill);
+        public static Func<Cell[,], int, int, Cell> FillChar(char fill) =>
+            (cells, x, y) => cells[x, y].WithChar(fill);
     }
 }

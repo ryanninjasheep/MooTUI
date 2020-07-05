@@ -90,7 +90,7 @@ namespace MooTUI.Core.WPF
                 int cursorX = 0;
                 for (int i = 0; i < Visual.Width; i++)
                 {
-                    if (Visual.GetBackColor(i, j) != Visual.GetBackColor(cursorX, j))
+                    if (Visual[i, j].Back != Visual[cursorX, j].Back)
                     {
                         DrawBackground(cursorX, j, i - cursorX, dc);
                         cursorX = i;
@@ -105,7 +105,7 @@ namespace MooTUI.Core.WPF
                 int cursorX = 0;
                 for (int i = 0; i < Visual.Width; i++)
                 {
-                    if (Visual.GetForeColor(i, j) != Visual.GetForeColor(cursorX, j))
+                    if (Visual[i, j].Fore != Visual[cursorX, j].Fore)
                     {
                         DrawGlyphRun(cursorX, j, i - cursorX, dc);
                         cursorX = i;
@@ -119,7 +119,7 @@ namespace MooTUI.Core.WPF
             char[] chars = new char[length];
             for (int i = 0; i < length; i++)
             {
-                chars[i] = Visual.GetChar(xIndex + i, yIndex);
+                chars[i] = Visual[xIndex + i, yIndex].Char ?? ' ';
             }
 
             ushort[] charIndexes = new ushort[length];
@@ -142,11 +142,11 @@ namespace MooTUI.Core.WPF
             }
             isi.EndInit();
 
-            dc.DrawGlyphRun(new SolidColorBrush(Visual.GetForeColor(xIndex, yIndex)), g); ;
+            dc.DrawGlyphRun(new SolidColorBrush(Visual[xIndex, yIndex].Fore ?? Colors.Transparent), g); ;
         }
         private void DrawBackground(int xIndex, int yIndex, int length, DrawingContext dc) // Assumes all same color
         {
-            dc.DrawRectangle(new SolidColorBrush(Visual.GetBackColor(xIndex, yIndex)), null,
+            dc.DrawRectangle(new SolidColorBrush(Visual[xIndex, yIndex].Back ?? Colors.Transparent), null,
                 new Rect(xIndex * cellWidth, yIndex * cellHeight, length * cellWidth + 1, cellHeight + 1));
         }
 
