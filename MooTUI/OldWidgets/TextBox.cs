@@ -1,4 +1,4 @@
-﻿using MooTUI.Widgets.Primitives;
+﻿using MooTUI.OldWidgets.Primitives;
 using MooTUI.Input;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Windows;
 using System.Windows.Input;
 using MooTUI.IO;
 
-namespace MooTUI.Widgets
+namespace MooTUI.OldWidgets
 {
     public class TextBox : Widget, IEnsureCursorVisible
     {

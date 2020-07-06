@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MooTUI.Widgets.Primitives
+namespace MooTUI.OldWidgets.Primitives
 {
     /// <summary>
     /// Contains default implementation for a container with exactly one child.

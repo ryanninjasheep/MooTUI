@@ -1,11 +1,11 @@
 ﻿using MooTUI.Core;
-using MooTUI.Widgets.Primitives;
+using MooTUI.OldWidgets.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Media;
 
-namespace MooTUI.Widgets
+namespace MooTUI.OldWidgets
 {
     public class Spacer : Widget
     {

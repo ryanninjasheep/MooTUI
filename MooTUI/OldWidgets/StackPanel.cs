@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using MooTUI.Widgets.Primitives;
+using MooTUI.OldWidgets.Primitives;
 using MooTUI.Input;
 using MooTUI.IO;
 
-namespace MooTUI.Widgets
+namespace MooTUI.OldWidgets
 {
     public class StackPanel : Container
     {

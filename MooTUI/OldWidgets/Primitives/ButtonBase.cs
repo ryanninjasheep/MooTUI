@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using MooTUI.Input;
 
-namespace MooTUI.Widgets.Primitives
+namespace MooTUI.OldWidgets.Primitives
 {
     public abstract class ButtonBase : Widget
     {

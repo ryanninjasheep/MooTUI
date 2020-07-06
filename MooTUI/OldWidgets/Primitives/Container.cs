@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MooTUI.Widgets.Primitives
+namespace MooTUI.OldWidgets.Primitives
 {
     /// <summary>
     /// Includes a number of abstract methods that interact with children, in addition to providing a

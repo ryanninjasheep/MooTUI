@@ -2,8 +2,8 @@
 using MooTUI.Core.WPF;
 using MooTUI.Core;
 using MooTUI.IO;
-using MooTUI.Widgets;
-using MooTUI.Widgets.Primitives;
+using MooTUI.OldWidgets;
+using MooTUI.OldWidgets.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;

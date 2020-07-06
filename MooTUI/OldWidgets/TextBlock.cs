@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows;
 using System.Windows.Navigation;
-using MooTUI.Widgets.Primitives;
+using MooTUI.OldWidgets.Primitives;
 using MooTUI.Core;
 using MooTUI.IO;
 
-namespace MooTUI.Widgets
+namespace MooTUI.OldWidgets
 {
     public class TextBlock : Widget
     {

@@ -1,4 +1,4 @@
-﻿using MooTUI.Widgets.Primitives;
+﻿using MooTUI.OldWidgets.Primitives;
 using MooTUI.Input;
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ using System.Diagnostics.Contracts;
 using System.ComponentModel;
 using MooTUI.IO;
 
-namespace MooTUI.Widgets
+namespace MooTUI.OldWidgets
 {
     /// <summary>
     /// Automatically creates ScrollBars - make sure the specified width and height

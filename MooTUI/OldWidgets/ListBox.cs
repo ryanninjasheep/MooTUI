@@ -1,6 +1,6 @@
 ﻿using MooTUI.Input;
 using MooTUI.IO;
-using MooTUI.Widgets.Primitives;
+using MooTUI.OldWidgets.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -8,7 +8,7 @@ using System.Security.RightsManagement;
 using System.Text;
 using System.Windows.Navigation;
 
-namespace MooTUI.Widgets
+namespace MooTUI.OldWidgets
 {
     public class ListBox : Container
     {

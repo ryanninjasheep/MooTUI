@@ -1,11 +1,11 @@
 ﻿using MooTUI.Input;
 using MooTUI.IO;
-using MooTUI.Widgets.Primitives;
+using MooTUI.OldWidgets.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MooTUI.Widgets
+namespace MooTUI.OldWidgets
 {
     public class Canvas : Container
     {

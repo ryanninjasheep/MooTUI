@@ -5,7 +5,7 @@ using System.Windows.Media;
 using MooTUI.Input;
 using MooTUI.IO;
 
-namespace MooTUI.Widgets.Primitives
+namespace MooTUI.OldWidgets.Primitives
 {
     /// <summary>
     /// The base class for all Widgets.
