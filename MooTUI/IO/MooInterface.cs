@@ -36,7 +36,7 @@ namespace MooTUI.IO
             }
 
             Content = w;
-            Content.SetStyle(Style.SimpleLight, false); // Temp
+            Content.SetStyle(Style.Dark, false); // Temp
             Content.Rendered += Content_RenderEventHandler;
             Content.ClaimFocusEventHandler += Content_ClaimFocus;
         }

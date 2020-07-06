@@ -93,7 +93,7 @@ namespace MooTUI.Widgets
         private static readonly ColorFamily Base = new ColorFamily() { "TextBox_Default", "Default" };
         private static readonly ColorFamily Hover = new ColorFamily() { "TextBox_Hover", "Hover" };
         private static readonly ColorFamily Active = new ColorFamily() { "TextBox_Active", "Active" };
-        private static readonly ColorFamily Prompt = new ColorFamily() { "TextBox_Pompt", "Default" };
+        private static readonly ColorFamily Prompt = new ColorFamily() { "TextBox_Pompt", "Disabled" };
         private static readonly ColorFamily Selection = new ColorFamily() { "TextBox_Selection", "Selection" };
         private static readonly ColorFamily Cursor = new ColorFamily() { "TextBox_Cursor", "Cursor" };
 
@@ -123,7 +123,10 @@ namespace MooTUI.Widgets
                 View.FillColorScheme(Style.GetColorScheme(Base));
             }
 
-            View.DrawSpan(Span);
+            if (Span.Length == 0)
+                View.DrawSpan(PromptText);
+            else
+                View.DrawSpan(Span);
         }
 
         protected void DrawSelection()

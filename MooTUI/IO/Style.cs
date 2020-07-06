@@ -32,22 +32,31 @@ namespace MooTUI.IO
         public Color GetFore(string key) => GetColorScheme(key).Fore;
         public Color GetBack(string key) => GetColorScheme(key).Back;
 
-        public static readonly Style Default = new Style(new Dictionary<string, ColorScheme>()
+        public static readonly Style Dark = new Style(new Dictionary<string, ColorScheme>()
         {
-            { "Default",   new ColorScheme(Color.Foreground, Color.Background)   },
+            { "Default",   new ColorScheme(Color.Base0,    Color.Base03)   },
+            { "Disabled",  new ColorScheme(Color.Base01,   Color.Base03)   },
+            { "Hover",     new ColorScheme(Color.Base0,    Color.Base02)   },
+            { "Active",    new ColorScheme(Color.Base0,    Color.Base02)   },
+            { "Cursor",    new ColorScheme(Color.Base03,   Color.Base0)    },
+            { "Selection", new ColorScheme(Color.Base03,   Color.Base01)   },
+            { "Message",   new ColorScheme(Color.Base0,    Color.Base02)   },
+            { "Error",     new ColorScheme(Color.Red,      Color.Base02)   },
+            { "Warning",   new ColorScheme(Color.Yellow,   Color.Base02)   },
+            { "Info",      new ColorScheme(Color.Blue,     Color.Base02)   },
         });
-        public static readonly Style SimpleLight = new Style(new Dictionary<string, ColorScheme>()
+        public static readonly Style Light = new Style(new Dictionary<string, ColorScheme>()
         {
-            { "Default",   new ColorScheme(Color.Foreground, Color.Background)   },
-            { "Disabled",  new ColorScheme(Color.DarkGrey,   Color.Background)   },
-            { "Hover",     new ColorScheme(Color.Yellow,     Color.Background)   },
-            { "Active",    new ColorScheme(Color.Foreground, Color.AltYellow)    },
-            { "Cursor",    new ColorScheme(Color.Background, Color.Foreground)   },
-            { "Selection", new ColorScheme(Color.Foreground, Color.Blue)         },
-            { "Message",   new ColorScheme(Color.Foreground, Color.LightGrey)    },
-            { "Error",     new ColorScheme(Color.Foreground, Color.Red)          },
-            { "Warning",   new ColorScheme(Color.Foreground, Color.Yellow)       },
-            { "Info",      new ColorScheme(Color.Foreground, Color.Cyan)         },
+            { "Default",   new ColorScheme(Color.Base00,   Color.Base3)    },
+            { "Disabled",  new ColorScheme(Color.Base1,    Color.Base3)    },
+            { "Hover",     new ColorScheme(Color.Base00,   Color.Base2)    },
+            { "Active",    new ColorScheme(Color.Base00,   Color.Base2)    },
+            { "Cursor",    new ColorScheme(Color.Base3,    Color.Base00)   },
+            { "Selection", new ColorScheme(Color.Base3,    Color.Base1)    },
+            { "Message",   new ColorScheme(Color.Base3,    Color.Base1)    },
+            { "Error",     new ColorScheme(Color.Base3,    Color.Red)      },
+            { "Warning",   new ColorScheme(Color.Base3,    Color.Yellow)   },
+            { "Info",      new ColorScheme(Color.Base3,    Color.Blue)     },
         });
     }
 
@@ -63,8 +72,6 @@ namespace MooTUI.IO
         }
 
         public ColorScheme Invert() => new ColorScheme(Back, Fore);
-
-        public static ColorScheme Null => new ColorScheme(Color.None, Color.None);
     }
 
     public class ColorFamily : IEnumerable<string>

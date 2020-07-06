@@ -29,7 +29,7 @@ namespace MooTUI.Widgets.Primitives
             View = new View(width, height);
 
             IsDefaultStyle = true;
-            Style = Style.Default;
+            Style = Style.Dark;
 
             IsEnabled = true;
             IsVisible = true;

@@ -33,11 +33,11 @@ namespace MooTUI_Test
         {
             InitializeComponent();
 
-            WPFMooViewer viewer = new WPFMooViewer(100, 30, Theme.Hybrid);
+            WPFMooViewer viewer = new WPFMooViewer(100, 30, Theme.Solarized);
             Content = viewer;
 
             Window window = new Window(100, 30);
-            window.SetStyle(MooTUI.IO.Style.SimpleLight, true);
+            window.SetStyle(MooTUI.IO.Style.Dark, true);
 
             MooInterface @interface = new MooInterface(viewer, window);
 
@@ -73,6 +73,9 @@ namespace MooTUI_Test
                     new ScrollViewer(10, 2,
                         new ExpandingTextBox(5), ScrollViewer.ScrollBarVisibility.AUTO, ScrollViewer.ScrollBarVisibility.DISABLED),
                     "Text"), 30, 15);
+
+            Canvas.AddChild(
+                new Outline(new TextBox(30, 5, ">> Prompt"), "Large TextBox"), 50, 20);
         }
 
         private void Button_Remove_Click(object sender, EventArgs e)

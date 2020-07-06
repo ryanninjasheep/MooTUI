@@ -15,7 +15,7 @@ namespace MooTUI.Core.WPF
             Window newWindow = new Window();
             WPFMooViewer viewer = new WPFMooViewer(w.Width, w.Height, t);
             newWindow.Content = viewer;
-            newWindow.Background = new SolidColorBrush(t.Palette[Color.Background]);
+            newWindow.Background = new SolidColorBrush(t.Palette[Color.Base03]);
 
             MooInterface @interface = new MooInterface(viewer, w);
 

@@ -82,7 +82,7 @@ namespace MooTUI.Core.WPF
             base.OnRender(dc);
 
             dc.DrawRectangle(
-                new Media.SolidColorBrush(Theme.Palette[Color.Background]),
+                new Media.SolidColorBrush(Theme.Palette[Color.Base03]),
                 null, new Rect(0, 0, Width, Height)
                 );
 

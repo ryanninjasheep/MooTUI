@@ -29,7 +29,7 @@ namespace MooTUI.IO
             Visual.FillChar(' ');
         }
         public View(int getWidth, int getHeight) 
-            : this(getWidth, getHeight, Color.Foreground, Color.Background) { }
+            : this(getWidth, getHeight, Color.Base03, Color.Base0) { }
 
         #region PUBLIC HELPER FUNCTIONS
 
