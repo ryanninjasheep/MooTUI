@@ -10,11 +10,12 @@ namespace MooTUI.Core.WPF
 {
     public static class WPFMooTUIBuilder
     {
-        public static Window GenerateWindowFromWidget(Widget w)
+        public static Window GenerateWindowFromWidget(Widget w, Theme t)
         {
             Window newWindow = new Window();
-            WPFMooViewer viewer = new WPFMooViewer(w.Width, w.Height, Colors.White);
+            WPFMooViewer viewer = new WPFMooViewer(w.Width, w.Height, t);
             newWindow.Content = viewer;
+            newWindow.Background = new SolidColorBrush(t.Palette[Color.Background]);
 
             MooInterface @interface = new MooInterface(viewer, w);
 

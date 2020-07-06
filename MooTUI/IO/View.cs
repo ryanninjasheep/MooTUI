@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Controls;
-using Media = System.Windows.Media;
 
 namespace MooTUI.IO
 {
@@ -21,7 +20,7 @@ namespace MooTUI.IO
 
         public Visual Visual { get; private set; }
 
-        public View(int width, int height, Media.Color defaultFore, Media.Color defaultBack)
+        public View(int width, int height, Color defaultFore, Color defaultBack)
         {
             Visual = new Visual(width, height);
 
@@ -30,13 +29,13 @@ namespace MooTUI.IO
             Visual.FillChar(' ');
         }
         public View(int getWidth, int getHeight) 
-            : this(getWidth, getHeight, Media.Colors.Transparent, Media.Colors.Transparent) { }
+            : this(getWidth, getHeight, Color.Foreground, Color.Background) { }
 
         #region PUBLIC HELPER FUNCTIONS
 
         public void FillColorScheme(ColorScheme fill) => FillColorScheme(fill, 0, 0, Width, Height);
-        public void FillForeColor(Media.Color fill) => FillForeColor(fill, 0, 0, Width, Height);
-        public void FillBackColor(Media.Color fill) => FillBackColor(fill, 0, 0, Width, Height);
+        public void FillForeColor(Color fill) => FillForeColor(fill, 0, 0, Width, Height);
+        public void FillBackColor(Color fill) => FillBackColor(fill, 0, 0, Width, Height);
         public void FillChar(char fill) => FillChar(fill, 0, 0, Width, Height);
 
         public void FillColorScheme(ColorScheme fill, int xStart, int yStart, int width, int height)
@@ -44,20 +43,28 @@ namespace MooTUI.IO
             FillForeColor(fill.Fore, xStart, yStart, width, height);
             FillBackColor(fill.Back, xStart, yStart, width, height);
         }
-        public void FillForeColor(Media.Color fill, int xStart, int yStart, int width, int height) =>
-            ApplyShader(Shaders.Fill(fill), false, true, false, xStart, yStart, width, height);
-        public void FillBackColor(Media.Color fill, int xStart, int yStart, int width, int height) => 
-            ApplyShader(Shaders.Fill(fill), false, false, true, xStart, yStart, width, height);
-        public void FillChar(char fill, int xStart, int yStart, int width, int height) =>
-            ApplyShader(Shaders.FillChar(fill), true, false, false, xStart, yStart, width, height);
+        public void FillForeColor(Color fill, int xStart, int yStart, int width, int height) =>
+            ApplyShader(Shaders.Fill(fill), true, false, xStart, yStart, width, height);
+        public void FillBackColor(Color fill, int xStart, int yStart, int width, int height) => 
+            ApplyShader(Shaders.Fill(fill), false, true, xStart, yStart, width, height);
+        public void FillChar(char fill, int xStart, int yStart, int width, int height)
+        {
+            for (int i = xStart; i < Width && i - xStart < width; i++)
+            {
+                for (int j = yStart; j < Height && j - yStart < height; j++)
+                {
+                    Visual[i, j] = Visual[i, j].WithChar(fill);
+                }
+            }
+        }
 
         public void SetColorScheme(int x, int y, ColorScheme c)
         {
             SetForeColor(x, y, c.Fore);
             SetBackColor(x, y, c.Back);
         }
-        public void SetForeColor(int x, int y, Media.Color c) => Visual[x, y] = Visual[x, y].WithFore(c);
-        public void SetBackColor(int x, int y, Media.Color c) => Visual[x, y] = Visual[x, y].WithBack(c);
+        public void SetForeColor(int x, int y, Color c) => Visual[x, y] = Visual[x, y].WithFore(c);
+        public void SetBackColor(int x, int y, Color c) => Visual[x, y] = Visual[x, y].WithBack(c);
         public void SetChar(int x, int y, char c) => Visual[x, y] = Visual[x, y].WithChar(c);
 
         public void SetText(string s) => SetText(s, 0, 0);
@@ -135,33 +142,31 @@ namespace MooTUI.IO
         /// <summary>
         /// Applies a particular function to all cells in the View.
         /// </summary>
-        public void ApplyShader(Func<Cell[,], int, int, Cell> shader, 
-            bool affectChar, bool affectFore, bool affectBack) =>
-            ApplyShader(shader, affectChar, affectFore, affectBack, 0, 0, Width, Height);
+        public void ApplyShader(Func<Color, int, int, Color> shader, 
+            bool affectFore, bool affectBack) =>
+            ApplyShader(shader, affectFore, affectBack, 0, 0, Width, Height);
         /// <summary>
         /// Applies a particular function to a certain range of cells in the View.
         /// </summary>
-        public void ApplyShader(Func<Cell[,], int, int, Cell> shader, 
-            bool affectChar, bool affectFore, bool affectBack,
+        public void ApplyShader(Func<Color, int, int, Color> shader, 
+            bool affectFore, bool affectBack,
             int xStart, int yStart, int width, int height)
         {
-            Visual buffer = new Visual(width, height);
-
             for (int i = xStart; i < Width && i - xStart < width; i++)
             {
                 for (int j = yStart; j < Height && j - yStart < height; j++)
                 {
-                    Cell shaded = shader(Visual.Cells, i, j);
+                    Cell shaded = Visual[i, j];
 
-                    char? c = affectChar ? shaded.Char : null;
-                    Media.Color? fore = affectFore ? shaded.Fore : null;
-                    Media.Color? back = affectBack ? shaded.Back : null;
+                    if (affectFore)
+                        shaded = shaded.WithFore(shader(shaded.Fore, i, j));
 
-                    buffer[i - xStart, j - yStart] = new Cell(c, fore, back);
+                    if (affectBack)
+                        shaded = shaded.WithBack(shader(shaded.Back, i, j));
+
+                    Visual[i, j] = shaded;
                 }
             }
-
-            Merge(buffer, xStart, yStart);
         }
 
         #endregion

@@ -1,6 +1,6 @@
 using System;
 using System.Windows;
-using System.Windows.Media;
+using Media = System.Windows.Media;
 using SystemInput = System.Windows.Input;
 using System.ComponentModel;
 using System.Windows.Navigation;
@@ -13,13 +13,13 @@ namespace MooTUI.Core.WPF
     /// </summary>
     public class WPFMooViewer : FrameworkElement, IMooViewer
     {
-        private GlyphTypeface glyphTypeface;
+        private Media.GlyphTypeface glyphTypeface;
         private double fontSize;
         private double cellWidth;
         private double cellHeight;
 
         private Visual Visual { get; set; }
-        private Color BaseColor { get; set; }
+        private Theme Theme { get; set; }
 
         public MouseContext MouseContext { get; private set; }
         public KeyboardContext KeyboardContext { get; private set; }
@@ -27,7 +27,7 @@ namespace MooTUI.Core.WPF
         /// <summary>
         /// Width and height in terms of CELLS, not pixels.
         /// </summary>
-        public WPFMooViewer(int width, int height, Color baseColor)
+        public WPFMooViewer(int width, int height, Theme theme)
         {
             LoadTypeface("Consolas", 13, 7, 15);
 
@@ -39,16 +39,15 @@ namespace MooTUI.Core.WPF
             MouseContext = new MouseContext();
             KeyboardContext = new KeyboardContext();
 
-            //TEMP
-            BaseColor = baseColor;
+            Theme = theme;
 
             SetSize(width, height);
         }
 
         private void LoadTypeface(string getFamily, int getFontSize, int getCellWidth, int getCellHeight)
         {
-            FontFamily family = new FontFamily(getFamily);
-            Typeface typeface = new Typeface(family,
+            Media.FontFamily family = new Media.FontFamily(getFamily);
+            Media.Typeface typeface = new Media.Typeface(family,
                 FontStyles.Normal,
                 FontWeights.Normal,
                 FontStretches.Normal);
@@ -78,11 +77,14 @@ namespace MooTUI.Core.WPF
             InvalidateVisual();
         }
 
-        protected override void OnRender(DrawingContext dc)
+        protected override void OnRender(Media.DrawingContext dc)
         {
             base.OnRender(dc);
 
-            dc.DrawRectangle(new SolidColorBrush(BaseColor), null, new Rect(0, 0, Width, Height));
+            dc.DrawRectangle(
+                new Media.SolidColorBrush(Theme.Palette[Color.Background]),
+                null, new Rect(0, 0, Width, Height)
+                );
 
             // Background
             for (int j = 0; j < Visual.Height; j++) // Go row by row
@@ -114,7 +116,7 @@ namespace MooTUI.Core.WPF
                 DrawGlyphRun(cursorX, j, Visual.Width - cursorX, dc);
             }
         }
-        private void DrawGlyphRun(int xIndex, int yIndex, int length, DrawingContext dc) // Assumes all glyphs are the same color
+        private void DrawGlyphRun(int xIndex, int yIndex, int length, Media.DrawingContext dc) // Assumes all glyphs are the same color
         {
             char[] chars = new char[length];
             for (int i = 0; i < length; i++)
@@ -130,7 +132,7 @@ namespace MooTUI.Core.WPF
                 advanceWidths[i] = cellWidth;
             }
 
-            GlyphRun g = new GlyphRun((float)1.25);
+            Media.GlyphRun g = new Media.GlyphRun((float)1.25);
             ISupportInitialize isi = g;
             isi.BeginInit();
             {
@@ -142,13 +144,15 @@ namespace MooTUI.Core.WPF
             }
             isi.EndInit();
 
-            dc.DrawGlyphRun(new SolidColorBrush(Visual[xIndex, yIndex].Fore ?? Colors.Transparent), g); ;
+            dc.DrawGlyphRun(new Media.SolidColorBrush(GetColor(Visual[xIndex, yIndex].Fore)), g); ;
         }
-        private void DrawBackground(int xIndex, int yIndex, int length, DrawingContext dc) // Assumes all same color
+        private void DrawBackground(int xIndex, int yIndex, int length, Media.DrawingContext dc) // Assumes all same color
         {
-            dc.DrawRectangle(new SolidColorBrush(Visual[xIndex, yIndex].Back ?? Colors.Transparent), null,
+            dc.DrawRectangle(new Media.SolidColorBrush(GetColor(Visual[xIndex, yIndex].Back)), null,
                 new Rect(xIndex * cellWidth, yIndex * cellHeight, length * cellWidth + 1, cellHeight + 1));
         }
+
+        private Media.Color GetColor(Color c) => Theme.Palette[c];
 
         #endregion
 

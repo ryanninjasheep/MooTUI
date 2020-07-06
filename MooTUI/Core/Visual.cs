@@ -10,60 +10,49 @@ namespace MooTUI.Core
 {
     public class Visual
     {
-        public int Width { get => Cells.GetLength(0); }
-        public int Height { get => Cells.GetLength(1); }
+        public int Width { get; private set; }
+        public int Height { get => Cells.Length / Width; }
 
-        public Cell[,] Cells { get; set; }
+        private Cell[] Cells { get; set; }
 
         public Visual(int width, int height)
         {
-            Cells = new Cell[width, height];
+            Width = width;
+            Cells = new Cell[width * height];
         }
 
-        public Cell this[int x, int y] 
+        public Cell this[int x, int y]
         {
-            get => Cells[x, y]; 
-            set => Cells[x, y] = value; 
+            get => Cells[x + y * Width];
+            set => Cells[x + y * Width] = value;
         }
 
         public void FillChar(char fill)
         {
-            for (int i = 0; i < Width; i++)
+            for (int i = 0; i < Cells.Length; i++)
             {
-                for (int j = 0; j < Height; j++)
-                {
-                    Cells[i, j] = Cells[i, j].WithChar(fill);
-                }
+                Cells[i] = Cells[i].WithChar(fill);
             }
         }
         public void FillForeColor(Color fill)
         {
-            for (int i = 0; i < Width; i++)
+            for (int i = 0; i < Cells.Length; i++)
             {
-                for (int j = 0; j < Height; j++)
-                {
-                    Cells[i, j] = Cells[i, j].WithFore(fill);
-                }
+                Cells[i] = Cells[i].WithFore(fill);
             }
         }
         public void FillBackColor(Color fill)
         {
-            for (int i = 0; i < Width; i++)
+            for (int i = 0; i < Cells.Length; i++)
             {
-                for (int j = 0; j < Height; j++)
-                {
-                    Cells[i, j] = Cells[i, j].WithBack(fill);
-                }
+                Cells[i] = Cells[i].WithBack(fill);
             }
         }
         public void FillCell(Cell fill)
         {
-            for (int i = 0; i < Width; i++)
+            for (int i = 0; i < Cells.Length; i++)
             {
-                for (int j = 0; j < Height; j++)
-                {
-                    Cells[i, j] = fill;
-                }
+                Cells[i] = fill;
             }
         }
     }

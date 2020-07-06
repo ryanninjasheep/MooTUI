@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using System.Windows.Media;
+using MooTUI.Core;
 
 namespace MooTUI.IO
 {
@@ -35,33 +34,20 @@ namespace MooTUI.IO
 
         public static readonly Style Default = new Style(new Dictionary<string, ColorScheme>()
         {
-            { "Default",   new ColorScheme(Colors.Black,     Colors.White)       },
+            { "Default",   new ColorScheme(Color.Foreground, Color.Background)   },
         });
         public static readonly Style SimpleLight = new Style(new Dictionary<string, ColorScheme>()
         {
-            { "Default",   new ColorScheme(Colors.Black,     Colors.White)       },
-            { "Disabled",  new ColorScheme(Colors.LightGray, Colors.White)       },
-            { "Hover",     new ColorScheme(Colors.Black,     Colors.Khaki)       },
-            { "Active",    new ColorScheme(Colors.Black,     Colors.White)       },
-            { "Cursor",    new ColorScheme(Colors.Black,     Colors.LightGray)   },
-            { "Selection", new ColorScheme(Colors.Black,     Colors.LightBlue)   },
-            { "Message",   new ColorScheme(Colors.Black,     Colors.LightGray)   },
-            { "Error",     new ColorScheme(Colors.White,     Colors.Red)         },
-            { "Warning",   new ColorScheme(Colors.Black,     Colors.Yellow)      },
-            { "Info",      new ColorScheme(Colors.Black,     Colors.LightBlue)   },
-        });
-        public static readonly Style Test = new Style(new Dictionary<string, ColorScheme>()
-        {
-            { "Default",   new ColorScheme(Color.FromRgb(0x9b, 0x90, 0x81), Color.FromRgb(0x18, 0x1b, 0x20)) },
-            { "Disabled",  new ColorScheme(Color.FromRgb(0x5f, 0x5f, 0x5f), Color.FromRgb(0x18, 0x1b, 0x20)) },
-            { "Hover",     new ColorScheme(Color.FromRgb(0x9b, 0x90, 0x81), Color.FromRgb(0x35, 0x35, 0x35)) },
-            { "Active",    new ColorScheme(Color.FromRgb(0xcd, 0xcd, 0xcd), Color.FromRgb(0x35, 0x35, 0x35)) },
-            { "Cursor",    new ColorScheme(Color.FromRgb(0xcd, 0xcd, 0xcd), Color.FromRgb(0x5f, 0x5f, 0x5f)) },
-            { "Selection", new ColorScheme(Color.FromRgb(0xcd, 0xcd, 0xcd), Color.FromRgb(0x43, 0x58, 0x61)) },
-            { "Message",   new ColorScheme(Color.FromRgb(0x35, 0x35, 0x35), Color.FromRgb(0x18, 0x1b, 0x20)) },
-            { "Error",     new ColorScheme(Color.FromRgb(0x6d, 0x61, 0x37), Color.FromRgb(0x18, 0x1b, 0x20)) },
-            { "Warning",   new ColorScheme(Color.FromRgb(0xcd, 0xcd, 0xcd), Color.FromRgb(0x18, 0x1b, 0x20)) },
-            { "Info",      new ColorScheme(Color.FromRgb(0x43, 0x58, 0x61), Color.FromRgb(0x18, 0x1b, 0x20)) },
+            { "Default",   new ColorScheme(Color.Foreground, Color.Background)   },
+            { "Disabled",  new ColorScheme(Color.DarkGrey,   Color.Background)   },
+            { "Hover",     new ColorScheme(Color.Yellow,     Color.Background)   },
+            { "Active",    new ColorScheme(Color.Foreground, Color.AltYellow)    },
+            { "Cursor",    new ColorScheme(Color.Background, Color.Foreground)   },
+            { "Selection", new ColorScheme(Color.Foreground, Color.Blue)         },
+            { "Message",   new ColorScheme(Color.Foreground, Color.LightGrey)    },
+            { "Error",     new ColorScheme(Color.Foreground, Color.Red)          },
+            { "Warning",   new ColorScheme(Color.Foreground, Color.Yellow)       },
+            { "Info",      new ColorScheme(Color.Foreground, Color.Cyan)         },
         });
     }
 
@@ -78,7 +64,7 @@ namespace MooTUI.IO
 
         public ColorScheme Invert() => new ColorScheme(Back, Fore);
 
-        public static ColorScheme Null => new ColorScheme(Colors.Transparent, Colors.Transparent);
+        public static ColorScheme Null => new ColorScheme(Color.None, Color.None);
     }
 
     public class ColorFamily : IEnumerable<string>

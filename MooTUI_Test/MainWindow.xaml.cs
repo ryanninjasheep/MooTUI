@@ -1,5 +1,6 @@
 ﻿using MooTUI.Input;
 using MooTUI.Core.WPF;
+using MooTUI.Core;
 using MooTUI.IO;
 using MooTUI.Widgets;
 using MooTUI.Widgets.Primitives;
@@ -32,11 +33,11 @@ namespace MooTUI_Test
         {
             InitializeComponent();
 
-            WPFMooViewer viewer = new WPFMooViewer(150, 30, Colors.White);
+            WPFMooViewer viewer = new WPFMooViewer(100, 30, Theme.Hybrid);
             Content = viewer;
 
-            Window window = new Window(150, 30);
-            window.SetStyle(MooTUI.IO.Style.Test, true);
+            Window window = new Window(100, 30);
+            window.SetStyle(MooTUI.IO.Style.SimpleLight, true);
 
             MooInterface @interface = new MooInterface(viewer, window);
 
