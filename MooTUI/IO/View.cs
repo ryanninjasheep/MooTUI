@@ -1,4 +1,6 @@
 ﻿using MooTUI.Core;
+using MooTUI.Text;
+using MooTUI.Layout;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +9,6 @@ using System.Windows.Controls;
 
 namespace MooTUI.IO
 {
-    public enum HJustification { LEFT, CENTER, RIGHT }
-    public enum VJustification { TOP, CENTER, BOTTOM }
-
     /// <summary>
     /// Contains all data for rendering a View, as well as helper functions for merging Views.
     /// </summary>
@@ -84,6 +83,13 @@ namespace MooTUI.IO
             }
         }
 
+
+        public void DrawSpan(TextSpan span, HJustification h = HJustification.CENTER, VJustification v = VJustification.CENTER)
+        {
+            Visual visual = span.Draw();
+
+            Visual.Merge(visual, h.GetOffset(visual.Width, Width), v.GetOffset(visual.Height, Height));
+        }
         public void DrawSpan(Span span)
         {
             int yStart = span.VJustification switch
@@ -112,32 +118,10 @@ namespace MooTUI.IO
             }
         }
 
-        public void Merge(View v) => Merge(v.Visual);
-        public void Merge(View v, int xIndex, int yIndex) => Merge(v.Visual, xIndex, yIndex);
+        public void Merge(View v) => Visual.Merge(v.Visual);
+        public void Merge(View v, int xIndex, int yIndex) => Visual.Merge(v.Visual, xIndex, yIndex);
         public void Merge(View v, int xIndex, int yIndex, int xStart, int yStart, int width, int height) =>
-            Merge(v.Visual, xIndex, yIndex, xStart, yStart, width, height);
-
-        public void Merge(Visual v) => Merge(v, 0, 0);
-        /// <summary>
-        /// Overlays a Visual at the specified location.
-        /// </summary>
-        public void Merge(Visual v, int xIndex, int yIndex) => Merge(v, xIndex, yIndex, 0, 0, v.Width, v.Height);
-        /// <summary>
-        /// Overlays a certain range of a Visual at the specified location.  
-        /// X and Y Index refers to location in this Visual to begin overlay.
-        /// </summary>
-        public void Merge(Visual v, int xIndex, int yIndex, int xStart, int yStart, int width, int height)
-        {
-            for (int j = 0; j + yStart < v.Height && j + yIndex < Height && j < height; j++)
-            {
-                for (int i = 0; i + xStart < v.Width && i + xIndex < Width && i < width; i++)
-                {
-                    Cell top = v[i + xStart, j + yStart];
-
-                    Visual[i + xIndex, j + yIndex] = Visual[i + xIndex, j + yIndex].Overlay(top);
-                }
-            }
-        }
+            Visual.Merge(v.Visual, xIndex, yIndex, xStart, yStart, width, height);
 
         /// <summary>
         /// Applies a particular function to all cells in the View.

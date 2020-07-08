@@ -55,5 +55,27 @@ namespace MooTUI.Core
                 Cells[i] = fill;
             }
         }
+
+        public void Merge(Visual v) => Merge(v, 0, 0);
+        /// <summary>
+        /// Overlays a Visual at the specified location.
+        /// </summary>
+        public void Merge(Visual v, int xIndex, int yIndex) => Merge(v, xIndex, yIndex, 0, 0, v.Width, v.Height);
+        /// <summary>
+        /// Overlays a certain range of a Visual at the specified location.  
+        /// X and Y Index refers to location in this Visual to begin overlay.
+        /// </summary>
+        public void Merge(Visual v, int xIndex, int yIndex, int xStart, int yStart, int width, int height)
+        {
+            for (int j = 0; j + yStart < v.Height && j + yIndex < Height && j < height; j++)
+            {
+                for (int i = 0; i + xStart < v.Width && i + xIndex < Width && i < width; i++)
+                {
+                    Cell top = v[i + xStart, j + yStart];
+
+                    this[i + xIndex, j + yIndex] = this[i + xIndex, j + yIndex].Overlay(top);
+                }
+            }
+        }
     }
 }

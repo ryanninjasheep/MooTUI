@@ -16,6 +16,7 @@ namespace MooTUI.Core
             Fore = fore;
             Back = back;
         }
+        public Cell(char? c, ColorPair colors) : this(c, colors.Fore, colors.Back) { }
 
         public Cell WithChar(char c) => new Cell(c, Fore, Back);
         public Cell WithFore(Color c) => new Cell(Char, c, Back);

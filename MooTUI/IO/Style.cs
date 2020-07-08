@@ -65,7 +65,7 @@ namespace MooTUI.IO
         public Color Fore { get; private set; }
         public Color Back { get; private set; }
 
-        public ColorScheme(Color fore, Color back)
+        public ColorScheme(Color fore = Color.None, Color back = Color.None)
         {
             Fore = fore;
             Back = back;
