@@ -31,7 +31,7 @@ namespace MooTUI.Text
 
             for (int i = 0; i < Text.Length; i++)
             {
-                visual[i, 0] = new Cell(Text[i], Colors.GetCurrentColorsAtIndex(i));
+                visual[i, 0] = new Cell(Text[i], ColorInfo.GetCurrentColorsAtIndex(i));
             }
 
             return visual;

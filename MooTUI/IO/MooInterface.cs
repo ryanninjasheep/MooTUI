@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using MooTUI.Core;
-using MooTUI.OldWidgets.Primitives;
+using MooTUI.Widgets.Primitives;
 using MooTUI.Input;
 
 namespace MooTUI.IO
@@ -32,13 +32,12 @@ namespace MooTUI.IO
             if (Content != null)
             {
                 Content.Rendered -= Content_RenderEventHandler;
-                Content.ClaimFocusEventHandler -= Content_ClaimFocus;
+                Content.BubbleFocus -= Content_ClaimFocus;
             }
 
             Content = w;
-            Content.SetStyle(Style.Dark, false); // Temp
             Content.Rendered += Content_RenderEventHandler;
-            Content.ClaimFocusEventHandler += Content_ClaimFocus;
+            Content.BubbleFocus += Content_ClaimFocus;
         }
 
         private void SetViewer(IMooViewer v)

@@ -85,12 +85,12 @@ namespace MooTUI.IO
             }
         }
 
-
-        public void DrawSpan(TextSpan span, HJustification h = HJustification.CENTER, VJustification v = VJustification.CENTER)
+        public void DrawSpan(TextSpan span, 
+            HJustification h = HJustification.CENTER, VJustification v = VJustification.CENTER)
         {
             Visual visual = span.Draw();
 
-            Visual.Merge(visual, h.GetOffset(visual.Width, Width), v.GetOffset(visual.Height, Height));
+            Visual.Merge(visual, h, v);
         }
         public void DrawSpan(Span span)
         {
@@ -120,13 +120,17 @@ namespace MooTUI.IO
             }
         }
 
-        public void Merge(View v) => Visual.Merge(v.Visual);
-        public void Merge(View v, int xIndex, int yIndex) => Visual.Merge(v.Visual, xIndex, yIndex);
+        public void Merge(View v, HJustification hJust, VJustification vJust) =>
+            Visual.Merge(v.Visual, hJust, vJust);
+        public void Merge(View v, int xIndex = 0, int yIndex = 0, int xStart = 0, int yStart = 0) => 
+            Visual.Merge(v.Visual, xIndex, yIndex, xStart, yStart);
         public void Merge(View v, int xIndex, int yIndex, int xStart, int yStart, int width, int height) =>
             Visual.Merge(v.Visual, xIndex, yIndex, xStart, yStart, width, height);
 
-        public void Merge(Visual v) => Visual.Merge(v);
-        public void Merge(Visual v, int xIndex, int yIndex) => Visual.Merge(v, xIndex, yIndex);
+        public void Merge(Visual v, HJustification hJust, VJustification vJust) =>
+            Visual.Merge(v, hJust, vJust);
+        public void Merge(Visual v, int xIndex = 0, int yIndex = 0, int xStart = 0, int yStart = 0) =>
+            Visual.Merge(v, xIndex, yIndex, xStart, yStart);
         public void Merge(Visual v, int xIndex, int yIndex, int xStart, int yStart, int width, int height) =>
             Visual.Merge(v, xIndex, yIndex, xStart, yStart, width, height);
 

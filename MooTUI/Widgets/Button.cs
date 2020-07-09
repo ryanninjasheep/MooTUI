@@ -13,6 +13,9 @@ namespace MooTUI.Widgets
     {
         public TextSpan Text { get; private set; }
 
+        public static TextSpanEnclosure Enclosure { get; set; } = 
+            new TextSpanEnclosure(" [ ", " ] ", Style.GetColorPair("Default"));
+
         public Button(TextSpan text, LayoutRect bounds) : base(bounds)
         {
             Text = text;
@@ -24,7 +27,7 @@ namespace MooTUI.Widgets
         protected override void Draw()
         {
             View.ClearText();
-            View.DrawSpan(Text);
+            View.Merge(Enclosure.DrawEnclosure(Text), HJustification.CENTER, VJustification.CENTER);
         }
 
         protected override void Input(InputEventArgs e)

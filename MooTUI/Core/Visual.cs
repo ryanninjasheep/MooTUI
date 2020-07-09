@@ -5,6 +5,7 @@ using System.Windows.Media;
 using System.Windows.Navigation;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using MooTUI.Layout;
 
 namespace MooTUI.Core
 {
@@ -56,11 +57,13 @@ namespace MooTUI.Core
             }
         }
 
-        public void Merge(Visual v) => Merge(v, 0, 0);
+        public void Merge(Visual v, HJustification hJust, VJustification vJust) =>
+            Merge(v, hJust.GetOffset(v.Width, Width), vJust.GetOffset(v.Height, Height));
         /// <summary>
         /// Overlays a Visual at the specified location.
         /// </summary>
-        public void Merge(Visual v, int xIndex, int yIndex) => Merge(v, xIndex, yIndex, 0, 0, v.Width, v.Height);
+        public void Merge(Visual v, int xIndex = 0, int yIndex = 0, int xStart = 0, int yStart = 0) =>
+            Merge(v, xIndex, yIndex, xStart, yStart, v.Width, v.Height);
         /// <summary>
         /// Overlays a certain range of a Visual at the specified location.  
         /// X and Y Index refers to location in this Visual to begin overlay.

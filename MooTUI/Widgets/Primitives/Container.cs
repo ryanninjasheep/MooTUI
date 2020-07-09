@@ -17,6 +17,7 @@ namespace MooTUI.Widgets.Primitives
             child.Rendered += Child_Rendered;
             child.Resized += Child_Resized;
             child.BubbleInput += Child_BubbleInput;
+            child.BubbleFocus += Child_BubbleFocus;
         }
 
         // NOTE: I'm not including this because right now I'm not sure if it's even necessary
@@ -43,5 +44,6 @@ namespace MooTUI.Widgets.Primitives
         private void Child_Rendered(object sender, EventArgs e) => Render();
         private void Child_Resized(object sender, EventArgs e) => OnChildResize((Widget)sender);
         private void Child_BubbleInput(object sender, InputEventArgs e) => HandleInput(e);
+        private void Child_BubbleFocus(object sender, IO.FocusEventArgs e) => OnClaimFocus(e);
     }
 }

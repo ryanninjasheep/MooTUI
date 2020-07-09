@@ -76,6 +76,8 @@ namespace MooTUI.Widgets.Primitives
             OnBubbleInput(e);
         }
 
+        public void ClaimFocus() => OnClaimFocus(new FocusEventArgs(this));
+
         public bool HitTest(int x, int y) =>
             (x >= 0 && x < Width) && (y >= 0 && y < Height);
 
@@ -107,7 +109,14 @@ namespace MooTUI.Widgets.Primitives
             handler?.Invoke(this, e);
         }
 
+        internal void OnClaimFocus(FocusEventArgs e)
+        {
+            EventHandler<FocusEventArgs> handler = BubbleFocus;
+            handler?.Invoke(this, e);
+        }
+
         internal event EventHandler<InputEventArgs> BubbleInput;
+        internal event EventHandler<FocusEventArgs> BubbleFocus;
 
         /// <summary>
         /// !!! ONLY CALL FROM Container.LinkChild !!!

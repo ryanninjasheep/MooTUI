@@ -6,6 +6,44 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="OldWidgets\Button.cs" />
+    <Compile Remove="OldWidgets\Canvas.cs" />
+    <Compile Remove="OldWidgets\CheckBox.cs" />
+    <Compile Remove="OldWidgets\ExpandingTextBox.cs" />
+    <Compile Remove="OldWidgets\ListBox.cs" />
+    <Compile Remove="OldWidgets\Outline.cs" />
+    <Compile Remove="OldWidgets\Primitives\ButtonBase.cs" />
+    <Compile Remove="OldWidgets\Primitives\Container.cs" />
+    <Compile Remove="OldWidgets\Primitives\MonoContainer.cs" />
+    <Compile Remove="OldWidgets\Primitives\Widget.cs" />
+    <Compile Remove="OldWidgets\ScrollViewer.cs" />
+    <Compile Remove="OldWidgets\Spacer.cs" />
+    <Compile Remove="OldWidgets\StackPanel.cs" />
+    <Compile Remove="OldWidgets\TextBlock.cs" />
+    <Compile Remove="OldWidgets\TextBox.cs" />
+    <Compile Remove="OldWidgets\Window.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="OldWidgets\Button.cs" />
+    <None Include="OldWidgets\Canvas.cs" />
+    <None Include="OldWidgets\CheckBox.cs" />
+    <None Include="OldWidgets\ExpandingTextBox.cs" />
+    <None Include="OldWidgets\ListBox.cs" />
+    <None Include="OldWidgets\Outline.cs" />
+    <None Include="OldWidgets\Primitives\ButtonBase.cs" />
+    <None Include="OldWidgets\Primitives\Container.cs" />
+    <None Include="OldWidgets\Primitives\MonoContainer.cs" />
+    <None Include="OldWidgets\Primitives\Widget.cs" />
+    <None Include="OldWidgets\ScrollViewer.cs" />
+    <None Include="OldWidgets\Spacer.cs" />
+    <None Include="OldWidgets\StackPanel.cs" />
+    <None Include="OldWidgets\TextBlock.cs" />
+    <None Include="OldWidgets\TextBox.cs" />
+    <None Include="OldWidgets\Window.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="PresentationCore">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\PresentationCore.dll</HintPath>
     </Reference>

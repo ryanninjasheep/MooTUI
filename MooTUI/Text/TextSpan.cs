@@ -17,19 +17,6 @@ namespace MooTUI.Text
             Text = text;
         }
 
-        public void SetColorInfo(int index, ColorPair colors)
-        {
-            if (index < 0 || index > Text.Length)
-                throw new ArgumentOutOfRangeException();
-
-            if (ColorInfo.ContainsKey(index))
-                ColorInfo[index] = colors;
-            else if (ColorInfo.GetCurrentColorsAtIndex(index) == colors)
-                return;
-            else
-                ColorInfo.Add(index, colors);
-        }
-
         public SingleLineTextSpan SubSpan(int start, int length)
         {
             if (start < 0 || length < 0 || start + length > Text.Length)
@@ -49,6 +36,19 @@ namespace MooTUI.Text
         }
 
         public abstract Visual Draw();
+
+        protected void SetColorInfo(int index, ColorPair colors)
+        {
+            if (index < 0 || index > Text.Length)
+                throw new ArgumentOutOfRangeException();
+
+            if (ColorInfo.ContainsKey(index))
+                ColorInfo[index] = colors;
+            else if (ColorInfo.GetCurrentColorsAtIndex(index) == colors)
+                return;
+            else
+                ColorInfo.Add(index, colors);
+        }
     }
 
     public class ColorInfo : SortedList<int, ColorPair>
