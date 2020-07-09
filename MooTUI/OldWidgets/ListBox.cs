@@ -235,7 +235,7 @@ namespace MooTUI.OldWidgets
             {
                 base.Draw();
 
-                View.FillColorScheme(Style.GetColorScheme("Default"));
+                View.FillColorScheme(Style.GetColorPair("Default"));
 
                 int yIndex = 0;
                 for (int i = 0; i < Items.Count; i++)

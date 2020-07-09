@@ -17,6 +17,8 @@ namespace MooTUI.Layout
         {
             ActualSize = size;
         }
+
+        public virtual Size WithRelativeSize(int difference) => new Size(ActualSize + difference);
     }
 
     public class FlexSize : Size
@@ -41,5 +43,8 @@ namespace MooTUI.Layout
 
             base.SetActualSize(size);
         }
+
+        public override Size WithRelativeSize(int difference) => 
+            new FlexSize(PreferredSize + difference, Min + difference);
     }
 }

@@ -518,7 +518,7 @@ namespace MooTUI.OldWidgets
 
             private void DrawTrack()
             {
-                View.FillColorScheme(Style.GetColorScheme(TrackScheme));
+                View.FillColorScheme(Style.GetColorPair(TrackScheme));
 
                 if (Orientation == ScrollBarOrientation.HORIZONTAL)
                 {
@@ -539,12 +539,12 @@ namespace MooTUI.OldWidgets
             {
                 if (Orientation == ScrollBarOrientation.HORIZONTAL)
                 {
-                    View.FillColorScheme(Style.GetColorScheme(GripScheme), GripStart, 0, GripLength, 1);
+                    View.FillColorScheme(Style.GetColorPair(GripScheme), GripStart, 0, GripLength, 1);
                     View.FillChar(HGripChar, GripStart, 0, GripLength, 1);
                 }
                 else if (Orientation == ScrollBarOrientation.VERTICAL)
                 {
-                    View.FillColorScheme(Style.GetColorScheme(GripScheme), 0, GripStart, 1, GripLength);
+                    View.FillColorScheme(Style.GetColorPair(GripScheme), 0, GripStart, 1, GripLength);
                     View.FillChar(VGripChar, 0, GripStart, 1, GripLength);
                 }
             }

@@ -32,12 +32,12 @@ namespace MooTUI.IO
 
         #region PUBLIC HELPER FUNCTIONS
 
-        public void FillColorScheme(ColorScheme fill) => FillColorScheme(fill, 0, 0, Width, Height);
+        public void FillColorScheme(ColorPair fill) => FillColorScheme(fill, 0, 0, Width, Height);
         public void FillForeColor(Color fill) => FillForeColor(fill, 0, 0, Width, Height);
         public void FillBackColor(Color fill) => FillBackColor(fill, 0, 0, Width, Height);
         public void FillChar(char fill) => FillChar(fill, 0, 0, Width, Height);
 
-        public void FillColorScheme(ColorScheme fill, int xStart, int yStart, int width, int height)
+        public void FillColorScheme(ColorPair fill, int xStart, int yStart, int width, int height)
         {
             FillForeColor(fill.Fore, xStart, yStart, width, height);
             FillBackColor(fill.Back, xStart, yStart, width, height);
@@ -57,7 +57,9 @@ namespace MooTUI.IO
             }
         }
 
-        public void SetColorScheme(int x, int y, ColorScheme c)
+        public void ClearText() => FillChar(' ');
+
+        public void SetColorScheme(int x, int y, ColorPair c)
         {
             SetForeColor(x, y, c.Fore);
             SetBackColor(x, y, c.Back);
@@ -122,6 +124,11 @@ namespace MooTUI.IO
         public void Merge(View v, int xIndex, int yIndex) => Visual.Merge(v.Visual, xIndex, yIndex);
         public void Merge(View v, int xIndex, int yIndex, int xStart, int yStart, int width, int height) =>
             Visual.Merge(v.Visual, xIndex, yIndex, xStart, yStart, width, height);
+
+        public void Merge(Visual v) => Visual.Merge(v);
+        public void Merge(Visual v, int xIndex, int yIndex) => Visual.Merge(v, xIndex, yIndex);
+        public void Merge(Visual v, int xIndex, int yIndex, int xStart, int yStart, int width, int height) =>
+            Visual.Merge(v, xIndex, yIndex, xStart, yStart, width, height);
 
         /// <summary>
         /// Applies a particular function to all cells in the View.

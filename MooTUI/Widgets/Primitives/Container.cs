@@ -26,7 +26,7 @@ namespace MooTUI.Widgets.Primitives
         /// <summary>
         /// Updates relative mouse position and returns Widget directly under mouse.
         /// </summary>
-        public abstract void GetHoveredWidget(MouseContext m);
+        public abstract Widget GetHoveredWidget(MouseContext m);
 
         /// <summary>
         /// Returns an unordered list of all logical children.  When implementing, ensure

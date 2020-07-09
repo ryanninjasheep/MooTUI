@@ -56,7 +56,7 @@ namespace MooTUI.OldWidgets
         {
             base.Draw();
 
-            View.FillColorScheme(Style.GetColorScheme("Default"));
+            View.FillColorScheme(Style.GetColorPair("Default"));
 
             foreach (WidgetWithLocation w in Children)
             {

@@ -9,6 +9,9 @@ namespace MooTUI.Widgets.Primitives
 {
     public abstract class Widget
     {
+        protected static Style Style { get; set; } = Style.Dark;
+        public static void SetStyle(Style s) => Style = s;
+
         public View View { get; protected set; }
         public LayoutRect Bounds { get; private set; }
 
@@ -48,7 +51,7 @@ namespace MooTUI.Widgets.Primitives
             OnRendered(EventArgs.Empty);
         }
 
-        public void SetBounds(LayoutRect bounds)
+        public void Resize(LayoutRect bounds)
         {
             Bounds = bounds;
 
@@ -72,6 +75,9 @@ namespace MooTUI.Widgets.Primitives
 
             OnBubbleInput(e);
         }
+
+        public bool HitTest(int x, int y) =>
+            (x >= 0 && x < Width) && (y >= 0 && y < Height);
 
         protected abstract void Draw();
         protected abstract void Input(InputEventArgs e);
