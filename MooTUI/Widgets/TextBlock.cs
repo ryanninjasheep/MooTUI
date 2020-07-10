@@ -16,6 +16,7 @@ namespace MooTUI.Widgets
         {
             Text = text;
 
+            View.FillColorScheme(Style.GetColorPair("Default"));
             View.DrawSpan(text);
         }
 

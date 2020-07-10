@@ -10,16 +10,13 @@ namespace MooTUI.Core.WPF
 {
     public static class WPFMooTUIBuilder
     {
-        public static Window GenerateWindowFromWidget(Widget w, Theme t)
+        public static void GenerateViewer(Window window, Widget widget, Theme t)
         {
-            Window newWindow = new Window();
-            WPFMooViewer viewer = new WPFMooViewer(w.Width, w.Height, t);
-            newWindow.Content = viewer;
-            newWindow.Background = new SolidColorBrush(t.Palette[Color.Base03]);
+            WPFMooViewer viewer = new WPFMooViewer(widget.Width, widget.Height, t);
+            window.Content = viewer;
+            window.Background = new SolidColorBrush(t.Palette[Color.Base03]);
 
-            MooInterface @interface = new MooInterface(viewer, w);
-
-            return newWindow;
+            MooInterface @interface = new MooInterface(viewer, widget);
         }
     }
 }

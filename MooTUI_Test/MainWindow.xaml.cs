@@ -31,9 +31,6 @@ namespace MooTUI_Test
         {
             InitializeComponent();
 
-            WPFMooViewer viewer = new WPFMooViewer(100, 30, Theme.Solarized);
-            Content = viewer;
-
             Button_Create = new Button(
                 new MultilineTextSpan(
                     "This is a Button with too much text :p",
@@ -50,7 +47,7 @@ namespace MooTUI_Test
                 BoxDrawingChars.Rounded
             );
 
-            MooInterface @interface = new MooInterface(viewer, o);
+            WPFMooTUIBuilder.GenerateViewer(this, o, Theme.Solarized);
             Button_Create.Render();
         }
 
