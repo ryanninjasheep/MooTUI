@@ -6,6 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="IO\EditableSpan.cs" />
+    <Compile Remove="IO\EventArgs\LogicalBubbleEventArgs.cs" />
+    <Compile Remove="IO\EventArgs\MessageEventArgs.cs" />
+    <Compile Remove="IO\IPushMessage.cs" />
+    <Compile Remove="IO\Message.cs" />
+    <Compile Remove="IO\SelectableSpan.cs" />
+    <Compile Remove="IO\Span.cs" />
     <Compile Remove="OldWidgets\Button.cs" />
     <Compile Remove="OldWidgets\Canvas.cs" />
     <Compile Remove="OldWidgets\CheckBox.cs" />
@@ -25,6 +32,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="IO\EditableSpan.cs" />
+    <None Include="IO\EventArgs\LogicalBubbleEventArgs.cs" />
+    <None Include="IO\EventArgs\MessageEventArgs.cs" />
+    <None Include="IO\IPushMessage.cs" />
+    <None Include="IO\Message.cs" />
+    <None Include="IO\SelectableSpan.cs" />
+    <None Include="IO\Span.cs" />
     <None Include="OldWidgets\Button.cs" />
     <None Include="OldWidgets\Canvas.cs" />
     <None Include="OldWidgets\CheckBox.cs" />

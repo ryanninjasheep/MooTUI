@@ -14,7 +14,7 @@ namespace MooTUI.Widgets
         public TextSpan Text { get; private set; }
 
         public static TextSpanEnclosure Enclosure { get; set; } = 
-            new TextSpanEnclosure(" [ ", " ] ", Style.GetColorPair("Default"));
+            new TextSpanEnclosure(" [ ", " ] ", new ColorPair());
 
         public Button(TextSpan text, LayoutRect bounds) : base(bounds)
         {
@@ -36,9 +36,11 @@ namespace MooTUI.Widgets
             {
                 case InputTypes.MOUSE_ENTER:
                     View.FillColorScheme(Style.GetColorPair("Hover"));
+                    Render();
                     break;
                 case InputTypes.MOUSE_LEAVE:
                     View.FillColorScheme(Style.GetColorPair("Default"));
+                    Render();
                     break;
                 case InputTypes.LEFT_CLICK:
                     OnClick(EventArgs.Empty);

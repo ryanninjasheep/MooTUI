@@ -92,33 +92,33 @@ namespace MooTUI.IO
 
             Visual.Merge(visual, h, v);
         }
-        public void DrawSpan(Span span)
-        {
-            int yStart = span.VJustification switch
-            {
-                VJustification.TOP => 0,
-                VJustification.CENTER => GetCenterStart(Height, span.Height),
-                VJustification.BOTTOM => Height - span.Height,
-                _ => throw new NotImplementedException(),
-            };
+        //public void DrawSpan(Span span)
+        //{
+        //    int yStart = span.VJustification switch
+        //    {
+        //        VJustification.TOP => 0,
+        //        VJustification.CENTER => GetCenterStart(Height, span.Height),
+        //        VJustification.BOTTOM => Height - span.Height,
+        //        _ => throw new NotImplementedException(),
+        //    };
 
-            foreach (string s in span.DisplayText)
-            {
-                int xStart = span.HJustification switch
-                {
-                    HJustification.LEFT => 0,
-                    HJustification.CENTER => GetCenterStart(Width, s.Length),
-                    HJustification.RIGHT => Width - s.Length - 1,
-                    _ => throw new NotImplementedException(),
-                };
-                SetText(s, xStart, yStart);
+        //    foreach (string s in span.DisplayText)
+        //    {
+        //        int xStart = span.HJustification switch
+        //        {
+        //            HJustification.LEFT => 0,
+        //            HJustification.CENTER => GetCenterStart(Width, s.Length),
+        //            HJustification.RIGHT => Width - s.Length - 1,
+        //            _ => throw new NotImplementedException(),
+        //        };
+        //        SetText(s, xStart, yStart);
 
-                yStart++;
+        //        yStart++;
 
-                if (yStart >= Height)
-                    return;
-            }
-        }
+        //        if (yStart >= Height)
+        //            return;
+        //    }
+        //}
 
         public void Merge(View v, HJustification hJust, VJustification vJust) =>
             Visual.Merge(v.Visual, hJust, vJust);

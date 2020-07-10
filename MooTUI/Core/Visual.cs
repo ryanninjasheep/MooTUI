@@ -18,6 +18,9 @@ namespace MooTUI.Core
 
         public Visual(int width, int height)
         {
+            if (width <= 0 || height <= 0)
+                throw new ArgumentOutOfRangeException("Visual cannot have size less than 1");
+
             Width = width;
             Cells = new Cell[width * height];
         }

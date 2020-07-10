@@ -27,7 +27,7 @@ namespace MooTUI.Text
         {
             // This could be optimized
 
-            Visual visual = new Visual(Text.Length, 1);
+            Visual visual = new Visual(Math.Max(Text.Length, 1), 1);
 
             for (int i = 0; i < Text.Length; i++)
             {

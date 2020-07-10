@@ -14,10 +14,11 @@ namespace MooTUI.Text
 
         private List<SingleLineTextSpan> Lines { get; set; }
 
-        public MultilineTextSpan(string text = "", ColorPair c = new ColorPair(), 
+        public MultilineTextSpan(string text, int width, ColorPair c = new ColorPair(), 
             HJustification justification = HJustification.LEFT)
             : base(text, c)
         {
+            Width = width;
             Lines = new List<SingleLineTextSpan>();
             Justification = justification;
         }
@@ -31,8 +32,9 @@ namespace MooTUI.Text
             for (int i = 0; i < Lines.Count; i++)
             {
                 Visual line = Lines[i].Draw();
+                int trimmedLength = Lines[i].Text.Trim().Length;
 
-                visual.Merge(line, Justification.GetOffset(line.Width, Width), i);
+                visual.Merge(line, Justification.GetOffset(trimmedLength, Width), i);
             }
 
             return visual;
@@ -79,7 +81,7 @@ namespace MooTUI.Text
             char curr;
             int wordLength = 0;
             int lineLength = 0;
-            for (int i = 0; i < s.Text.Length - 1; i++)
+            for (int i = 0; i < s.Text.Length; i++)
             {
                 curr = s.Text[i];
 
@@ -97,7 +99,7 @@ namespace MooTUI.Text
                     wordLength++;
                     if (lineLength + wordLength > Width)
                     {
-                        lines.Add(s.SubSpan(i - lineLength, lineLength));
+                        lines.Add(s.SubSpan(i - lineLength - wordLength + 1, lineLength));
                         if (lineLength == 0)
                             wordLength = 0;
                         else
@@ -106,7 +108,7 @@ namespace MooTUI.Text
                 }
             }
 
-            lines.Add(s.SubSpan(Text.Length - lineLength, lineLength));
+            lines.Add(s.SubSpan(Text.Length - lineLength - wordLength, lineLength + wordLength));
 
             return lines;
         }
