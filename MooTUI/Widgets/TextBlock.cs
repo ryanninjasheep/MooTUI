@@ -16,18 +16,18 @@ namespace MooTUI.Widgets
         {
             Text = text;
 
-            View.FillColorScheme(Style.GetColorPair("Default"));
-            View.DrawSpan(text);
+            RefreshVisual();
         }
 
-        public TextBlock FromText(TextSpan text)
+        public static TextBlock FromSpan(TextSpan text)
         {
             Visual v = text.Draw();
             return new TextBlock(text, new LayoutRect(v.Width, v.Height));
         }
 
-        protected override void Draw()
+        protected override void RefreshVisual()
         {
+            View.FillColorScheme(Style.GetColorPair("Default"));
             View.DrawSpan(Text);
         }
 

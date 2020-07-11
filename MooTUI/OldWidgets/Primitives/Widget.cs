@@ -39,7 +39,7 @@ namespace MooTUI.OldWidgets.Primitives
         /// Adjusts the width and height of this Widget and then renders it.
         /// </summary>
         /// <remarks>
-        /// If any internal changes need to take place before rendering, override OnResize().
+        /// If any internal changes need to take place before rendering, override AdjustResize().
         /// </remarks>
         public void Resize(int width, int height)
         {

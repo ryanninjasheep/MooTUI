@@ -2,7 +2,7 @@
 
 namespace MooTUI.Layout
 {
-    enum Orientation
+    public enum Orientation
     {
         Horizontal,
         Vertical

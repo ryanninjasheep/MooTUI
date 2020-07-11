@@ -6,14 +6,9 @@ namespace MooTUI.Layout
 {
     public class Size
     {
-        public int ActualSize { get; protected set; }
+        public int ActualSize { get; set; }
 
         public Size(int size)
-        {
-            ActualSize = size;
-        }
-
-        public virtual void SetActualSize(int size)
         {
             ActualSize = size;
         }
@@ -30,18 +25,20 @@ namespace MooTUI.Layout
         public int PreferredSize { get; private set; }
         public int Min { get; private set; }
 
-        public FlexSize(int preferredSize, int min) : base(preferredSize)
+        public FlexSize(int preferredSize, int min) : this(preferredSize, min, preferredSize) { }
+
+        private FlexSize(int preferredSize, int min, int actualSize) : base(actualSize)
         {
             PreferredSize = preferredSize;
             Min = min;
         }
 
-        public override void SetActualSize(int size)
+        public FlexSize WithActualSize(int size)
         {
             if (size < Min)
                 throw new ArgumentOutOfRangeException("size", "Size cannot be less than min");
 
-            base.SetActualSize(size);
+            return new FlexSize(PreferredSize, Min, size);
         }
 
         public override Size WithRelativeSize(int difference) => 

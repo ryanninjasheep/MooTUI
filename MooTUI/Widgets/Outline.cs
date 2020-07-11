@@ -24,7 +24,7 @@ namespace MooTUI.Widgets
             Text = text ?? new SingleLineTextSpan();
             LineStyle = lineStyle ?? BoxDrawingChars.Default;
 
-            RefreshVisuals();
+            RefreshVisual();
         }
 
         public override Widget GetHoveredWidget(MouseContext m)
@@ -42,27 +42,27 @@ namespace MooTUI.Widgets
             }
         }
 
-        protected override void Draw()
+        protected override void DrawChild(Widget child)
         {
-            View.Merge(Content.View, 1, 1);
+            View.Merge(child.View, 1, 1);
         }
-
-        protected override void OnChildResize(Widget child) =>
-            Resize(new LayoutRect(
-                child.Bounds.WidthData.WithRelativeSize(2), 
-                child.Bounds.HeightData.WithRelativeSize(2)
-                ));
 
         protected override void Input(InputEventArgs e) { }
 
-        private void RefreshVisuals()
+        protected override void Resize()
+        {
+            Content.Resize(Content.Bounds.TryResize(Width - 2, Height - 2));
+        }
+
+        protected override void RefreshVisual()
         {
             View.ClearText();
             View.FillColorScheme(Style.GetColorPair("Default"));
 
+            DrawChild(Content);
+
             DrawOutline();
             DrawText();
-            Draw();
         }
 
         private void DrawOutline()

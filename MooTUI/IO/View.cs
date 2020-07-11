@@ -165,12 +165,5 @@ namespace MooTUI.IO
         }
 
         #endregion
-
-        #region PRIVATE HELPER FUNCTIONS
-
-        private int GetCenterStart(int baseLength, int overlayLength) =>
-            (int)Math.Floor((double)(baseLength - overlayLength) / 2);
-
-        #endregion
     }
 }

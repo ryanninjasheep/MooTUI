@@ -20,6 +20,8 @@ namespace MooTUI.Widgets.Primitives
 
         public bool HasParent { get; private set; }
 
+        private bool RenderLock { get; set; }
+
         public Widget(LayoutRect bounds)
         {
             Bounds = bounds;
@@ -32,11 +34,6 @@ namespace MooTUI.Widgets.Primitives
         public event EventHandler Rendered;
 
         /// <summary>
-        /// Called whenever this Widget changes size; bubbles up logical tree.
-        /// </summary>
-        public event EventHandler Resized;
-
-        /// <summary>
         /// Called after this Widget handles input, but before it is propagated up the  logical tree.
         /// </summary>
         public event EventHandler<InputEventArgs> InputReceived;
@@ -46,6 +43,9 @@ namespace MooTUI.Widgets.Primitives
         /// </summary>
         public void Render()
         {
+            if (RenderLock)
+                return;
+
             Draw();
 
             OnRendered(EventArgs.Empty);
@@ -59,8 +59,7 @@ namespace MooTUI.Widgets.Primitives
 
             Resize();
 
-            OnResized(EventArgs.Empty);
-
+            RefreshVisual();
             Render();
         }
 
@@ -81,19 +80,23 @@ namespace MooTUI.Widgets.Primitives
         public bool HitTest(int x, int y) =>
             (x >= 0 && x < Width) && (y >= 0 && y < Height);
 
-        protected abstract void Draw();
+        /// <summary>
+        /// Used for any drawing that is done any time the visual is rendered.
+        /// </summary>
+        protected virtual void Draw() { }
+        /// <summary>
+        /// Used for base drawing.
+        /// </summary>
+        protected abstract void RefreshVisual();
         protected abstract void Input(InputEventArgs e);
         protected virtual void Resize() { }
+
+        protected void LockRendering() => RenderLock = true;
+        protected void UnlockRendering() => RenderLock = false;
 
         private void OnRendered(EventArgs e)
         {
             EventHandler handler = Rendered;
-            handler?.Invoke(this, e);
-        }
-
-        private void OnResized(EventArgs e)
-        {
-            EventHandler handler = Resized;
             handler?.Invoke(this, e);
         }
 

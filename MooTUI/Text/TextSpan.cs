@@ -35,9 +35,7 @@ namespace MooTUI.Text
             return span;
         }
 
-        public abstract Visual Draw();
-
-        protected void SetColorInfo(int index, ColorPair colors)
+        public void SetColorInfo(int index, ColorPair colors)
         {
             if (index < 0 || index > Text.Length)
                 throw new ArgumentOutOfRangeException();
@@ -49,6 +47,8 @@ namespace MooTUI.Text
             else
                 ColorInfo.Add(index, colors);
         }
+
+        public abstract Visual Draw();
     }
 
     public class ColorInfo : SortedList<int, ColorPair>

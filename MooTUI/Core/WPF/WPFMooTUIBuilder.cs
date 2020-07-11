@@ -16,7 +16,7 @@ namespace MooTUI.Core.WPF
             window.Content = viewer;
             window.Background = new SolidColorBrush(t.Palette[Color.Base03]);
 
-            MooInterface @interface = new MooInterface(viewer, widget);
+            new MooInterface(viewer, widget);
         }
     }
 }

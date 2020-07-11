@@ -19,13 +19,15 @@ namespace MooTUI.Widgets
         public Button(TextSpan text, LayoutRect bounds) : base(bounds)
         {
             Text = text;
-            View.FillColorScheme(Style.GetColorPair("Default"));
+
+            RefreshVisual();
         }
 
         public event EventHandler Click;
 
-        protected override void Draw()
+        protected override void RefreshVisual()
         {
+            View.FillColorScheme(Style.GetColorPair("Default"));
             View.ClearText();
             View.Merge(Enclosure.DrawEnclosure(Text), HJustification.CENTER, VJustification.CENTER);
         }
