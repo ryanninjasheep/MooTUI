@@ -43,8 +43,8 @@ namespace MooTUI_Test
                         15, 
                         justification: HJustification.CENTER),
                     new LayoutRect(
-                        new FlexSize(17, 17),
-                        new FlexSize(8, 8)
+                        new FlexSize(17),
+                        new FlexSize(8)
                     )
                 );
             Button_Create.Click += A_Click;
@@ -70,8 +70,8 @@ namespace MooTUI_Test
             LayoutContainer h =
                 new LayoutContainer(
                     new LayoutRect(
-                        new FlexSize(10, 10),
-                        new FlexSize(16, 8)
+                        new FlexSize(50),
+                        new FlexSize(16)
                     ),
                     Orientation.Horizontal
                 );
@@ -83,16 +83,16 @@ namespace MooTUI_Test
                         15,
                         justification: HJustification.CENTER),
                     new LayoutRect(
-                        new FlexSize(10, 10),
-                        new FlexSize(16, 8)
+                        new FlexSize(10),
+                        new FlexSize(16)
                     )
                 );
             Button otherOtherButton =
                 new Button(
                     new SingleLineTextSpan("This is to the right"),
                     new LayoutRect(
-                        new FlexSize(10, 10),
-                        new FlexSize(16, 8)
+                        new FlexSize(10),
+                        new FlexSize(16)
                     )
                 );
             Outline h_o =

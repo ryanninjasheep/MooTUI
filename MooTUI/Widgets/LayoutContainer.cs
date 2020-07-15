@@ -1,4 +1,5 @@
-﻿using MooTUI.Input;
+﻿using MooTUI.Core;
+using MooTUI.Input;
 using MooTUI.Layout;
 using MooTUI.Widgets.Primitives;
 using System;
@@ -10,15 +11,48 @@ namespace MooTUI.Widgets
 {
     public class LayoutContainer : Container
     {
+        public enum MainAxisJustification { START, CENTER, END, STRETCH, SPACE_BETWEEN, SPACE_AROUND }
+        public enum CrossAxisJustification { START, CENTER, END }
+
         public List<Widget> Children { get; private set; }
+        private List<WidgetWithLocation> ChildrenWithLocation { get; set; }
+
         public Orientation Orientation { get; }
 
-        private int OrientationSize => Bounds.GetSize(Orientation).ActualSize;
+        private MainAxisJustification _mainJustification;
+        private CrossAxisJustification _crossJustification;
 
-        public LayoutContainer(LayoutRect bounds, Orientation oritentation) : base(bounds)
+        public MainAxisJustification MainJustification
+        {
+            get => _mainJustification;
+            set
+            {
+                _mainJustification = value;
+                CalculateLayout();
+            }
+        }
+        public CrossAxisJustification CrossJustification
+        {
+            get => _crossJustification;
+            set
+            {
+                _crossJustification = value;
+                CalculateLayout();
+            }
+        }
+
+        private int OrientationSize => Bounds.GetSizeInMainAxis(Orientation).ActualSize;
+
+        public LayoutContainer(LayoutRect bounds, Orientation oritentation,
+            MainAxisJustification mainJustification = MainAxisJustification.STRETCH,
+            CrossAxisJustification crossJustification = CrossAxisJustification.CENTER) 
+            : base(bounds)
         {
             Orientation = oritentation;
             Children = new List<Widget>();
+            ChildrenWithLocation = new List<WidgetWithLocation>();
+            _mainJustification = mainJustification;
+            _crossJustification = crossJustification;
         }
 
         public void AddChild(Widget w)
@@ -33,46 +67,78 @@ namespace MooTUI.Widgets
         {
             AssertMinSizesFit();
 
-            LockRendering();
+            Lock = true;
 
-            List<(Widget, FlexSize)> flexible = Children
-                .Where((w) => w.Bounds.GetSize(Orientation) is FlexSize)
-                .Select((w) => (w, w.Bounds.GetSize(Orientation) as FlexSize))
-                .ToList();
+            List<WidgetWithLocation> widgets = Children.Select((w) => new WidgetWithLocation(w)).ToList();
+            List<FlexSize> flexible = new List<FlexSize>();
 
-            int freeSpace = OrientationSize - Children.Sum((s) => s.Bounds.GetSize(Orientation).ActualSize);
-
-            while (freeSpace != 0 && flexible.Count > 0)
+            foreach (WidgetWithLocation w in widgets)
             {
-                if (freeSpace < 0)
-                    flexible = flexible
-                        .Where(((Widget w, FlexSize f) pair) => pair.f.ActualSize > pair.f.Min)
-                        .ToList();
+                SetIndividualCrossSize(w);
 
-                foreach ((Widget w, FlexSize f) in flexible)
+                if (w.Widget.Bounds.GetSizeInMainAxis(Orientation) is FlexSize f)
                 {
-                    float totalPreferred = flexible.Sum(((Widget w, FlexSize f) pair) => pair.f.PreferredSize);
-
-                    float sizeRatio = f.PreferredSize / totalPreferred;
-                    float growth = sizeRatio * freeSpace;
-                    int newSize = Math.Max(f.PreferredSize + (int)Math.Round(growth), f.Min);
-                    switch (Orientation)
-                    {
-                        case Orientation.Horizontal:
-                            w.Resize(w.Bounds.TryResize(newSize, Height));
-                            break;
-                        case Orientation.Vertical:
-                            w.Resize(w.Bounds.TryResize(Width, newSize));
-                            break;
-                        default:
-                            throw new System.ComponentModel.InvalidEnumArgumentException();
-                    }
+                    f.Reset();
+                    flexible.Add(f);
                 }
-
-                freeSpace = OrientationSize - Children.Sum((s) => s.Bounds.GetSize(Orientation).ActualSize);
             }
 
-            UnlockRendering();
+            int totalSpace = Children.Sum((s) => s.Bounds.GetSizeInMainAxis(Orientation).ActualSize);
+
+            if (MainJustification == MainAxisJustification.START ||
+                MainJustification == MainAxisJustification.CENTER ||
+                MainJustification == MainAxisJustification.END ||
+                MainJustification == MainAxisJustification.STRETCH)
+            {
+                if (MainJustification == MainAxisJustification.STRETCH ||
+                    totalSpace > OrientationSize)
+                    UpdateFlexSizeToFit(flexible, OrientationSize - totalSpace);
+
+                int index = MainJustification switch
+                {
+                    MainAxisJustification.START => HJustification.LEFT.GetOffset(totalSpace, OrientationSize),
+                    MainAxisJustification.CENTER => HJustification.CENTER.GetOffset(totalSpace, OrientationSize),
+                    MainAxisJustification.END => HJustification.RIGHT.GetOffset(totalSpace, OrientationSize),
+                    MainAxisJustification.STRETCH => 0,
+                    _ => throw new NotImplementedException(),
+                };
+
+                switch (Orientation)
+                {
+                    case Orientation.Horizontal:
+                        foreach (WidgetWithLocation w in widgets)
+                        {
+                            w.X = index;
+                            index += w.Widget.Width;
+                        }
+                        break;
+                    case Orientation.Vertical:
+                        foreach (WidgetWithLocation w in widgets)
+                        {
+                            w.Y = index;
+                            index += w.Widget.Height;
+                        }
+                        break;
+                    default:
+                        throw new System.ComponentModel.InvalidEnumArgumentException();
+                }
+            }
+            else if (MainJustification == MainAxisJustification.SPACE_AROUND)
+            {
+                //TODO
+            }
+            else if (MainJustification == MainAxisJustification.SPACE_BETWEEN)
+            {
+                //TODO
+            }
+            else
+            {
+                throw new System.ComponentModel.InvalidEnumArgumentException();
+            }
+
+            ChildrenWithLocation = widgets;
+
+            Lock = false;
 
             RefreshVisual();
         }
@@ -81,44 +147,15 @@ namespace MooTUI.Widgets
         {
             (int x, int y) = m.Mouse;
 
-            int index = 0;
-
-            switch (Orientation)
+            foreach(WidgetWithLocation w in ChildrenWithLocation)
             {
-                case Orientation.Horizontal:
-                    foreach (Widget w in Children)
-                    {
-                        if (index + w.Width > x)
-                        {
-                            if (y < w.Height)
-                            {
-                                m.SetRelativeMouse(-index, 0);
+                if (x > w.X && x < w.X + w.Widget.Width
+                    && y > w.Y && y < w.Y + w.Widget.Height)
+                {
+                    m.SetRelativeMouse(-w.X, -w.Y);
 
-                                return w;
-                            }
-                            break;
-                        }
-
-                        index += w.Width;
-                    }
-                    break;
-                case Orientation.Vertical:
-                    foreach (Widget w in Children)
-                    {
-                        if (index + w.Height > y)
-                        {
-                            if (x < w.Width)
-                            {
-                                m.SetRelativeMouse(0, -index);
-
-                                return w;
-                            }
-                            break;
-                        }
-
-                        index += w.Height;
-                    }
-                    break;
+                    return w.Widget;
+                }
             }
 
             // if nothing is hovered over
@@ -127,65 +164,28 @@ namespace MooTUI.Widgets
 
         protected override void RefreshVisual()
         {
-            View.ClearText();
-            View.FillColorScheme(new Core.ColorPair());
+            Visual.FillCell(new Cell(' ', new ColorPair()));
 
-            int index = 0;
-
-            switch (Orientation)
+            foreach (WidgetWithLocation w in ChildrenWithLocation)
             {
-                case Orientation.Horizontal:
-                    foreach (Widget w in Children)
-                    {
-                        View.Merge(w.View, index, 0);
-
-                        index += w.Width;
-                        if (index > Width)
-                            return;
-                    }
-                    return;
-                case Orientation.Vertical:
-                    foreach (Widget w in Children)
-                    {
-                        View.Merge(w.View, 0, index);
-
-                        index += w.Height;
-                        if (index > Height)
-                            return;
-                    }
-                    return;
-            }
-        }
-
-        protected override void DrawChild(Widget child)
-        {
-            int index = 0;
-            foreach (Widget w in Children)
-            {
-                if (w == child)
-                {
-                    switch (Orientation)
-                    {
-                        case Orientation.Horizontal:
-                            View.Merge(w.View, index, 0);
-                            break;
-                        case Orientation.Vertical:
-                            View.Merge(w.View, 0, index);
-                            break;
-                        default:
-                            throw new System.ComponentModel.InvalidEnumArgumentException();
-                    }
-                }
-                else
-                {
-                    index += w.Bounds.GetSize(Orientation).ActualSize;
-                }
+                Visual.Merge(w.Widget.Visual, w.X, w.Y);
             }
         }
 
         protected override void Resize() => CalculateLayout();
 
         protected override IEnumerable<Widget> GetLogicalChildren() => Children;
+
+        protected override void DrawChild(Widget child)
+        {
+            foreach (WidgetWithLocation w in ChildrenWithLocation)
+            {
+                if (w.Widget == child)
+                    Visual.Merge(w.Widget.Visual, w.X, w.Y);
+            }
+        }
+
+        protected override void OnChildResized(Widget child) => CalculateLayout();
 
         protected override void Input(InputEventArgs e) { }
 
@@ -194,15 +194,108 @@ namespace MooTUI.Widgets
             int min = 0;
             foreach (Widget w in Children)
             {
-                Size s = w.Bounds.GetSize(Orientation);
-                if (s is FlexSize f)
+                Size m = w.Bounds.GetSizeInMainAxis(Orientation);
+                if (m is FlexSize f)
                     min += f.Min;
                 else
-                    min += s.ActualSize;
+                    min += m.ActualSize;
+
+                Size c = w.Bounds.GetSizeInCrossAxis(Orientation);
+
+                if ((c is FlexSize g && g.Min > Bounds.GetSizeInCrossAxis(Orientation).ActualSize) ||
+                    (!(c is FlexSize) && c.ActualSize > Bounds.GetSizeInCrossAxis(Orientation).ActualSize))
+                    throw new InvalidOperationException("The given objects cannot fit!");
             }
 
             if (min > OrientationSize)
                 throw new InvalidOperationException("The given objects cannot fit!");
+        }
+
+        private void SetIndividualCrossSize(WidgetWithLocation w)
+        {
+            switch (Orientation)
+            {
+                case Orientation.Horizontal:
+                    if (w.Widget.Bounds.HeightData is FlexSize g)
+                    {
+                        g.ActualSize = Height;
+                        w.Y = 0;
+                    }
+                    else
+                    {
+                        w.Y = CrossJustification switch
+                        {
+                            CrossAxisJustification.START =>
+                                HJustification.LEFT.GetOffset(w.Widget.Height, Height),
+                            CrossAxisJustification.CENTER =>
+                                HJustification.CENTER.GetOffset(w.Widget.Height, Height),
+                            CrossAxisJustification.END =>
+                                HJustification.RIGHT.GetOffset(w.Widget.Height, Height),
+                            _ => throw new System.ComponentModel.InvalidEnumArgumentException(),
+                        };
+                    }
+                    break;
+                case Orientation.Vertical:
+                    if (w.Widget.Bounds.WidthData is FlexSize f)
+                    {
+                        f.ActualSize = Width;
+                        w.X = 0;
+                    }
+                    else
+                    {
+                        w.X = CrossJustification switch
+                        {
+                            CrossAxisJustification.START =>
+                                HJustification.LEFT.GetOffset(w.Widget.Width, Width),
+                            CrossAxisJustification.CENTER =>
+                                HJustification.CENTER.GetOffset(w.Widget.Width, Width),
+                            CrossAxisJustification.END =>
+                                HJustification.RIGHT.GetOffset(w.Widget.Width, Width),
+                            _ => throw new System.ComponentModel.InvalidEnumArgumentException(),
+                        };
+                    }
+                    break;
+                default:
+                    throw new System.ComponentModel.InvalidEnumArgumentException();
+            }
+        }
+
+        private void UpdateFlexSizeToFit(List<FlexSize> flexible, int freeSpace)
+        {
+            while (freeSpace != 0 && flexible.Count > 0)
+            {
+                if (freeSpace < 0)
+                    flexible = flexible
+                        .Where((f) => f.ActualSize > f.Min)
+                        .ToList();
+
+                foreach (FlexSize f in flexible)
+                {
+                    float totalPreferred = flexible.Sum((f) => f.PreferredSize);
+
+                    float sizeRatio = f.PreferredSize / totalPreferred;
+                    float growth = sizeRatio * freeSpace;
+                    int newSize = Math.Max(f.ActualSize + (int)Math.Round(growth), f.Min);
+
+                    f.ActualSize = newSize;
+                }
+
+                freeSpace = OrientationSize -
+                    Children.Sum((s) => s.Bounds.GetSizeInMainAxis(Orientation).ActualSize);
+            }
+        }
+
+        private class WidgetWithLocation
+        {
+            public Widget Widget { get; }
+
+            public int X { get; set; }
+            public int Y { get; set; }
+
+            public WidgetWithLocation(Widget w)
+            {
+                Widget = w;
+            }
         }
     }
 }

@@ -6,14 +6,32 @@ namespace MooTUI.Layout
 {
     public class Size
     {
-        public int ActualSize { get; set; }
+        private int _actualSize;
+
+        public virtual int ActualSize
+        {
+            get => _actualSize;
+            set
+            {
+                _actualSize = value;
+                OnActualSizeChanged(EventArgs.Empty);
+            }
+        }
 
         public Size(int size)
         {
-            ActualSize = size;
+            _actualSize = size;
         }
 
+        public event EventHandler ActualSizeChanged;
+
         public virtual Size WithRelativeSize(int difference) => new Size(ActualSize + difference);
+
+        private void OnActualSizeChanged(EventArgs e)
+        {
+            EventHandler handler = ActualSizeChanged;
+            handler?.Invoke(this, e);
+        }
     }
 
     public class FlexSize : Size
@@ -25,7 +43,20 @@ namespace MooTUI.Layout
         public int PreferredSize { get; private set; }
         public int Min { get; private set; }
 
+        public override int ActualSize 
+        {
+            get => base.ActualSize;
+            set
+            {
+                if (value < Min)
+                    throw new ArgumentOutOfRangeException(nameof(value), "Value must be greater than min.");
+
+                base.ActualSize = value;
+            }
+        }
+
         public FlexSize(int preferredSize, int min) : this(preferredSize, min, preferredSize) { }
+        public FlexSize(int preferredSize) : this(preferredSize, 1, preferredSize) { }
 
         private FlexSize(int preferredSize, int min, int actualSize) : base(actualSize)
         {
@@ -33,13 +64,7 @@ namespace MooTUI.Layout
             Min = min;
         }
 
-        public FlexSize WithActualSize(int size)
-        {
-            if (size < Min)
-                throw new ArgumentOutOfRangeException("size", "Size cannot be less than min");
-
-            return new FlexSize(PreferredSize, Min, size);
-        }
+        public void Reset() => ActualSize = PreferredSize;
 
         public override Size WithRelativeSize(int difference) => 
             new FlexSize(PreferredSize + difference, Min + difference);

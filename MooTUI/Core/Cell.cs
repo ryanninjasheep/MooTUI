@@ -21,6 +21,7 @@ namespace MooTUI.Core
         public Cell WithChar(char c) => new Cell(c, Fore, Back);
         public Cell WithFore(Color c) => new Cell(Char, c, Back);
         public Cell WithBack(Color c) => new Cell(Char, Fore, c);
+        public Cell WithColors(ColorPair c) => new Cell(Char, c.Fore, c.Back);
 
         public Cell Overlay(Cell c) => 
             new Cell(

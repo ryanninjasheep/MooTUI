@@ -47,4 +47,37 @@ namespace MooTUI.IO
         public static Func<Color, int, int, Color> Fill(Color fill) => 
             (cells, x, y) => fill;
     }
+
+    public static class VisualShaderExtensions
+    {
+        /// <summary>
+        /// Applies a particular function to all cells in the View.
+        /// </summary>
+        public static void ApplyShader(this Visual v, Func<Color, int, int, Color> shader,
+            bool affectFore, bool affectBack) =>
+            v.ApplyShader(shader, affectFore, affectBack, 0, 0, v.Width, v.Height);
+        /// <summary>
+        /// Applies a particular function to a certain range of cells in the View.
+        /// </summary>
+        public static void ApplyShader(this Visual v, Func<Color, int, int, Color> shader,
+            bool affectFore, bool affectBack,
+            int xStart, int yStart, int width, int height)
+        {
+            for (int i = xStart; i < v.Width && i - xStart < width; i++)
+            {
+                for (int j = yStart; j < v.Height && j - yStart < height; j++)
+                {
+                    Cell shaded = v[i, j];
+
+                    if (affectFore)
+                        shaded = shaded.WithFore(shader(shaded.Fore, i, j));
+
+                    if (affectBack)
+                        shaded = shaded.WithBack(shader(shaded.Back, i, j));
+
+                    v[i, j] = shaded;
+                }
+            }
+        }
+    }
 }

@@ -9,11 +9,11 @@ namespace MooTUI.Text
     public abstract class TextSpan
     {
         public string Text { get; protected set; }
-        public ColorInfo ColorInfo { get; protected set; }
+        public TextSpanColorInfo ColorInfo { get; protected set; }
 
         public TextSpan(string text = "", ColorPair c = new ColorPair())
         {
-            ColorInfo = new ColorInfo(c);
+            ColorInfo = new TextSpanColorInfo(c);
             Text = text;
         }
 
@@ -49,23 +49,32 @@ namespace MooTUI.Text
         }
 
         public abstract Visual Draw();
+
+        public class TextSpanColorInfo : SortedList<int, ColorPair>
+        {
+            public TextSpanColorInfo(ColorPair c)
+            {
+                Add(0, c);
+            }
+
+            public ColorPair GetCurrentColorsAtIndex(int index)
+            {
+                int keyIndex = Keys.ToList().BinarySearch(index);
+
+                if (keyIndex < 0)
+                    keyIndex = ~keyIndex - 1;
+
+                return this[Keys[keyIndex]];
+            }
+        }
     }
 
-    public class ColorInfo : SortedList<int, ColorPair>
+    public static class VisualTextSpanExtensions
     {
-        public ColorInfo(ColorPair c)
+        public static void DrawSpan(this Visual v, TextSpan span)
         {
-            Add(0, c);
-        }
-
-        public ColorPair GetCurrentColorsAtIndex(int index)
-        {
-            int keyIndex = Keys.ToList().BinarySearch(index);
-
-            if (keyIndex < 0)
-                keyIndex = ~keyIndex - 1;
-
-            return this[Keys[keyIndex]];
+            Visual spanVisual = span.Draw();
+            v.Merge(spanVisual);
         }
     }
 }

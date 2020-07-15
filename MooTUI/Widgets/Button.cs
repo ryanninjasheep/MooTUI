@@ -27,9 +27,8 @@ namespace MooTUI.Widgets
 
         protected override void RefreshVisual()
         {
-            View.FillColorScheme(Style.GetColorPair("Default"));
-            View.ClearText();
-            View.Merge(Enclosure.DrawEnclosure(Text), HJustification.CENTER, VJustification.CENTER);
+            Visual.FillCell(new Cell(' ', Style.GetColorPair("Default")));
+            Visual.Merge(Enclosure.DrawEnclosure(Text), HJustification.CENTER, VJustification.CENTER);
         }
 
         protected override void Input(InputEventArgs e)
@@ -37,11 +36,11 @@ namespace MooTUI.Widgets
             switch (e.InputType)
             {
                 case InputTypes.MOUSE_ENTER:
-                    View.FillColorScheme(Style.GetColorPair("Hover"));
+                    Visual.FillColors(Style.GetColorPair("Hover"));
                     Render();
                     break;
                 case InputTypes.MOUSE_LEAVE:
-                    View.FillColorScheme(Style.GetColorPair("Default"));
+                    Visual.FillColors(Style.GetColorPair("Default"));
                     Render();
                     break;
                 case InputTypes.LEFT_CLICK:

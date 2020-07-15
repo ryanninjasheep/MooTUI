@@ -48,7 +48,7 @@ namespace MooTUI.IO
 
         private void Content_RenderEventHandler(object sender, EventArgs e)
         {
-            Viewer.SetVisual(Content.View.Visual);
+            Viewer.SetVisual(Content.Visual);
         }
 
         private void Content_ClaimFocus(object sender, FocusEventArgs e)

@@ -13,7 +13,7 @@ namespace MooTUI.Text
 
         public ColorPair Colors { get; set; }
 
-        public TextSpanEnclosure(string left, string right, ColorPair colors)
+        public TextSpanEnclosure(string left, string right, ColorPair colors = new ColorPair())
         {
             if (left.Length != right.Length)
                 throw new ArgumentException("Left and Right must be same length");

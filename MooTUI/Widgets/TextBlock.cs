@@ -27,8 +27,8 @@ namespace MooTUI.Widgets
 
         protected override void RefreshVisual()
         {
-            View.FillColorScheme(Style.GetColorPair("Default"));
-            View.DrawSpan(Text);
+            Visual.FillColors(Style.GetColorPair("Default"));
+            Visual.DrawSpan(Text);
         }
 
         protected override void Input(Input.InputEventArgs e) { }

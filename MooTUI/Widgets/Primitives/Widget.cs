@@ -4,28 +4,39 @@ using MooTUI.Input;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using MooTUI.Core;
 
 namespace MooTUI.Widgets.Primitives
 {
     public abstract class Widget
     {
-        protected static Style Style { get; set; } = Style.Dark;
-        public static void SetStyle(Style s) => Style = s;
+        private LayoutRect _bounds;
 
-        public View View { get; protected set; }
-        public LayoutRect Bounds { get; private set; }
+        public static Style Style { get; set; } = Style.Dark;
+
+        public LayoutRect Bounds
+        {
+            get => _bounds;
+            private set
+            {
+                if (!(_bounds is null))
+                    _bounds.SizeChanged -= Bounds_SizeChanged;
+
+                _bounds = value;
+                _bounds.SizeChanged += Bounds_SizeChanged;
+            }
+        }
+        public Visual Visual { get; protected set; }
 
         public int Width => Bounds.Width;
         public int Height => Bounds.Height;
 
         public bool HasParent { get; private set; }
 
-        private bool RenderLock { get; set; }
-
         public Widget(LayoutRect bounds)
         {
             Bounds = bounds;
-            View = new View(Width, Height);
+            Visual = new Visual(Width, Height);
         }
 
         /// <summary>
@@ -38,29 +49,16 @@ namespace MooTUI.Widgets.Primitives
         /// </summary>
         public event EventHandler<InputEventArgs> InputReceived;
 
+        public event EventHandler Resized;
+
         /// <summary>
         /// Draw View and bubble up logical tree, making parents render too.
         /// </summary>
         public void Render()
         {
-            if (RenderLock)
-                return;
-
             Draw();
 
             OnRendered(EventArgs.Empty);
-        }
-
-        public void Resize(LayoutRect bounds)
-        {
-            Bounds = bounds;
-
-            View = new View(Width, Height);
-
-            Resize();
-
-            RefreshVisual();
-            Render();
         }
 
         /// <summary>
@@ -91,9 +89,6 @@ namespace MooTUI.Widgets.Primitives
         protected abstract void Input(InputEventArgs e);
         protected virtual void Resize() { }
 
-        protected void LockRendering() => RenderLock = true;
-        protected void UnlockRendering() => RenderLock = false;
-
         private void OnRendered(EventArgs e)
         {
             EventHandler handler = Rendered;
@@ -106,7 +101,30 @@ namespace MooTUI.Widgets.Primitives
             handler?.Invoke(this, e);
         }
 
-        private void OnBubbleInput(InputEventArgs e)
+        private void OnResized(EventArgs e)
+        {
+            EventHandler handler = Resized;
+            handler?.Invoke(this, e);
+        }
+
+        private void OnSizeChanged()
+        {
+            Visual = new Visual(Width, Height);
+
+            Resize();
+
+            OnResized(EventArgs.Empty);
+
+            RefreshVisual();
+            Render();
+        }
+
+        private void Bounds_SizeChanged(object sender, EventArgs e)
+        {
+            OnSizeChanged();
+        }
+
+        internal void OnBubbleInput(InputEventArgs e)
         {
             EventHandler<InputEventArgs> handler = BubbleInput;
             handler?.Invoke(this, e);

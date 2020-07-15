@@ -44,20 +44,29 @@ namespace MooTUI.Widgets
 
         protected override void DrawChild(Widget child)
         {
-            View.Merge(child.View, 1, 1);
+            Visual.Merge(child.Visual, 1, 1);
+        }
+
+        protected override void OnChildResized(Widget child)
+        {
+            Bounds.WithSize(Orientation.Horizontal, Content.Bounds.WidthData.WithRelativeSize(2));
+            Bounds.WithSize(Orientation.Vertical, Content.Bounds.HeightData.WithRelativeSize(2));
         }
 
         protected override void Input(InputEventArgs e) { }
 
         protected override void Resize()
         {
-            Content.Resize(Content.Bounds.TryResize(Width - 2, Height - 2));
+            Lock = true;
+
+            Content.Bounds.TryResize(Width - 2, Height - 2);
+
+            Lock = false;
         }
 
         protected override void RefreshVisual()
         {
-            View.ClearText();
-            View.FillColorScheme(Style.GetColorPair("Default"));
+            Visual.FillCell(new Cell(' ', Style.GetColorPair("Default")));
 
             DrawChild(Content);
 
@@ -67,20 +76,20 @@ namespace MooTUI.Widgets
 
         private void DrawOutline()
         {
-            View.FillChar(LineStyle.LR, 0, 0, Width - 1, 1);
-            View.FillChar(LineStyle.LR, 0, Height - 1, Width, 1);
-            View.FillChar(LineStyle.UD, 0, 0, 1, Height - 1);
-            View.FillChar(LineStyle.UD, Width - 1, 0, 1, Height - 1);
+            Visual.FillChar(LineStyle.LR, 0, 0, Width - 1, 1);
+            Visual.FillChar(LineStyle.LR, 0, Height - 1, Width, 1);
+            Visual.FillChar(LineStyle.UD, 0, 0, 1, Height - 1);
+            Visual.FillChar(LineStyle.UD, Width - 1, 0, 1, Height - 1);
 
-            View.SetChar(0, 0, LineStyle.DR);
-            View.SetChar(Width - 1, 0, LineStyle.DL);
-            View.SetChar(0, Height - 1, LineStyle.UR);
-            View.SetChar(Width - 1, Height - 1, LineStyle.UL);
+            Visual.SetChar(0, 0, LineStyle.DR);
+            Visual.SetChar(Width - 1, 0, LineStyle.DL);
+            Visual.SetChar(0, Height - 1, LineStyle.UR);
+            Visual.SetChar(Width - 1, Height - 1, LineStyle.UL);
         }
 
         private void DrawText()
         {
-            View.Merge(Enclosure.DrawEnclosure(Text), 1, 0);
+            Visual.Merge(Enclosure.DrawEnclosure(Text), 1, 0);
         }
     }
 

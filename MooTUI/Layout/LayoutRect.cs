@@ -17,14 +17,25 @@ namespace MooTUI.Layout
         {
             WidthData = widthData;
             HeightData = heightData;
+
+            WidthData.ActualSizeChanged += BubbleSizeChanged;
+            HeightData.ActualSizeChanged += BubbleSizeChanged;
         }
         public LayoutRect(int width, int height) 
             : this(new Size(width), new Size(height)) { }
 
-        public Size GetSize(Orientation orientation) => orientation switch
+        public event EventHandler SizeChanged;
+
+        public Size GetSizeInMainAxis(Orientation orientation) => orientation switch
         {
             Orientation.Horizontal => WidthData,
             Orientation.Vertical => HeightData,
+            _ => throw new InvalidEnumArgumentException(),
+        };
+        public Size GetSizeInCrossAxis(Orientation orientation) => orientation switch
+        {
+            Orientation.Horizontal => HeightData,
+            Orientation.Vertical => WidthData,
             _ => throw new InvalidEnumArgumentException(),
         };
 
@@ -35,12 +46,19 @@ namespace MooTUI.Layout
             _ => throw new InvalidEnumArgumentException(),
         };
 
-        public LayoutRect TryResize(int width, int height)
+        public void TryResize(int width, int height)
         {
-            Size wi = WidthData is FlexSize h ? h.WithActualSize(width) : WidthData;
-            Size he = HeightData is FlexSize v ? v.WithActualSize(height) : HeightData;
+            if (WidthData is FlexSize f)
+                f.ActualSize = width;
 
-            return new LayoutRect(wi, he);
+            if (HeightData is FlexSize g)
+                g.ActualSize = height;
+        }
+
+        private void BubbleSizeChanged(object sender, EventArgs e)
+        {
+            EventHandler handler = SizeChanged;
+            handler?.Invoke(sender, e);
         }
     }
 }
