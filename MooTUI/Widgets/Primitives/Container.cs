@@ -2,6 +2,7 @@
 using MooTUI.Layout;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace MooTUI.Widgets.Primitives
@@ -41,9 +42,18 @@ namespace MooTUI.Widgets.Primitives
             child.Resized += Child_Resized;
         }
         
-        // NOTE: I'm not including this because right now I'm not sure if it's even necessary
-        // for children to be unlinkable.  Maybe UIs are not changeable once built?
-        // protected void UnlinkChild(Widget child) { }
+        protected void UnlinkChild(Widget child)
+        {
+            if (!GetLogicalChildren().Contains(child))
+                throw new ArgumentException("The given Widget is not a child of this container.");
+
+            child.Release();
+
+            child.Rendered -= Child_Rendered;
+            child.BubbleInput -= Child_BubbleInput;
+            child.BubbleFocus -= Child_BubbleFocus;
+            child.Resized -= Child_Resized;
+        }
 
         private void Child_Rendered(object sender, EventArgs e)
         {

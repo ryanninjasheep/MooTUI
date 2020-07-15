@@ -60,7 +60,14 @@ namespace MooTUI.Widgets
             LinkChild(w);
             Children.Add(w);
             CalculateLayout();
+
             w.Render();
+        }
+        public void RemoveChild(Widget w)
+        {
+            UnlinkChild(w);
+            Children.Remove(w);
+            CalculateLayout();
         }
 
         public void CalculateLayout()

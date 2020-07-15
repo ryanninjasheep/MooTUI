@@ -150,10 +150,9 @@ namespace MooTUI.Widgets.Primitives
             HasParent = true;
         }
 
-        // Currently unused.
-        // /// <summary>
-        // /// !!! ONLY CALL FROM Container.UnlinkChild !!!
-        // /// </summary>
-        // internal void Release() => HasParent = false;
+        /// <summary>
+        /// !!! ONLY CALL FROM Container.UnlinkChild !!!
+        /// </summary>
+        internal void Release() => HasParent = false;
     }
 }

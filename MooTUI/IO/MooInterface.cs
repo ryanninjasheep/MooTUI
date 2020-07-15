@@ -31,9 +31,13 @@ namespace MooTUI.IO
         {
             if (Content != null)
             {
+                Content.Release();
+
                 Content.Rendered -= Content_RenderEventHandler;
                 Content.BubbleFocus -= Content_ClaimFocus;
             }
+
+            w.Bind();
 
             Content = w;
             Content.Rendered += Content_RenderEventHandler;
