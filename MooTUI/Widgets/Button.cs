@@ -16,9 +16,12 @@ namespace MooTUI.Widgets
         public static TextSpanEnclosure Enclosure { get; set; } = 
             new TextSpanEnclosure(" [ ", " ] ", new ColorPair());
 
-        public Button(TextSpan text, LayoutRect bounds) : base(bounds)
+        public bool IsSimple { get; private set; }
+
+        public Button(string text, LayoutRect bounds, bool isSimple = false) : base(bounds)
         {
-            Text = text;
+            Text = new MultilineTextSpan(text, Width, justification: HJustification.CENTER);
+            IsSimple = isSimple;
 
             RefreshVisual();
         }
@@ -28,7 +31,10 @@ namespace MooTUI.Widgets
         protected override void RefreshVisual()
         {
             Visual.FillCell(new Cell(' ', Style.GetColorPair("Default")));
-            Visual.Merge(Enclosure.DrawEnclosure(Text), HJustification.CENTER, VJustification.CENTER);
+            if (IsSimple)
+                Visual.DrawSpan(Text);
+            else
+                Visual.Merge(Enclosure.DrawEnclosure(Text), HJustification.CENTER, VJustification.CENTER);
         }
 
         protected override void Input(InputEventArgs e)
@@ -36,11 +42,11 @@ namespace MooTUI.Widgets
             switch (e.InputType)
             {
                 case InputTypes.MOUSE_ENTER:
-                    Visual.FillColors(Style.GetColorPair("Hover"));
+                    Visual.FillBackColor(Style.GetBack("Hover"));
                     Render();
                     break;
                 case InputTypes.MOUSE_LEAVE:
-                    Visual.FillColors(Style.GetColorPair("Default"));
+                    Visual.FillBackColor(Style.GetBack("Default"));
                     Render();
                     break;
                 case InputTypes.LEFT_CLICK:

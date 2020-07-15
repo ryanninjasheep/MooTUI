@@ -26,7 +26,9 @@ namespace MooTUI_Test
     /// </summary>
     public partial class MainWindow : System.Windows.Window
     {
+        LayoutContainer Buttons;
         Button Button_Create;
+        Outline O_Button_Destroy;
 
         public MainWindow()
         {
@@ -36,97 +38,59 @@ namespace MooTUI_Test
 
             WPFMooTUIBuilder.GenerateViewer(this, layoutContainer, Theme.Solarized);
 
+            Buttons = new LayoutContainer(
+                new LayoutRect(
+                    new FlexSize(10),
+                    new FlexSize(10)
+                ),
+                Orientation.Horizontal
+            );
+
             Button_Create = 
                 new Button(
-                    new MultilineTextSpan(
-                        "This is a Button with too much text :p",
-                        15, 
-                        justification: HJustification.CENTER),
+                    "Create a button!",
                     new LayoutRect(
-                        new FlexSize(17),
-                        new FlexSize(8)
+                        new FlexSize(15),
+                        new FlexSize(5)
                     )
                 );
-            Button_Create.Click += A_Click;
-            Button_Create.InputReceived += A_Input;
+            Button_Create.Click += Create_Click;
 
-            Outline o = 
+            Button Button_Destroy =
+                new Button(
+                    "Destroy this button!",
+                    new LayoutRect(
+                        new FlexSize(15),
+                        new FlexSize(5)
+                    )
+                );
+            Button_Destroy.Text.SetColorInfo(0, new ColorPair(MooTUI.Core.Color.Red, MooTUI.Core.Color.None));
+            Button_Destroy.Click += Destroy_Click;
+
+            Outline c_o = 
                 new Outline(
                     Button_Create,
-                    new SingleLineTextSpan("This is a button!"),
-                    BoxDrawingChars.Rounded
+                    lineStyle: BoxDrawingChars.Rounded
                 );
-
-            MultilineTextSpan span = new MultilineTextSpan(
-                "This is a ton of text, and I'm gonna have it be different colors!", 15);
-            span.SetColorInfo(10, new ColorPair(MooTUI.Core.Color.Red, MooTUI.Core.Color.None));
-            span.SetColorInfo(15, new ColorPair(MooTUI.Core.Color.Blue, MooTUI.Core.Color.None));
-            span.SetColorInfo(12, new ColorPair(MooTUI.Core.Color.Magenta, MooTUI.Core.Color.None));
-            span.SetColorInfo(30, new ColorPair(MooTUI.Core.Color.Yellow, MooTUI.Core.Color.None));
-            span.SetColorInfo(35, new ColorPair(MooTUI.Core.Color.Base03, MooTUI.Core.Color.Green));
-
-            TextBlock t = TextBlock.FromSpan(span);
-
-            LayoutContainer h =
-                new LayoutContainer(
-                    new LayoutRect(
-                        new FlexSize(50),
-                        new FlexSize(16)
-                    ),
-                    Orientation.Horizontal
-                );
-
-            Button otherButton =
-                new Button(
-                    new MultilineTextSpan(
-                        "This is a completely different button!",
-                        15,
-                        justification: HJustification.CENTER),
-                    new LayoutRect(
-                        new FlexSize(10),
-                        new FlexSize(16)
-                    )
-                );
-            Button otherOtherButton =
-                new Button(
-                    new SingleLineTextSpan("This is to the right"),
-                    new LayoutRect(
-                        new FlexSize(10),
-                        new FlexSize(16)
-                    )
-                );
-            Outline h_o =
+            O_Button_Destroy =
                 new Outline(
-                    otherOtherButton,
-                    new SingleLineTextSpan("This is a different outline"),
-                    BoxDrawingChars.Double
+                    Button_Destroy,
+                    lineStyle: BoxDrawingChars.Rounded
                 );
 
-            layoutContainer.AddChild(o);
-            layoutContainer.AddChild(t);
-            layoutContainer.AddChild(h);
+            layoutContainer.AddChild(Buttons);
 
-            h.AddChild(otherButton);
-            h.AddChild(h_o);
+            Buttons.AddChild(c_o);
         }
 
-        private void A_Input(object sender, MooTUI.Input.InputEventArgs e)
+        private void Destroy_Click(object sender, EventArgs e)
         {
-            if (sender == Button_Create)
-            {
-                switch (e.InputType)
-                {
-                    case InputTypes.MOUSE_ENTER:
-                        //Button_Create.GenerateMessage(Message.MessageType.INFO, "This will create a new button!");
-                        break;
-                }
-            }
+            Buttons.RemoveChild(O_Button_Destroy);
         }
 
-        private void A_Click(object sender, EventArgs e)
+        private void Create_Click(object sender, EventArgs e)
         {
-            //Button_Create.GenerateMessage(Message.MessageType.INFO, "New button created!");
-            //Canvas.AddChild(Button_Destroy, 5, 5);
+            Buttons.AddChild(O_Button_Destroy);
         }
     }
 }

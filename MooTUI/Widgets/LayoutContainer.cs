@@ -57,6 +57,9 @@ namespace MooTUI.Widgets
 
         public void AddChild(Widget w)
         {
+            if (GetLogicalChildren().Contains(w))
+                return;
+
             LinkChild(w);
             Children.Add(w);
             CalculateLayout();
@@ -68,6 +71,8 @@ namespace MooTUI.Widgets
             UnlinkChild(w);
             Children.Remove(w);
             CalculateLayout();
+
+            Render();
         }
 
         public void CalculateLayout()
