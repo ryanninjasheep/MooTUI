@@ -50,7 +50,7 @@ namespace MooTUI_Test
                 new Button(
                     "Create a button!",
                     new LayoutRect(
-                        new FlexSize(15),
+                        new FlexSize(30),
                         new FlexSize(5)
                     )
                 );
@@ -58,7 +58,7 @@ namespace MooTUI_Test
 
             Button Button_Destroy =
                 new Button(
-                    "{red/}Destroy this {base03/red}button!",
+                    "{red/}Destroy this button!",
                     new LayoutRect(
                         new FlexSize(15),
                         new FlexSize(5)
@@ -69,7 +69,7 @@ namespace MooTUI_Test
             Outline c_o = 
                 new Outline(
                     Button_Create,
-                    "{red/none}This has a lot of text!"
+                    "This is an {red/}o{orange/}u{yellow/}t{green/}l{blue/}i{purple/}n{magenta/}e{red/}!"
                 );
             O_Button_Destroy =
                 new Outline(
