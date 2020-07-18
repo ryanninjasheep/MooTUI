@@ -69,13 +69,11 @@ namespace MooTUI_Test
 
             Outline c_o = 
                 new Outline(
-                    Button_Create,
-                    lineStyle: BoxDrawingChars.Rounded
+                    Button_Create
                 );
             O_Button_Destroy =
                 new Outline(
-                    Button_Destroy,
-                    lineStyle: BoxDrawingChars.Rounded
+                    Button_Destroy
                 );
 
             layoutContainer.AddChild(Buttons);

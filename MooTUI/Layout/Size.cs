@@ -56,7 +56,7 @@ namespace MooTUI.Layout
         }
 
         public FlexSize(int preferredSize, int min) : this(preferredSize, min, preferredSize) { }
-        public FlexSize(int preferredSize) : this(preferredSize, 1, preferredSize) { }
+        public FlexSize(int preferredSize) : this(preferredSize, preferredSize) { }
 
         private FlexSize(int preferredSize, int min, int actualSize) : base(actualSize)
         {
