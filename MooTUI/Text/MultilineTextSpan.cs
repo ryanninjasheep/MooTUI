@@ -12,14 +12,13 @@ namespace MooTUI.Text
         public HJustification Justification { get; set; }
         public int Width { get; private set; }
 
-        private List<SingleLineTextSpan> Lines { get; set; }
+        private List<string> Lines { get; set; }
 
         public MultilineTextSpan(string text, int width, ColorPair c = new ColorPair(), 
             HJustification justification = HJustification.LEFT)
             : base(text, c)
         {
             Width = width;
-            Lines = new List<SingleLineTextSpan>();
             Justification = justification;
         }
 
@@ -29,12 +28,21 @@ namespace MooTUI.Text
 
             Visual visual = new Visual(Width, Lines.Count);
 
-            for (int i = 0; i < Lines.Count; i++)
-            {
-                Visual line = Lines[i].Draw();
-                int trimmedLength = Lines[i].Text.Trim().Length;
+            int i = 0;
 
-                visual.Merge(line, Justification.GetOffset(trimmedLength, Width), i);
+            for (int row = 0; row < Lines.Count; row++)
+            {
+                string currentLine = Lines[row];
+
+                int trimmedLength = currentLine.Trim().Length;
+                int xOffset = Justification.GetOffset(trimmedLength, Width);
+
+                for(int column = 0; column < currentLine.Length; column++)
+                {
+                    if (column + xOffset < Width)
+                        visual[column + xOffset, row] = new Cell(Text[i], ColorInfo.GetCurrentColorsAtIndex(i));
+                    i++;
+                }
             }
 
             return visual;
@@ -42,10 +50,10 @@ namespace MooTUI.Text
 
         private void GenerateLines()
         {
-            List<SingleLineTextSpan> lines = new List<SingleLineTextSpan>();
+            List<string> lines = new List<string>();
 
-            List<SingleLineTextSpan> hardLineBreaks = GetHardLineBreaks();
-            foreach(SingleLineTextSpan s in hardLineBreaks)
+            List<string> hardLineBreaks = GetHardLineBreaks();
+            foreach(string s in hardLineBreaks)
             {
                 lines.AddRange(GetSoftLineBreaks(s));
             }
@@ -53,9 +61,9 @@ namespace MooTUI.Text
             Lines = lines;
         }
 
-        private List<SingleLineTextSpan> GetHardLineBreaks()
+        private List<string> GetHardLineBreaks()
         {
-            List<SingleLineTextSpan> lines = new List<SingleLineTextSpan>();
+            List<string> lines = new List<string>();
 
             int i = 0;
             while (true)
@@ -65,25 +73,25 @@ namespace MooTUI.Text
                 if (next == -1)
                     break;
 
-                lines.Add(SubSpan(i, next - i));
+                lines.Add(Text.Substring(i, next - i));
                 i = next;
             }
 
-            lines.Add(SubSpan(i, Text.Length - i));
+            lines.Add(Text.Substring(i));
 
             return lines;
         }
 
-        private List<SingleLineTextSpan> GetSoftLineBreaks(SingleLineTextSpan s)
+        private List<string> GetSoftLineBreaks(string s)
         {
-            List<SingleLineTextSpan> lines = new List<SingleLineTextSpan>();
+            List<string> lines = new List<string>();
 
             char curr;
             int wordLength = 0;
             int lineLength = 0;
-            for (int i = 0; i < s.Text.Length; i++)
+            for (int i = 0; i < s.Length; i++)
             {
-                curr = s.Text[i];
+                curr = s[i];
 
                 if (char.IsWhiteSpace(curr))
                 {
@@ -99,7 +107,7 @@ namespace MooTUI.Text
                     wordLength++;
                     if (lineLength + wordLength > Width)
                     {
-                        lines.Add(s.SubSpan(i - lineLength - wordLength + 1, lineLength));
+                        lines.Add(s.Substring(i - lineLength - wordLength + 1, lineLength));
                         if (lineLength == 0)
                             wordLength = 0;
                         else
@@ -108,7 +116,7 @@ namespace MooTUI.Text
                 }
             }
 
-            lines.Add(s.SubSpan(Text.Length - lineLength - wordLength, lineLength + wordLength));
+            lines.Add(s.Substring(Text.Length - lineLength - wordLength));
 
             return lines;
         }

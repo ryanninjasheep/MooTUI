@@ -11,17 +11,17 @@ namespace MooTUI.Widgets
 {
     public class Outline : MonoContainer
     {
-        public SingleLineTextSpan Text { get; private set; }
+        public TextSpan Text { get; private set; }
         public BoxDrawingChars LineStyle { get; private set; }
 
         public static TextSpanEnclosure Enclosure { get; set; } =
             new TextSpanEnclosure("{ ", " }", new ColorPair());
 
-        public Outline(Widget w, SingleLineTextSpan text = null, BoxDrawingChars lineStyle = null)
+        public Outline(Widget w, TextSpan text = null, BoxDrawingChars lineStyle = null)
             : base(new LayoutRect(w.Bounds.WidthData.WithRelativeSize(2), w.Bounds.HeightData.WithRelativeSize(2)))
         {
             SetContent(w);
-            Text = text ?? new SingleLineTextSpan();
+            Text = text ?? new TextSpan();
             LineStyle = lineStyle ?? BoxDrawingChars.Default;
 
             RefreshVisual();

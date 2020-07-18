@@ -6,7 +6,7 @@ using System.Text;
 
 namespace MooTUI.Text
 {
-    public abstract class TextSpan
+    public class TextSpan
     {
         public string Text { get; protected set; }
         public TextSpanColorInfo ColorInfo { get; protected set; }
@@ -17,14 +17,14 @@ namespace MooTUI.Text
             Text = text;
         }
 
-        public SingleLineTextSpan SubSpan(int start, int length)
+        public TextSpan SubSpan(int start, int length)
         {
             if (start < 0 || length < 0 || start + length > Text.Length)
                 throw new ArgumentOutOfRangeException();
 
             string substring = Text.Substring(start, length);
             ColorPair startingColors = ColorInfo.GetCurrentColorsAtIndex(start);
-            SingleLineTextSpan span = new SingleLineTextSpan(substring, startingColors);
+            TextSpan span = new TextSpan(substring, startingColors);
 
             foreach (int k in ColorInfo.Keys)
             {
@@ -48,7 +48,27 @@ namespace MooTUI.Text
                 ColorInfo.Add(index, colors);
         }
 
-        public abstract Visual Draw();
+        public void Append(string text, ColorPair colors)
+        {
+            if (ColorInfo[text.Length] != colors)
+                ColorInfo.Add(text.Length, colors);
+
+            Text += text;
+        }
+
+        public virtual Visual Draw()
+        {
+            // This could be optimized
+
+            Visual visual = new Visual(Math.Max(Text.Length, 1), 1);
+
+            for (int i = 0; i < Text.Length; i++)
+            {
+                visual[i, 0] = new Cell(Text[i], ColorInfo.GetCurrentColorsAtIndex(i));
+            }
+
+            return visual;
+        }
 
         public class TextSpanColorInfo : SortedList<int, ColorPair>
         {
