@@ -22,6 +22,16 @@ namespace MooTUI.Text
             Justification = justification;
         }
 
+        public static MultilineTextSpan FromString(string s, int width, 
+            HJustification justification = HJustification.LEFT)
+        {
+            MultilineTextSpan span = new MultilineTextSpan("", width, justification: justification);
+
+            span.ParseAppend(s);
+
+            return span;
+        }
+
         public override Visual Draw()
         {
             GenerateLines();
@@ -40,7 +50,7 @@ namespace MooTUI.Text
                 for(int column = 0; column < currentLine.Length; column++)
                 {
                     if (column + xOffset < Width)
-                        visual[column + xOffset, row] = new Cell(Text[i], ColorInfo.GetCurrentColorsAtIndex(i));
+                        visual[column + xOffset, row] = new Cell(Text[i], ColorInfo.GetColorsAtIndex(i));
                     i++;
                 }
             }

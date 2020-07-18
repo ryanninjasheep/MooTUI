@@ -11,6 +11,8 @@ namespace MooTUI.Widgets
 {
     public class Button : Widget
     {
+        bool _isMouseOver = false;
+
         public TextSpan Text { get; private set; }
 
         public static TextSpanEnclosure Enclosure { get; set; } = 
@@ -20,7 +22,7 @@ namespace MooTUI.Widgets
 
         public Button(string text, LayoutRect bounds, bool isSimple = false) : base(bounds)
         {
-            Text = new MultilineTextSpan(text, Width, justification: HJustification.CENTER);
+            Text = MultilineTextSpan.FromString(text, Width, justification: HJustification.CENTER);
             IsSimple = isSimple;
 
             RefreshVisual();
@@ -30,7 +32,11 @@ namespace MooTUI.Widgets
 
         protected override void RefreshVisual()
         {
-            Visual.FillCell(new Cell(' ', Style.GetColorPair("Default")));
+            if (_isMouseOver)
+                Visual.FillCell(new Cell(' ', Style.GetColorPair("Hover")));
+            else
+                Visual.FillCell(new Cell(' ', Style.GetColorPair("Default")));
+
             if (IsSimple)
                 Visual.DrawSpan(Text);
             else
@@ -42,11 +48,13 @@ namespace MooTUI.Widgets
             switch (e.InputType)
             {
                 case InputTypes.MOUSE_ENTER:
-                    Visual.FillBackColor(Style.GetBack("Hover"));
+                    _isMouseOver = true;
+                    RefreshVisual();
                     Render();
                     break;
                 case InputTypes.MOUSE_LEAVE:
-                    Visual.FillBackColor(Style.GetBack("Default"));
+                    _isMouseOver = false;
+                    RefreshVisual();
                     Render();
                     break;
                 case InputTypes.LEFT_CLICK:

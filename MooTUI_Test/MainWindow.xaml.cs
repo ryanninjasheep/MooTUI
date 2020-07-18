@@ -58,19 +58,18 @@ namespace MooTUI_Test
 
             Button Button_Destroy =
                 new Button(
-                    "Destroy this button!",
+                    "{red/}Destroy this {base03/red}button!",
                     new LayoutRect(
                         new FlexSize(15),
                         new FlexSize(5)
                     )
                 );
-            Button_Destroy.Text.SetColorInfo(0, new ColorPair(MooTUI.Core.Color.Red, MooTUI.Core.Color.None));
             Button_Destroy.Click += Destroy_Click;
 
             Outline c_o = 
                 new Outline(
                     Button_Create,
-                    "This has a lot of text!"
+                    "{red/none}This has a lot of text!"
                 );
             O_Button_Destroy =
                 new Outline(

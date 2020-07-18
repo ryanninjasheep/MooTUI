@@ -21,7 +21,7 @@ namespace MooTUI.Widgets
             : base(new LayoutRect(w.Bounds.WidthData.WithRelativeSize(2), w.Bounds.HeightData.WithRelativeSize(2)))
         {
             SetContent(w);
-            Text = new TextSpan(text);
+            Text = TextSpan.FromString(text);
             LineStyle = lineStyle ?? BoxDrawingChars.Default;
 
             RefreshVisual();

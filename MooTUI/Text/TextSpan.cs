@@ -27,6 +27,15 @@ namespace MooTUI.Text
             Text = text;
         }
 
+        public static TextSpan FromString(string s)
+        {
+            TextSpan span = new TextSpan();
+
+            span.ParseAppend(s);
+
+            return span;
+        }
+
         public event EventHandler TextChanged;
 
         public TextSpan SubSpan(int start, int length)
@@ -35,14 +44,14 @@ namespace MooTUI.Text
                 throw new ArgumentOutOfRangeException();
 
             string substring = Text.Substring(start, length);
-            ColorPair startingColors = ColorInfo.GetCurrentColorsAtIndex(start);
-            TextSpan span = new TextSpan(substring, startingColors);
+            TextSpan span = new TextSpan(substring);
 
-            foreach (int k in ColorInfo.Keys)
-            {
-                if (k > start && k < start + length)
-                    span.SetColorInfo(k - start, ColorInfo[k]);
-            }
+            // TODO: FIX
+            //foreach (int k in ColorInfo.Keys)
+            //{
+            //    if (k > start && k < start + length)
+            //        span.SetColorInfo(k - start, ColorInfo.GetColorsAtIndex(k));
+            //}
 
             return span;
         }
@@ -52,9 +61,7 @@ namespace MooTUI.Text
             if (index < 0 || index > Text.Length)
                 throw new ArgumentOutOfRangeException();
 
-            if (ColorInfo.ContainsKey(index))
-                ColorInfo[index] = colors;
-            else if (ColorInfo.GetCurrentColorsAtIndex(index) == colors)
+            else if (ColorInfo.GetColorsAtIndex(index) == colors)
                 return;
             else
                 ColorInfo.Add(index, colors);
@@ -64,8 +71,8 @@ namespace MooTUI.Text
 
         public void Append(string text, ColorPair colors)
         {
-            if (ColorInfo[text.Length] != colors)
-                ColorInfo.Add(text.Length, colors);
+            if (ColorInfo.GetColorsAtIndex(Text.Length) != colors)
+                ColorInfo.Add(Text.Length, colors);
 
             Append(text);
         }
@@ -82,10 +89,55 @@ namespace MooTUI.Text
 
             for (int i = 0; i < Text.Length; i++)
             {
-                visual[i, 0] = new Cell(Text[i], ColorInfo.GetCurrentColorsAtIndex(i));
+                visual[i, 0] = new Cell(Text[i], ColorInfo.GetColorsAtIndex(i));
             }
 
             return visual;
+        }
+
+        protected void ParseAppend(string s)
+        {
+            ColorPair colors = new ColorPair();
+            string text = "";
+            foreach (char c in s)
+            {
+                if (c == '{')
+                {
+                    Append(text, colors);
+                    text = "";
+                }
+                else if (c == '}')
+                {
+                    colors = ParseColorArgument(text);
+                    text = "";
+                }
+                else
+                {
+                    text += c;
+                }
+            }
+
+            Append(text, colors);
+        }
+
+        /// <summary>
+        /// First, ensures argument is properly formatted, then returns the appropriate ColorPair.  If the argument
+        /// is not formatted properly, returns the empty ColorPair.
+        /// </summary>
+        private static ColorPair ParseColorArgument(string s)
+        {
+            int i = s.IndexOf('/');
+            if (i != -1)
+            {
+                string foreText = s.Substring(0, i);
+                string backText = s.Substring(i + 1);
+                Color fore = Color.None;
+                Color back = Color.None;
+                Enum.TryParse(foreText, true, out fore);
+                Enum.TryParse(backText, true, out back);
+                return new ColorPair(fore, back);
+            }
+            return new ColorPair();
         }
 
         private void OnTextChanged(EventArgs e)
@@ -94,21 +146,48 @@ namespace MooTUI.Text
             handler?.Invoke(this, e);
         }
 
-        public class TextSpanColorInfo : SortedList<int, ColorPair>
+        public class TextSpanColorInfo
         {
+            private List<(int index, ColorPair colors)> _data;
+
             public TextSpanColorInfo(ColorPair c)
             {
+                _data = new List<(int index, ColorPair colors)>();
                 Add(0, c);
             }
 
-            public ColorPair GetCurrentColorsAtIndex(int index)
+            public ColorPair GetColorsAtIndex(int index)
             {
-                int keyIndex = Keys.ToList().BinarySearch(index);
+                // Since the list is sorted, I could do more efficient stuff, but this works :D
 
-                if (keyIndex < 0)
-                    keyIndex = ~keyIndex - 1;
+                for (int i = 0; i < _data.Count - 1; i++)
+                {
+                    if (index >= _data[i].index && index < _data[i + 1].index)
+                    {
+                        return _data[i].colors;
+                    }
+                }
 
-                return this[Keys[keyIndex]];
+                return _data.Last().colors;
+            }
+
+            public void Add(int index, ColorPair c)
+            {
+                for (int i = 0; i < _data.Count - 1; i++)
+                {
+                    if (index == _data[i].index)
+                    {
+                        _data[i] = (_data[i].index, c);
+                        return;
+                    }
+                    else if (index > _data[i].index && index < _data[i + 1].index)
+                    {
+                        _data.Insert(i + 1, (index, c));
+                        return;
+                    }
+                }
+
+                _data.Add((index, c));
             }
         }
     }
