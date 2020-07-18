@@ -69,7 +69,8 @@ namespace MooTUI_Test
 
             Outline c_o = 
                 new Outline(
-                    Button_Create
+                    Button_Create,
+                    "This has a lot of text!"
                 );
             O_Button_Destroy =
                 new Outline(

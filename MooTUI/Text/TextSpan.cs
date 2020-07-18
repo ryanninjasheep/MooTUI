@@ -8,7 +8,17 @@ namespace MooTUI.Text
 {
     public class TextSpan
     {
-        public string Text { get; protected set; }
+        private string text;
+
+        public string Text
+        {
+            get => text;
+            protected set
+            {
+                OnTextChanged(EventArgs.Empty);
+                text = value;
+            }
+        }
         public TextSpanColorInfo ColorInfo { get; protected set; }
 
         public TextSpan(string text = "", ColorPair c = new ColorPair())
@@ -16,6 +26,8 @@ namespace MooTUI.Text
             ColorInfo = new TextSpanColorInfo(c);
             Text = text;
         }
+
+        public event EventHandler TextChanged;
 
         public TextSpan SubSpan(int start, int length)
         {
@@ -46,6 +58,8 @@ namespace MooTUI.Text
                 return;
             else
                 ColorInfo.Add(index, colors);
+
+            OnTextChanged(EventArgs.Empty);
         }
 
         public void Append(string text, ColorPair colors)
@@ -53,12 +67,16 @@ namespace MooTUI.Text
             if (ColorInfo[text.Length] != colors)
                 ColorInfo.Add(text.Length, colors);
 
+            Append(text);
+        }
+        public void Append(string text)
+        {
             Text += text;
         }
 
         public virtual Visual Draw()
         {
-            // This could be optimized
+            // This could be optimized probably
 
             Visual visual = new Visual(Math.Max(Text.Length, 1), 1);
 
@@ -68,6 +86,12 @@ namespace MooTUI.Text
             }
 
             return visual;
+        }
+
+        private void OnTextChanged(EventArgs e)
+        {
+            EventHandler handler = TextChanged;
+            handler?.Invoke(this, e);
         }
 
         public class TextSpanColorInfo : SortedList<int, ColorPair>
