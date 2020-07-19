@@ -292,10 +292,12 @@ namespace MooTUI.Widgets
         {
             Lock = true;
 
-            HScrollBar.Bounds.TryResize(Width - 2, 1);
-            VScrollBar.Bounds.TryResize(1, Height - 2);
+            HScrollBar.Bounds.WidthData.ActualSize = Width - 2;
+            VScrollBar.Bounds.HeightData.ActualSize = Height - 2;
 
             Lock = false;
+
+            CalculateScrollInfo();
         }
 
         protected override void RefreshVisual()

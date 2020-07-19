@@ -40,7 +40,8 @@ namespace MooTUI_Test
 
             Buttons = new LayoutContainer(
                 new LayoutRect(
-                    50, 50
+                    new FlexSize(75),
+                    new FlexSize(50)
                 ),
                 Orientation.Horizontal
             );
@@ -68,18 +69,23 @@ namespace MooTUI_Test
             Box c_o =
                 new Box(
                     Button_Create,
-                    "This is an {red/}o{orange/}u{yellow/}t{green/}l{blue/}i{purple/}n{magenta/}e{red/}!"
+                    "This is an {red/}o{orange/}u{yellow/}t{green/}l{blue/}i{purple/}n{magenta/}e{red/}!",
+                    BoxDrawing.Rounded
                 );
             O_Button_Destroy =
                 new Box(
-                    Button_Destroy
+                    Button_Destroy,
+                    lineStyle: BoxDrawing.Rounded
                 );
 
             ScrollBox s = new ScrollBox(
-                new LayoutRect(50, 30),
+                new LayoutRect(
+                    new FlexSize(10),
+                    new FlexSize(10)
+                    ),
                 Buttons,
                 text: "This is a {altyellow/!inv}scrollbox!",
-                lineStyle: BoxDrawing.Double);
+                lineStyle: BoxDrawing.Rounded);
 
             layoutContainer.AddChild(s);
 

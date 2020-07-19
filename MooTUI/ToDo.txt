@@ -2,7 +2,6 @@
 
 Long-Term:
  - Add more controls
-    - Scroll
     - Editable span
     - Radio Button
        -> actually, "radio group" makes more sense
