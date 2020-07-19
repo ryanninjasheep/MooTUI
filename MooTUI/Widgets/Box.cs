@@ -18,11 +18,15 @@ namespace MooTUI.Widgets
             new TextSpanEnclosure("{ ", " }", new ColorPair());
 
         public Box(Widget w, string text = "", BoxDrawing lineStyle = null)
-            : base(new LayoutRect(w.Bounds.WidthData.WithRelativeSize(2), w.Bounds.HeightData.WithRelativeSize(2)))
+            : this(new LayoutRect(w.Bounds.WidthData.WithRelativeSize(2), w.Bounds.HeightData.WithRelativeSize(2)),
+                  w, text, lineStyle)
+        { }
+        private protected Box(LayoutRect bounds, Widget w, string text, BoxDrawing lineStyle) : base(bounds)
         {
-            SetContent(w);
             Text = TextSpan.FromString(text);
             LineStyle = lineStyle ?? BoxDrawing.Default;
+
+            SetContent(w);
 
             RefreshVisual();
         }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MooTUI.IO;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
@@ -26,6 +27,13 @@ namespace MooTUI.Layout
 
         public event EventHandler SizeChanged;
 
+        public LayoutRect WithSize(Orientation orientation, Size s) => orientation switch
+        {
+            Orientation.Horizontal => new LayoutRect(s, HeightData),
+            Orientation.Vertical => new LayoutRect(WidthData, s),
+            _ => throw new InvalidEnumArgumentException(),
+        };
+
         public Size GetSizeInMainAxis(Orientation orientation) => orientation switch
         {
             Orientation.Horizontal => WidthData,
@@ -39,13 +47,6 @@ namespace MooTUI.Layout
             _ => throw new InvalidEnumArgumentException(),
         };
 
-        public LayoutRect WithSize(Orientation orientation, Size s) => orientation switch
-        {
-            Orientation.Horizontal => new LayoutRect(s, HeightData),
-            Orientation.Vertical => new LayoutRect(WidthData, s),
-            _ => throw new InvalidEnumArgumentException(),
-        };
-
         public void TryResize(int width, int height)
         {
             if (WidthData is FlexSize f)
@@ -53,6 +54,12 @@ namespace MooTUI.Layout
 
             if (HeightData is FlexSize g)
                 g.ActualSize = height;
+        }
+
+        public void AssertMinSize(int width, int height)
+        {
+            if (Width < width || Height < height)
+                throw new SizeException("LayoutRect is too small!");
         }
 
         private void BubbleSizeChanged(object sender, EventArgs e)
