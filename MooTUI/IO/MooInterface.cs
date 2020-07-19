@@ -35,6 +35,7 @@ namespace MooTUI.IO
 
                 Content.Rendered -= Content_RenderEventHandler;
                 Content.BubbleFocus -= Content_ClaimFocus;
+                Content.LayoutUpdated -= Content_LayoutUpdated;
             }
 
             w.Bind();
@@ -42,6 +43,7 @@ namespace MooTUI.IO
             Content = w;
             Content.Rendered += Content_RenderEventHandler;
             Content.BubbleFocus += Content_ClaimFocus;
+            Content.LayoutUpdated += Content_LayoutUpdated;
         }
 
         private void SetViewer(IMooViewer v)
@@ -58,6 +60,12 @@ namespace MooTUI.IO
         private void Content_ClaimFocus(object sender, FocusEventArgs e)
         {
             SetFocusedWidget(e.Sender);
+        }
+
+        private void Content_LayoutUpdated(object sender, EventArgs e)
+        {
+            SetHoveredWidget(null);
+            SetFocusedWidget(null);
         }
 
         private void Viewer_InputEventHandler(object sender, InputEventArgs e)

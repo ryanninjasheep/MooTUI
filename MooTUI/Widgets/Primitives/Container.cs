@@ -40,8 +40,9 @@ namespace MooTUI.Widgets.Primitives
             child.BubbleInput += Child_BubbleInput;
             child.BubbleFocus += Child_BubbleFocus;
             child.Resized += Child_Resized;
+            child.LayoutUpdated += Child_LayoutUpdated;
         }
-        
+
         protected void UnlinkChild(Widget child)
         {
             if (!GetLogicalChildren().Contains(child))
@@ -53,6 +54,7 @@ namespace MooTUI.Widgets.Primitives
             child.BubbleInput -= Child_BubbleInput;
             child.BubbleFocus -= Child_BubbleFocus;
             child.Resized -= Child_Resized;
+            child.LayoutUpdated -= Child_LayoutUpdated;
         }
 
         private void Child_Rendered(object sender, EventArgs e)
@@ -72,7 +74,6 @@ namespace MooTUI.Widgets.Primitives
             
             OnChildResized(sender as Widget);
         }
-
-
+        private void Child_LayoutUpdated(object sender, EventArgs e) => OnLayoutUpdated(e);
     }
 }

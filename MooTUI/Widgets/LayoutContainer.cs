@@ -152,6 +152,8 @@ namespace MooTUI.Widgets
 
             Lock = false;
 
+            OnLayoutUpdated(EventArgs.Empty);
+
             RefreshVisual();
         }
 

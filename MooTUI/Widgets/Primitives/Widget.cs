@@ -136,8 +136,15 @@ namespace MooTUI.Widgets.Primitives
             handler?.Invoke(this, e);
         }
 
+        internal void OnLayoutUpdated(EventArgs e)
+        {
+            EventHandler handler = LayoutUpdated;
+            handler?.Invoke(this, e);
+        }
+
         internal event EventHandler<InputEventArgs> BubbleInput;
         internal event EventHandler<FocusEventArgs> BubbleFocus;
+        internal event EventHandler LayoutUpdated;
 
         /// <summary>
         /// !!! ONLY CALL FROM Container.LinkChild !!!
