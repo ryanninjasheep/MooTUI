@@ -74,6 +74,9 @@ namespace MooTUI.Widgets
             HScrollBar = ScrollBar.Factory(Orientation.Horizontal, ViewportWidth, this);
             VScrollBar = ScrollBar.Factory(Orientation.Vertical, ViewportHeight, this);
 
+            LinkChild(HScrollBar);
+            LinkChild(VScrollBar);
+
             CalculateScrollInfo();
         }
 
@@ -109,6 +112,7 @@ namespace MooTUI.Widgets
 
             RefreshHScrollInfo();
 
+            DrawChild(Content);
             Render();
 
             return true;
@@ -122,6 +126,7 @@ namespace MooTUI.Widgets
 
             RefreshVScrollInfo();
 
+            DrawChild(Content);
             Render();
 
             return true;
@@ -138,6 +143,7 @@ namespace MooTUI.Widgets
             RefreshHScrollInfo();
             RefreshVScrollInfo();
 
+            DrawChild(Content);
             Render();
 
             return true;
@@ -158,6 +164,7 @@ namespace MooTUI.Widgets
             RefreshHScrollInfo();
             RefreshVScrollInfo();
 
+            DrawChild(Content);
             Render();
 
             return true;
@@ -192,6 +199,7 @@ namespace MooTUI.Widgets
             RefreshHScrollInfo();
             RefreshVScrollInfo();
 
+            DrawChild(Content);
             Render();
 
             return true;
@@ -289,8 +297,6 @@ namespace MooTUI.Widgets
 
             Lock = false;
         }
-
-        protected override void Draw() => RefreshVisual();
 
         protected override void RefreshVisual()
         {

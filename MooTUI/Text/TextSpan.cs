@@ -131,6 +131,7 @@ namespace MooTUI.Text
             {
                 string foreText = s.Substring(0, i);
                 string backText = s.Substring(i + 1);
+
                 Color fore = Color.None;
                 Color back = Color.None;
                 Enum.TryParse(foreText, true, out fore);

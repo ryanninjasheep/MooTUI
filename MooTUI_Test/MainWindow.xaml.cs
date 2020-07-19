@@ -78,7 +78,7 @@ namespace MooTUI_Test
             ScrollBox s = new ScrollBox(
                 new LayoutRect(50, 30),
                 Buttons,
-                text: "This is a {base03/altyellow}scrollbox!",
+                text: "This is a {altyellow/!inv}scrollbox!",
                 lineStyle: BoxDrawing.Double);
 
             layoutContainer.AddChild(s);
