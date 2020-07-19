@@ -2,7 +2,8 @@
 
 Long-Term:
  - Add more controls
-    - Grid (will be difficult!!!)
+    - Scroll
+    - Editable span
     - Radio Button
        -> actually, "radio group" makes more sense
     - Slider
@@ -16,12 +17,7 @@ Long-Term:
     - TabWindow?
     - Expander
        - Accordion
- - Work on size changes
  - Outline label acts as button?
- - Mouse drag to select in any selectable span
- - Animation support?  Particle support?
- - More involved info panel
-    - Debug Mode
  - Perhaps separate mouseDown and mouseUp to allow for dragging
     - When something is clicked, it receives the mouseUp signal even if the mouse has moved away!
  - Look into further separating input from display.

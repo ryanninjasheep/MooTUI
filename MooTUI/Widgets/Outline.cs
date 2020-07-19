@@ -12,17 +12,17 @@ namespace MooTUI.Widgets
     public class Outline : MonoContainer
     {
         public TextSpan Text { get; private set; }
-        public BoxDrawingChars LineStyle { get; private set; }
+        public BoxDrawing LineStyle { get; private set; }
 
         public static TextSpanEnclosure Enclosure { get; set; } =
             new TextSpanEnclosure("{ ", " }", new ColorPair());
 
-        public Outline(Widget w, string text = "", BoxDrawingChars lineStyle = null)
+        public Outline(Widget w, string text = "", BoxDrawing lineStyle = null)
             : base(new LayoutRect(w.Bounds.WidthData.WithRelativeSize(2), w.Bounds.HeightData.WithRelativeSize(2)))
         {
             SetContent(w);
             Text = TextSpan.FromString(text);
-            LineStyle = lineStyle ?? BoxDrawingChars.Default;
+            LineStyle = lineStyle ?? BoxDrawing.Default;
 
             RefreshVisual();
         }
@@ -76,15 +76,7 @@ namespace MooTUI.Widgets
 
         private void DrawOutline()
         {
-            Visual.FillChar(LineStyle.LR, 0, 0, Width - 1, 1);
-            Visual.FillChar(LineStyle.LR, 0, Height - 1, Width, 1);
-            Visual.FillChar(LineStyle.UD, 0, 0, 1, Height - 1);
-            Visual.FillChar(LineStyle.UD, Width - 1, 0, 1, Height - 1);
-
-            Visual.SetChar(0, 0, LineStyle.DR);
-            Visual.SetChar(Width - 1, 0, LineStyle.DL);
-            Visual.SetChar(0, Height - 1, LineStyle.UR);
-            Visual.SetChar(Width - 1, Height - 1, LineStyle.UL);
+            LineStyle.DrawBox(Visual, Width, Height);
         }
 
         private void DrawText()
@@ -95,43 +87,5 @@ namespace MooTUI.Widgets
                     0, 0,
                     Width, 1);
         }
-    }
-
-    public class BoxDrawingChars
-    {
-        public char UL { get; private set; }
-        public char UD { get; private set; }
-        public char UR { get; private set; }
-        public char DL { get; private set; }
-        public char DR { get; private set; }
-        public char LR { get; private set; }
-
-        public static BoxDrawingChars Default = new BoxDrawingChars
-        {
-            UL = '┘',
-            UD = '│',
-            UR = '└',
-            DL = '┐',
-            DR = '┌',
-            LR = '─'
-        };
-        public static BoxDrawingChars Double = new BoxDrawingChars
-        {
-            UL = '╝',
-            UD = '║',
-            UR = '╚',
-            DL = '╗',
-            DR = '╔',
-            LR = '═'
-        };
-        public static BoxDrawingChars Rounded = new BoxDrawingChars
-        {
-            UL = '╯',
-            UD = '│',
-            UR = '╰',
-            DL = '╮',
-            DR = '╭',
-            LR = '─'
-        };
     }
 }
