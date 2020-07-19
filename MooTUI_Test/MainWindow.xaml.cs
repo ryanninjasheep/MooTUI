@@ -28,7 +28,7 @@ namespace MooTUI_Test
     {
         LayoutContainer Buttons;
         Button Button_Create;
-        Outline O_Button_Destroy;
+        Box O_Button_Destroy;
 
         public MainWindow()
         {
@@ -66,13 +66,13 @@ namespace MooTUI_Test
                 );
             Button_Destroy.Click += Destroy_Click;
 
-            Outline c_o = 
-                new Outline(
+            Box c_o = 
+                new Box(
                     Button_Create,
                     "This is an {red/}o{orange/}u{yellow/}t{green/}l{blue/}i{purple/}n{magenta/}e{red/}!"
                 );
             O_Button_Destroy =
-                new Outline(
+                new Box(
                     Button_Destroy
                 );
 

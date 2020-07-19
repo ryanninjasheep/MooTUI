@@ -9,7 +9,7 @@ using System.Text;
 
 namespace MooTUI.Widgets
 {
-    public class Outline : MonoContainer
+    public class Box : MonoContainer
     {
         public TextSpan Text { get; private set; }
         public BoxDrawing LineStyle { get; private set; }
@@ -17,7 +17,7 @@ namespace MooTUI.Widgets
         public static TextSpanEnclosure Enclosure { get; set; } =
             new TextSpanEnclosure("{ ", " }", new ColorPair());
 
-        public Outline(Widget w, string text = "", BoxDrawing lineStyle = null)
+        public Box(Widget w, string text = "", BoxDrawing lineStyle = null)
             : base(new LayoutRect(w.Bounds.WidthData.WithRelativeSize(2), w.Bounds.HeightData.WithRelativeSize(2)))
         {
             SetContent(w);
