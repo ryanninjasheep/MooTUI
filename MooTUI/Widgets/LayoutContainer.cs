@@ -164,8 +164,8 @@ namespace MooTUI.Widgets
 
             foreach(WidgetWithLocation w in ChildrenWithLocation)
             {
-                if (x > w.X && x < w.X + w.Widget.Width
-                    && y > w.Y && y < w.Y + w.Widget.Height)
+                if (x >= w.X && x < w.X + w.Widget.Width
+                    && y >= w.Y && y < w.Y + w.Widget.Height)
                 {
                     m.SetRelativeMouse(-w.X, -w.Y);
 

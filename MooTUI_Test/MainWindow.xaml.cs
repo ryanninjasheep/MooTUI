@@ -34,13 +34,13 @@ namespace MooTUI_Test
 
             Container = new LayoutContainer(
                 new LayoutRect(
-                    new FlexSize(100),
+                    new FlexSize(30),
                     new FlexSize(3)),
                 Orientation.Vertical,
                 LayoutContainer.MainAxisJustification.FIT);
 
             ScrollBox scroll = new ScrollBox(
-                new LayoutRect(200, 50),
+                new LayoutRect(32, 20),
                 Container);
 
             WPFMooTUIBuilder.GenerateViewer(this, scroll, Theme.Solarized);

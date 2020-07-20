@@ -64,7 +64,7 @@ namespace MooTUI.IO
 
         private void Content_LayoutUpdated(object sender, EventArgs e)
         {
-            SetHoveredWidget(null);
+            SetHoveredWidget(GetHoveredWidget());
             SetFocusedWidget(null);
         }
 
@@ -90,15 +90,23 @@ namespace MooTUI.IO
 
         private void HandleMouseMovement(InputEventArgs e)
         {
+            SetHoveredWidget(GetHoveredWidget());
+            HoveredWidget.HandleInput(e.CopyWithNewInputType(InputTypes.MOUSE_MOVE));
+        }
+
+        private Widget GetHoveredWidget()
+        {
+            // Kinda sketchy fix
+            MouseContext.SetAbsoluteMouse(MouseContext.AbsoluteMouse);
             Widget hovered = Content;
             while (hovered is Container c)
             {
-                hovered = c.GetHoveredWidget(e.Mouse);
+                hovered = c.GetHoveredWidget(MouseContext);
                 if (c == hovered)
                     break;
             }
-            SetHoveredWidget(hovered);
-            HoveredWidget.HandleInput(e.CopyWithNewInputType(InputTypes.MOUSE_MOVE));
+
+            return hovered;
         }
 
         private void SetHoveredWidget(Widget w)
