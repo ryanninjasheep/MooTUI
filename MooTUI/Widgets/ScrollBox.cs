@@ -286,6 +286,7 @@ namespace MooTUI.Widgets
 
             MinScroll();
 
+            RefreshVisual();
             Render();
         }
 

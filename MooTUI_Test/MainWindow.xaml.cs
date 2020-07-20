@@ -26,81 +26,45 @@ namespace MooTUI_Test
     /// </summary>
     public partial class MainWindow : System.Windows.Window
     {
-        LayoutContainer Buttons;
-        Button Button_Create;
-        Box O_Button_Destroy;
+        LayoutContainer Container;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            LayoutContainer layoutContainer = new LayoutContainer(new LayoutRect(100, 30), Orientation.Vertical);
-
-            WPFMooTUIBuilder.GenerateViewer(this, layoutContainer, Theme.Solarized);
-
-            Buttons = new LayoutContainer(
+            Container = new LayoutContainer(
                 new LayoutRect(
-                    new FlexSize(75),
-                    new FlexSize(50)
-                ),
-                Orientation.Horizontal,
-                LayoutContainer.MainAxisJustification.FIT
-            );
+                    new FlexSize(100),
+                    new FlexSize(3)),
+                Orientation.Vertical,
+                LayoutContainer.MainAxisJustification.FIT);
 
-            Button_Create =
-                new Button(
-                    "Create a button!",
-                    new LayoutRect(
-                        new FlexSize(30),
-                        new FlexSize(5)
-                    )
-                );
-            Button_Create.Click += Create_Click;
+            ScrollBox scroll = new ScrollBox(
+                new LayoutRect(200, 50),
+                Container);
 
-            Button Button_Destroy =
-                new Button(
-                    "{red/}Destroy this button!",
-                    new LayoutRect(
-                        new FlexSize(15),
-                        new FlexSize(5)
-                    )
-                );
-            Button_Destroy.Click += Destroy_Click;
+            WPFMooTUIBuilder.GenerateViewer(this, scroll, Theme.Solarized);
 
-            Box c_o =
-                new Box(
-                    Button_Create,
-                    "This is an {red/}o{orange/}u{yellow/}t{green/}l{blue/}i{purple/}n{magenta/}e{red/}!",
-                    BoxDrawing.Rounded
-                );
-            O_Button_Destroy =
-                new Box(
-                    Button_Destroy,
-                    lineStyle: BoxDrawing.Rounded
-                );
-
-            ScrollBox s = new ScrollBox(
+            Button create = new Button(
+                "{altyellow/}create a new button!",
                 new LayoutRect(
-                    new FlexSize(10),
-                    new FlexSize(10)
-                    ),
-                Buttons,
-                text: "This is a {altyellow/!inv}scrollbox!",
-                lineStyle: BoxDrawing.Rounded);
+                    new FlexSize(30),
+                    new Size(3)));
+            create.Click += Create_Click;
 
-            layoutContainer.AddChild(s);
-
-            Buttons.AddChild(c_o);
-        }
-
-        private void Destroy_Click(object sender, EventArgs e)
-        {
-            Buttons.RemoveChild(O_Button_Destroy);
+            Container.AddChild(create);
         }
 
         private void Create_Click(object sender, EventArgs e)
         {
-            Buttons.AddChild(O_Button_Destroy);
+            Button b = new Button(
+                "delete this button",
+                new LayoutRect(
+                    new FlexSize(30),
+                    new Size(3)));
+            b.Click += (b, e) => Container.RemoveChild(b as Widget);
+
+            Container.AddChild(b);
         }
     }
 }
