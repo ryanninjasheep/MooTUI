@@ -34,6 +34,11 @@ namespace MooTUI.Layout
             _ => throw new InvalidEnumArgumentException(),
         };
 
+        public LayoutRect Clone() => new LayoutRect(WidthData.Clone(), HeightData.Clone());
+
+        public LayoutRect WithRelativeSize(int widthDiff, int heightDiff) =>
+            new LayoutRect(WidthData.WithRelativeSize(widthDiff), HeightData.WithRelativeSize(heightDiff));
+
         public Size GetSizeInMainAxis(Orientation orientation) => orientation switch
         {
             Orientation.Horizontal => WidthData,
@@ -54,6 +59,12 @@ namespace MooTUI.Layout
 
             if (HeightData is FlexSize g)
                 g.ActualSize = height;
+        }
+
+        public void SetSizes(Size width, Size height)
+        {
+            WidthData = width;
+            HeightData = height;
         }
 
         public void AssertMinSize(int width, int height)

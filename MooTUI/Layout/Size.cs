@@ -26,6 +26,7 @@ namespace MooTUI.Layout
         public event EventHandler ActualSizeChanged;
 
         public virtual Size WithRelativeSize(int difference) => new Size(ActualSize + difference);
+        public virtual Size Clone() => new Size(ActualSize);
 
         private void OnActualSizeChanged(EventArgs e)
         {
@@ -68,5 +69,6 @@ namespace MooTUI.Layout
 
         public override Size WithRelativeSize(int difference) => 
             new FlexSize(PreferredSize + difference, Min + difference);
+        public override Size Clone() => new FlexSize(PreferredSize, Min, ActualSize);
     }
 }

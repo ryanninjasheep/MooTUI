@@ -18,7 +18,7 @@ namespace MooTUI.Widgets
             new TextSpanEnclosure("{ ", " }", new ColorPair());
 
         public Box(Widget w, string text = "", BoxDrawing lineStyle = null)
-            : this(new LayoutRect(w.Bounds.WidthData.WithRelativeSize(2), w.Bounds.HeightData.WithRelativeSize(2)),
+            : this(w.Bounds.WithRelativeSize(2, 2),
                   w, text, lineStyle)
         { }
         private protected Box(LayoutRect bounds, Widget w, string text, BoxDrawing lineStyle) : base(bounds)
@@ -51,8 +51,9 @@ namespace MooTUI.Widgets
 
         protected override void OnChildResized(Widget child)
         {
-            Bounds.WithSize(Orientation.Horizontal, Content.Bounds.WidthData.WithRelativeSize(2));
-            Bounds.WithSize(Orientation.Vertical, Content.Bounds.HeightData.WithRelativeSize(2));
+            Bounds.SetSizes(
+                Content.Bounds.WidthData.WithRelativeSize(2),
+                Content.Bounds.HeightData.WithRelativeSize(2));
         }
 
         protected override void Input(InputEventArgs e) { }
