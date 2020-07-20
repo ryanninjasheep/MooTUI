@@ -11,6 +11,8 @@ namespace MooTUI.Text
         public string Left { get; private set; }
         public string Right { get; private set; }
 
+        public int TotalWidth => Left.Length + Right.Length;
+
         public ColorPair Colors { get; set; }
 
         public TextSpanEnclosure(string left, string right, ColorPair colors = new ColorPair())

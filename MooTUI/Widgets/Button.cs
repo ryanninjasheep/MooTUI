@@ -22,7 +22,10 @@ namespace MooTUI.Widgets
 
         public Button(string text, LayoutRect bounds, bool isSimple = false) : base(bounds)
         {
-            Text = MultilineTextSpan.FromString(text, Width, justification: HJustification.CENTER);
+            Text = MultilineTextSpan.FromString(
+                text, 
+                Width - Enclosure.TotalWidth, 
+                justification: HJustification.CENTER);
             IsSimple = isSimple;
         }
 
