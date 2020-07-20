@@ -11,8 +11,8 @@ namespace MooTUI.Widgets
 {
     public class LayoutContainer : Container
     {
-        public enum MainAxisJustification { START, CENTER, END, STRETCH, SPACE_BETWEEN, SPACE_AROUND }
-        public enum CrossAxisJustification { START, CENTER, END }
+        public enum MainAxisJustification { START, CENTER, END, STRETCH, FIT }
+        public enum CrossAxisJustification { START, CENTER, END, STRETCH }
 
         public List<Widget> Children { get; private set; }
         private List<WidgetWithLocation> ChildrenWithLocation { get; set; }
@@ -74,6 +74,16 @@ namespace MooTUI.Widgets
 
         public void CalculateLayout()
         {
+            if (Lock)
+                return;
+
+            if (MainJustification == MainAxisJustification.FIT
+                && Bounds.GetSizeInMainAxis(Orientation) is FlexSize size)
+            {
+                Lock = true;
+                size.ActualSize = Math.Max(GetMinContentSize(), size.Min);
+            }
+
             AssertMinSizesFit();
 
             Lock = true;
@@ -94,10 +104,11 @@ namespace MooTUI.Widgets
 
             int totalSpace = Children.Sum((s) => s.Bounds.GetSizeInMainAxis(Orientation).ActualSize);
 
-            if (MainJustification == MainAxisJustification.START ||
-                MainJustification == MainAxisJustification.CENTER ||
-                MainJustification == MainAxisJustification.END ||
-                MainJustification == MainAxisJustification.STRETCH)
+            if (MainJustification == MainAxisJustification.START 
+                || MainJustification == MainAxisJustification.FIT
+                || MainJustification == MainAxisJustification.CENTER 
+                || MainJustification == MainAxisJustification.END 
+                || MainJustification == MainAxisJustification.STRETCH)
             {
                 if (MainJustification == MainAxisJustification.STRETCH ||
                     totalSpace > OrientationSize)
@@ -106,6 +117,7 @@ namespace MooTUI.Widgets
                 int index = MainJustification switch
                 {
                     MainAxisJustification.START => HJustification.LEFT.GetOffset(totalSpace, OrientationSize),
+                    MainAxisJustification.FIT => HJustification.LEFT.GetOffset(totalSpace, OrientationSize),
                     MainAxisJustification.CENTER => HJustification.CENTER.GetOffset(totalSpace, OrientationSize),
                     MainAxisJustification.END => HJustification.RIGHT.GetOffset(totalSpace, OrientationSize),
                     MainAxisJustification.STRETCH => 0,
@@ -131,14 +143,6 @@ namespace MooTUI.Widgets
                     default:
                         throw new System.ComponentModel.InvalidEnumArgumentException();
                 }
-            }
-            else if (MainJustification == MainAxisJustification.SPACE_AROUND)
-            {
-                //TODO
-            }
-            else if (MainJustification == MainAxisJustification.SPACE_BETWEEN)
-            {
-                //TODO
             }
             else
             {
@@ -175,7 +179,7 @@ namespace MooTUI.Widgets
 
         protected override void RefreshVisual()
         {
-            Visual.FillCell(new Cell(' ', new ColorPair()));
+            Visual.FillCell(new Cell(' ', Style.GetColorPair("Default")));
 
             foreach (WidgetWithLocation w in ChildrenWithLocation)
             {
@@ -202,6 +206,12 @@ namespace MooTUI.Widgets
 
         private void AssertMinSizesFit()
         {
+            if (GetMinContentSize() > OrientationSize)
+                throw new InvalidOperationException("The given objects cannot fit!");
+        }
+
+        private int GetMinContentSize()
+        {
             int min = 0;
             foreach (Widget w in Children)
             {
@@ -218,8 +228,7 @@ namespace MooTUI.Widgets
                     throw new InvalidOperationException("The given objects cannot fit!");
             }
 
-            if (min > OrientationSize)
-                throw new InvalidOperationException("The given objects cannot fit!");
+            return min;
         }
 
         private void SetIndividualCrossSize(WidgetWithLocation w)

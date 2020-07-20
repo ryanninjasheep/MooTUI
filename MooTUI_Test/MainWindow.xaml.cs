@@ -43,7 +43,8 @@ namespace MooTUI_Test
                     new FlexSize(75),
                     new FlexSize(50)
                 ),
-                Orientation.Horizontal
+                Orientation.Horizontal,
+                LayoutContainer.MainAxisJustification.FIT
             );
 
             Button_Create =
