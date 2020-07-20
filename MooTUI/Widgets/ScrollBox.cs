@@ -250,7 +250,8 @@ namespace MooTUI.Widgets
         {
             (int x, int y) = m.Mouse;
 
-            if (x > 0 && x < 1 + ViewportWidth && y > 0 && y < 1 + ViewportHeight)
+            if (x > 0 && x < 1 + ViewportWidth && y > 0 && y < 1 + ViewportHeight
+                && Content.HitTest(x + HorizontalOffset - 1, y + VerticalOffset - 1))
             {
                 m.SetRelativeMouse(HorizontalOffset - 1, VerticalOffset - 1);
                 return Content;

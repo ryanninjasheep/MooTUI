@@ -31,7 +31,7 @@ namespace MooTUI.Widgets.Primitives
         public int Width => Bounds.Width;
         public int Height => Bounds.Height;
 
-        public bool HasParent { get; private set; }
+        internal bool HasParent { get; private set; }
 
         public Widget(LayoutRect bounds)
         {
@@ -43,12 +43,13 @@ namespace MooTUI.Widgets.Primitives
         /// Called after the View is drawn; bubbles up logical tree.
         /// </summary>
         public event EventHandler Rendered;
-
         /// <summary>
         /// Called after this Widget handles input, but before it is propagated up the  logical tree.
         /// </summary>
         public event EventHandler<InputEventArgs> InputReceived;
-
+        /// <summary>
+        /// Called whenever this widget changes size.
+        /// </summary>
         public event EventHandler Resized;
 
         /// <summary>
@@ -83,29 +84,19 @@ namespace MooTUI.Widgets.Primitives
         /// </summary>
         protected virtual void Draw() { }
         /// <summary>
-        /// Used for base drawing.
+        /// Used for base drawing.  Called whenever the entire visual needs to be redrawn.
         /// </summary>
         protected abstract void RefreshVisual();
+        /// <summary>
+        /// Deal with input.
+        /// </summary>
         protected abstract void Input(InputEventArgs e);
+        /// <summary>
+        /// If any additional changes need to be done when this widget is resized, put them here.
+        /// </summary>
         protected virtual void Resize() { }
 
-        private void OnRendered(EventArgs e)
-        {
-            EventHandler handler = Rendered;
-            handler?.Invoke(this, e);
-        }
-
-        private void OnInputReceived(InputEventArgs e)
-        {
-            EventHandler<InputEventArgs> handler = InputReceived;
-            handler?.Invoke(this, e);
-        }
-
-        private void OnResized(EventArgs e)
-        {
-            EventHandler handler = Resized;
-            handler?.Invoke(this, e);
-        }
+        private void Bounds_SizeChanged(object sender, EventArgs e) => OnSizeChanged();
 
         private void OnSizeChanged()
         {
@@ -119,9 +110,20 @@ namespace MooTUI.Widgets.Primitives
             Render();
         }
 
-        private void Bounds_SizeChanged(object sender, EventArgs e)
+        private void OnRendered(EventArgs e)
         {
-            OnSizeChanged();
+            EventHandler handler = Rendered;
+            handler?.Invoke(this, e);
+        }
+        private void OnInputReceived(InputEventArgs e)
+        {
+            EventHandler<InputEventArgs> handler = InputReceived;
+            handler?.Invoke(this, e);
+        }
+        private void OnResized(EventArgs e)
+        {
+            EventHandler handler = Resized;
+            handler?.Invoke(this, e);
         }
 
         internal void OnBubbleInput(InputEventArgs e)
@@ -129,13 +131,11 @@ namespace MooTUI.Widgets.Primitives
             EventHandler<InputEventArgs> handler = BubbleInput;
             handler?.Invoke(this, e);
         }
-
         internal void OnClaimFocus(FocusEventArgs e)
         {
             EventHandler<FocusEventArgs> handler = BubbleFocus;
             handler?.Invoke(this, e);
         }
-
         internal void OnLayoutUpdated(EventArgs e)
         {
             EventHandler handler = LayoutUpdated;

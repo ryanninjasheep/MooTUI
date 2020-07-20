@@ -20,16 +20,20 @@ namespace MooTUI.Widgets.Primitives
         /// Updates relative mouse position and returns Widget directly under mouse.
         /// </summary>
         public abstract Widget GetHoveredWidget(MouseContext m);
-
         /// <summary>
         /// Returns an unordered list of all logical children.  When implementing, ensure
         /// that the method doesn't return null and also that none of the elements in
         /// the list are null.
         /// </summary>
         protected abstract IEnumerable<Widget> GetLogicalChildren();
-
+        /// <summary>
+        /// Draws a particular child of this object.  Do not call render from this method.
+        /// </summary>
         protected abstract void DrawChild(Widget child);
-
+        /// <summary>
+        /// Contains additional behavior to occur if a child is resized.  Use lock to prevent this from
+        /// being called when maniputlating child size.
+        /// </summary>
         protected abstract void OnChildResized(Widget child);
 
         protected void LinkChild(Widget child)
