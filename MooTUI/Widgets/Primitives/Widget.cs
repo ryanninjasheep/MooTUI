@@ -85,6 +85,7 @@ namespace MooTUI.Widgets.Primitives
         protected virtual void Draw() { }
         /// <summary>
         /// Used for base drawing.  Called whenever the entire visual needs to be redrawn.
+        /// Unnecessary to call after object init.
         /// </summary>
         protected abstract void RefreshVisual();
         /// <summary>
@@ -154,6 +155,7 @@ namespace MooTUI.Widgets.Primitives
             if (HasParent)
                 throw new InvalidOperationException("Cannot bind Widget because it already has a parent.");
 
+            RefreshVisual();
             HasParent = true;
         }
 

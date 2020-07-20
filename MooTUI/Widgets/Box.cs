@@ -27,8 +27,6 @@ namespace MooTUI.Widgets
             LineStyle = lineStyle ?? BoxDrawing.Default;
 
             SetContent(w);
-
-            RefreshVisual();
         }
 
         public override Widget GetHoveredWidget(MouseContext m)

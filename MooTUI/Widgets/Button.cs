@@ -24,8 +24,6 @@ namespace MooTUI.Widgets
         {
             Text = MultilineTextSpan.FromString(text, Width, justification: HJustification.CENTER);
             IsSimple = isSimple;
-
-            RefreshVisual();
         }
 
         public event EventHandler Click;

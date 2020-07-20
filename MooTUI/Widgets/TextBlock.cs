@@ -15,9 +15,9 @@ namespace MooTUI.Widgets
         public TextBlock(TextSpan text, LayoutRect bounds) : base(bounds)
         {
             Text = text;
-
-            RefreshVisual();
         }
+        public TextBlock(string text, LayoutRect bounds)
+            : this(MultilineTextSpan.FromString(text, bounds.Width), bounds) { }
 
         public static TextBlock FromSpan(TextSpan text)
         {
