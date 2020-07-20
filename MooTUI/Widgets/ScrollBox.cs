@@ -66,6 +66,11 @@ namespace MooTUI.Widgets
             string text = "", BoxDrawing lineStyle = null)
             : base(bounds, w, text, lineStyle)
         {
+            if (w.Bounds.Width < ViewportWidth && w.Bounds.WidthData is FlexSize width)
+                width.ActualSize = ViewportWidth;
+            if (w.Bounds.Height < ViewportHeight && w.Bounds.HeightData is FlexSize height)
+                height.ActualSize = ViewportHeight;
+
             bounds.AssertMinSize(5, 5);
 
             HScrollBarVisibility = hScrollbarVisibility;

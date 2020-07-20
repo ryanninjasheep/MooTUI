@@ -40,7 +40,7 @@ namespace MooTUI_Test
                 LayoutContainer.MainAxisJustification.FIT);
 
             ScrollBox scroll = new ScrollBox(
-                new LayoutRect(32, 20),
+                new LayoutRect(50, 20),
                 Container);
 
             WPFMooTUIBuilder.GenerateViewer(this, scroll, Theme.Solarized);
