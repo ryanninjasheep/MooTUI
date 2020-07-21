@@ -1,5 +1,6 @@
 ﻿using MooTUI.Core;
 using MooTUI.Input;
+using MooTUI.IO;
 using MooTUI.Layout;
 using MooTUI.Widgets.Primitives;
 using System;
@@ -63,8 +64,19 @@ namespace MooTUI.Widgets
 
             w.Render();
         }
+        public void InsertChild(Widget w, int index)
+        {
+            LinkChild(w);
+            Children.Insert(index, w);
+            CalculateLayout();
+
+            w.Render();
+        }
         public void RemoveChild(Widget w)
         {
+            if (!Children.Contains(w))
+                return;
+
             UnlinkChild(w);
             Children.Remove(w);
             CalculateLayout();
@@ -225,7 +237,7 @@ namespace MooTUI.Widgets
 
                 if ((c is FlexSize g && g.Min > Bounds.GetSizeInCrossAxis(Orientation).ActualSize) ||
                     (!(c is FlexSize) && c.ActualSize > Bounds.GetSizeInCrossAxis(Orientation).ActualSize))
-                    throw new InvalidOperationException("The given objects cannot fit!");
+                    throw new SizeException("The given objects cannot fit!");
             }
 
             return min;

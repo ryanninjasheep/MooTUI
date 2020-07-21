@@ -65,6 +65,8 @@ namespace MooTUI.Layout
         {
             WidthData = width;
             HeightData = height;
+
+            BubbleSizeChanged(this, EventArgs.Empty);
         }
 
         public void AssertMinSize(int width, int height)

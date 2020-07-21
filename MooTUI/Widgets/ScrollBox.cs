@@ -66,10 +66,7 @@ namespace MooTUI.Widgets
             string text = "", BoxDrawing lineStyle = null)
             : base(bounds, w, text, lineStyle)
         {
-            if (w.Bounds.Width < ViewportWidth && w.Bounds.WidthData is FlexSize width)
-                width.ActualSize = ViewportWidth;
-            if (w.Bounds.Height < ViewportHeight && w.Bounds.HeightData is FlexSize height)
-                height.ActualSize = ViewportHeight;
+            TryStretchContent();
 
             bounds.AssertMinSize(5, 5);
 
@@ -302,6 +299,8 @@ namespace MooTUI.Widgets
             HScrollBar.Bounds.WidthData.ActualSize = Width - 2;
             VScrollBar.Bounds.HeightData.ActualSize = Height - 2;
 
+            TryStretchContent();
+
             Lock = false;
 
             CalculateScrollInfo();
@@ -410,6 +409,14 @@ namespace MooTUI.Widgets
                 DrawChild(HScrollBar);
             if (IsVScrollBarVisible)
                 DrawChild(VScrollBar);
+        }
+
+        private void TryStretchContent()
+        {
+            if (Content.Bounds.Width < ViewportWidth && Content.Bounds.WidthData is FlexSize width)
+                width.ActualSize = ViewportWidth;
+            if (Content.Bounds.Height < ViewportHeight && Content.Bounds.HeightData is FlexSize height)
+                height.ActualSize = ViewportHeight;
         }
 
         /// <summary>

@@ -31,7 +31,9 @@ namespace MooTUI.Widgets
 
         public event EventHandler Click;
 
-        protected override void RefreshVisual()
+        protected override void RefreshVisual() { }
+
+        protected override void Draw()
         {
             if (_isMouseOver)
                 Visual.FillCell(new Cell(' ', Style.GetColorPair("Hover")));
@@ -50,12 +52,10 @@ namespace MooTUI.Widgets
             {
                 case InputTypes.MOUSE_ENTER:
                     _isMouseOver = true;
-                    RefreshVisual();
                     Render();
                     break;
                 case InputTypes.MOUSE_LEAVE:
                     _isMouseOver = false;
-                    RefreshVisual();
                     Render();
                     break;
                 case InputTypes.LEFT_CLICK:
@@ -64,7 +64,6 @@ namespace MooTUI.Widgets
                 default:
                     // ok, just do nothing.
                     break;
-
             }
         }
 

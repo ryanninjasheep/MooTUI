@@ -37,7 +37,7 @@ namespace MooTUI_Test
                     new FlexSize(30),
                     new FlexSize(3)),
                 Orientation.Vertical,
-                LayoutContainer.MainAxisJustification.FIT);
+                crossJustification: LayoutContainer.CrossAxisJustification.STRETCH);
 
             ScrollBox scroll = new ScrollBox(
                 new LayoutRect(50, 20),
@@ -46,26 +46,36 @@ namespace MooTUI_Test
 
             WPFMooTUIBuilder.GenerateViewer(this, scroll, Theme.Solarized);
 
-            Button create = new Button(
-                "{altyellow/}create a new button!",
+            ListBox list = new ListBox(
+                new LayoutRect(
+                    new FlexSize(20),
+                    new FlexSize(10)),
+                "List!",
+                BoxDrawing.Leaf);
+
+            Container.AddChild(list);
+
+            Button addToList = new Button(
+                "{green/}add an item to the list!",
                 new LayoutRect(
                     new FlexSize(30),
-                    new Size(3)));
-            create.Click += Create_Click;
-
-            Container.AddChild(create);
-        }
-
-        private void Create_Click(object sender, EventArgs e)
-        {
-            Button b = new Button(
-                "delete this button",
+                    new Size(1)));
+            addToList.Click += (s, e) =>
+            {
+                list.Add("This is a {yellow/}listitem!");
+            };
+            Button removeList = new Button(
+                "{red/}remove selected listitem!",
                 new LayoutRect(
                     new FlexSize(30),
-                    new Size(3)));
-            b.Click += (b, e) => Container.RemoveChild(b as Widget);
+                    new Size(1)));
+            removeList.Click += (s, e) =>
+            {
+                list.RemoveElementUnderCursor();
+            };
 
-            Container.AddChild(b);
+            Container.AddChild(addToList);
+            Container.AddChild(removeList);
         }
     }
 }
