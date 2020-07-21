@@ -41,7 +41,8 @@ namespace MooTUI_Test
 
             ScrollBox scroll = new ScrollBox(
                 new LayoutRect(50, 20),
-                Container);
+                Container,
+                lineStyle: BoxDrawing.Leaf);
 
             WPFMooTUIBuilder.GenerateViewer(this, scroll, Theme.Solarized);
 

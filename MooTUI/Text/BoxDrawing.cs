@@ -41,6 +41,33 @@ namespace MooTUI.Text
             DR = '╭',
             LR = '─'
         };
+        public static BoxDrawing Leaf = new BoxDrawing
+        {
+            UL = '╯',
+            UD = '│',
+            UR = '└',
+            DL = '┐',
+            DR = '╭',
+            LR = '─'
+        };
+        public static BoxDrawing BubbleLeft = new BoxDrawing
+        {
+            UL = '╯',
+            UD = '│',
+            UR = '└',
+            DL = '╮',
+            DR = '╭',
+            LR = '─'
+        };
+        public static BoxDrawing BubbleRight = new BoxDrawing
+        {
+            UL = '┘',
+            UD = '│',
+            UR = '╰',
+            DL = '╮',
+            DR = '╭',
+            LR = '─'
+        };
 
         public void DrawBox(Visual v, int width, int height, int xOffset = 0, int yOffset = 0)
         {
