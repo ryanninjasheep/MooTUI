@@ -14,16 +14,16 @@ namespace MooTUI.Widgets
 {
     public class TextInput : Widget
     {
-        private MultilineTextSpan _text;
+        private TextArea _text;
 
-        public string Text => Span.Text;
+        public string Text => TextArea.Text;
         public int Cursor { get; private set; }
 
         public int SelectionStart => Math.Min(SelectionFrom, SelectionTo);
         public int SelectionEnd => Math.Max(SelectionFrom, SelectionTo);
         public bool IsSelectionActive => SelectionFrom != SelectionTo;
 
-        protected MultilineTextSpan Span
+        protected TextArea TextArea
         {
             get => _text;
             private set
@@ -39,12 +39,12 @@ namespace MooTUI.Widgets
         private bool IsFocused { get; set; }
         private bool IsHovered { get; set; }
 
-        private MultilineTextSpan Prompt { get; set; }
+        private TextArea Prompt { get; set; }
 
         public TextInput(LayoutRect bounds, string promptText = "") : base(bounds)
         {
-            Span = new MultilineTextSpan("", Width);
-            Prompt = new MultilineTextSpan(promptText, Width, Style.GetColorPair("Disabled"));
+            TextArea = new TextArea("", Width);
+            Prompt = new TextArea(promptText, Width, Style.GetColorPair("Disabled"));
         }
 
         public event EventHandler TextChanged;
@@ -67,7 +67,7 @@ namespace MooTUI.Widgets
             if (IsSelectionActive)
                 ClearSelection();
 
-            Span.Insert(Cursor, s);
+            TextArea.Span.Insert(Cursor, s);
             MoveCursor(s.Length, 0);
 
             OnTextChanged(EventArgs.Empty);
@@ -120,7 +120,7 @@ namespace MooTUI.Widgets
             {
                 Visual.FillCell(new Cell(' ', Style.GetColorPair("Active")));
 
-                Visual.DrawSpan(Span);
+                Visual.DrawTextArea(TextArea);
                 DrawSelection();
                 DrawCursor();
             }
@@ -129,18 +129,18 @@ namespace MooTUI.Widgets
                 Visual.FillCell(new Cell(' ', Style.GetColorPair("Hover")));
 
                 if (Text.Length == 0)
-                    Visual.DrawSpan(Prompt);
+                    Visual.DrawTextArea(Prompt);
                 else
-                    Visual.DrawSpan(Span);
+                    Visual.DrawTextArea(TextArea);
             }
             else
             {
                 Visual.FillCell(new Cell(' ', Style.GetColorPair("Default")));
 
                 if (Text.Length == 0)
-                    Visual.DrawSpan(Prompt);
+                    Visual.DrawTextArea(Prompt);
                 else
-                    Visual.DrawSpan(Span);
+                    Visual.DrawTextArea(TextArea);
             }
         }
 
@@ -200,7 +200,7 @@ namespace MooTUI.Widgets
                     else if (Cursor > 0)
                     {
                         MoveCursor(-1, 0);
-                        Span.Delete(Cursor, 1);
+                        TextArea.Span.Delete(Cursor, 1);
                         Render();
                     }
                     else
@@ -266,7 +266,7 @@ namespace MooTUI.Widgets
             (int x, int y) = GetCursorCoords();
 
             if ((deltaY < 0 && y == 0)
-                || (deltaY > 0 && y == Span.Lines.Count))
+                || (deltaY > 0 && y == TextArea.Lines.Count))
                 return false;
 
             SetCursorCoords(x + deltaX, y + deltaY, selectionActive);
@@ -275,11 +275,11 @@ namespace MooTUI.Widgets
 
         private void SetCursorCoords(int x, int y, bool selectionActive = false)
         {
-            y = Math.Min(y, Span.Lines.Count - 1);
+            y = Math.Min(y, TextArea.Lines.Count - 1);
             int cursor = x;
             for (int i = 0; i < y; i++)
             {
-                cursor += Span.Lines[i].Length;
+                cursor += TextArea.Lines[i].Length;
             }
             Cursor = Math.Min(cursor, Text.Length);
             if (Cursor == -1)
@@ -299,7 +299,7 @@ namespace MooTUI.Widgets
 
         private void DeleteSelection()
         {
-            Span.Delete(SelectionStart, SelectionEnd - SelectionStart);
+            TextArea.Span.Delete(SelectionStart, SelectionEnd - SelectionStart);
             Cursor = SelectionStart;
             Render();
             OnTextChanged(EventArgs.Empty);
@@ -311,13 +311,13 @@ namespace MooTUI.Widgets
             int x = index;
             int y = 0;
 
-            while (y < Span.Lines.Count - 1 && x >= Span.Lines[y].Length)
+            while (y < TextArea.Lines.Count - 1 && x >= TextArea.Lines[y].Length)
             {
                 y++;
             }
 
             if (y > 0)
-                x -= Span.Lines[y - 1].Length;
+                x -= TextArea.Lines[y - 1].Length;
 
             x = Math.Min(x, Width - 1);
 

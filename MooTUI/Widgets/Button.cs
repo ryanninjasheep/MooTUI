@@ -13,16 +13,16 @@ namespace MooTUI.Widgets
     {
         bool _isMouseOver = false;
 
-        public TextSpan Text { get; private set; }
+        public TextArea Text { get; private set; }
 
-        public static TextSpanEnclosure Enclosure { get; set; } = 
-            new TextSpanEnclosure(" [ ", " ] ", new ColorPair());
+        public static TextAreaEnclosure Enclosure { get; set; } = 
+            new TextAreaEnclosure(" [ ", " ] ", new ColorPair());
 
         public bool IsSimple { get; private set; }
 
         public Button(string text, LayoutRect bounds, bool isSimple = false) : base(bounds)
         {
-            Text = MultilineTextSpan.FromString(
+            Text = TextArea.FromString(
                 text, 
                 Width - Enclosure.TotalWidth, 
                 justification: HJustification.CENTER);
@@ -41,7 +41,7 @@ namespace MooTUI.Widgets
                 Visual.FillCell(new Cell(' ', Style.GetColorPair("Default")));
 
             if (IsSimple)
-                Visual.DrawSpan(Text);
+                Visual.DrawTextArea(Text);
             else
                 Visual.Merge(Enclosure.DrawEnclosure(Text), HJustification.CENTER, VJustification.CENTER);
         }

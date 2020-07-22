@@ -152,7 +152,7 @@ namespace MooTUI.Widgets
             private bool _isSelected;
             private bool _isMouseOver;
 
-            public TextSpan Text { get; }
+            public TextArea Text { get; }
             public object Object { get; }
 
             public bool IsCursor
@@ -184,7 +184,7 @@ namespace MooTUI.Widgets
                 }
             }
 
-            private ListBoxElement(LayoutRect bounds, TextSpan text, object reference, ListBox parent) : base(bounds)
+            private ListBoxElement(LayoutRect bounds, TextArea text, object reference, ListBox parent) : base(bounds)
             {
                 Text = text;
                 Object = reference ?? Text.Text;
@@ -192,7 +192,7 @@ namespace MooTUI.Widgets
             }
             public static ListBoxElement Generate(string text, int width, object reference, ListBox parent)
             {
-                MultilineTextSpan span = MultilineTextSpan.FromString(text, width);
+                TextArea span = TextArea.FromString(text, width);
                 LayoutRect bounds = new LayoutRect(
                     new FlexSize(span.Width),
                     new FlexSize(span.Draw().Height));
@@ -247,7 +247,7 @@ namespace MooTUI.Widgets
                 else
                     Visual.FillCell(new Cell(' ', Style.GetColorPair("Default")));
 
-                Visual.DrawSpan(Text);
+                Visual.DrawTextArea(Text);
             }
         }
     }

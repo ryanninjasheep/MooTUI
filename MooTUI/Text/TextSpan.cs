@@ -4,6 +4,7 @@ using MooTUI.Widgets.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows;
 
@@ -22,6 +23,10 @@ namespace MooTUI.Text
                 text = value;
             }
         }
+
+        public int Length => Text.Length;
+
+        public Cell this[int index] => new Cell(Text[index], ColorInfo.GetColorsAtIndex(index));
 
         protected TextSpanColorInfo ColorInfo { get; set; }
 
@@ -44,7 +49,7 @@ namespace MooTUI.Text
 
         public TextSpan SubSpan(int start, int length)
         {
-            if (start < 0 || length < 0 || start + length > Text.Length)
+            if (start < 0 || length < 0 || start + length > Length)
                 throw new ArgumentOutOfRangeException();
 
             string substring = Text.Substring(start, length);
@@ -52,16 +57,29 @@ namespace MooTUI.Text
 
             foreach ((int i, ColorPair c) in ColorInfo.Data)
             {
-                if (i > start && i < start + length)
+                if (i >= start && i < start + length)
                     span.SetColorInfo(i - start, c);
             }
 
             return span;
         }
+        public TextSpan SubSpan(int start) => SubSpan(start, Length - start);
+
+        public Visual Draw()
+        {
+            Visual visual = new Visual(Length, 1);
+
+            for (int i = 0; i < Length; i++)
+            {
+                visual[i, 0] = this[i];
+            }
+
+            return visual;
+        }
 
         public void SetColorInfo(int index, ColorPair colors)
         {
-            if (index < 0 || index > Text.Length)
+            if (index < 0 || index > Length)
                 throw new ArgumentOutOfRangeException();
 
             else if (ColorInfo.GetColorsAtIndex(index) == colors)
@@ -74,8 +92,8 @@ namespace MooTUI.Text
 
         public void Append(string text, ColorPair? colors = null)
         {
-            if (colors is ColorPair c && ColorInfo.GetColorsAtIndex(Text.Length) != c)
-                ColorInfo.Add(Text.Length, c);
+            if (colors is ColorPair c && ColorInfo.GetColorsAtIndex(Length) != c)
+                ColorInfo.Add(Length, c);
 
             Text += text;
         }
@@ -92,20 +110,6 @@ namespace MooTUI.Text
             ColorInfo.Delete(index, length);
 
             Text = Text.Remove(index, length);
-        }
-
-        public virtual Visual Draw()
-        {
-            // This could be optimized probably
-
-            Visual visual = new Visual(Math.Max(Text.Length, 1), 1);
-
-            for (int i = 0; i < Text.Length; i++)
-            {
-                visual[i, 0] = new Cell(Text[i], ColorInfo.GetColorsAtIndex(i));
-            }
-
-            return visual;
         }
 
         protected void ParseAppend(string s)
@@ -249,15 +253,6 @@ namespace MooTUI.Text
                     }
                 }
             }
-        }
-    }
-
-    public static class VisualTextSpanExtensions
-    {
-        public static void DrawSpan(this Visual v, TextSpan span)
-        {
-            Visual spanVisual = span.Draw();
-            v.Merge(spanVisual);
         }
     }
 }

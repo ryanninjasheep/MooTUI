@@ -4,54 +4,52 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows.Documents;
 
 namespace MooTUI.Text
 {
-    public class MultilineTextSpan : TextSpan
+    public class TextArea
     {
+        public TextSpan Span { get; private set; }
+        public string Text => Span.Text;
+
         public HJustification Justification { get; set; }
         public int Width { get; private set; }
 
-        public List<string> Lines { get; private set; }
+        public List<TextSpan> Lines { get; private set; }
 
-        public MultilineTextSpan(string text, int width, ColorPair c = new ColorPair(), 
+        public TextArea(string text, int width, ColorPair c = new ColorPair(),
             HJustification justification = HJustification.LEFT)
-            : base(text, c)
+            : this(new TextSpan(text, c), width, justification) { }
+        public TextArea(TextSpan text, int width, HJustification justification = HJustification.LEFT)
         {
+            Span = text;
+
             Width = width;
             Justification = justification;
         }
 
-        public static MultilineTextSpan FromString(string s, int width, 
-            HJustification justification = HJustification.LEFT)
-        {
-            MultilineTextSpan span = new MultilineTextSpan("", width, justification: justification);
+        public static TextArea FromString(string s, int width, 
+            HJustification justification = HJustification.LEFT) =>
+            new TextArea(TextSpan.FromString(s), width, justification);
 
-            span.ParseAppend(s);
-
-            return span;
-        }
-
-        public override Visual Draw()
+        public Visual Draw()
         {
             GenerateLines();
 
             Visual visual = new Visual(Width, Lines.Count);
 
-            int i = 0;
-
             for (int row = 0; row < Lines.Count; row++)
             {
-                string currentLine = Lines[row];
+                TextSpan currentLine = Lines[row];
 
-                int trimmedLength = currentLine.Trim().Length;
+                int trimmedLength = currentLine.Text.Trim().Length;
                 int xOffset = Justification.GetOffset(trimmedLength, Width);
 
                 for(int column = 0; column < currentLine.Length; column++)
                 {
                     if (column + xOffset < Width)
-                        visual[column + xOffset, row] = new Cell(Text[i], ColorInfo.GetColorsAtIndex(i));
-                    i++;
+                        visual[column + xOffset, row] = currentLine[column];
                 }
             }
 
@@ -60,10 +58,10 @@ namespace MooTUI.Text
 
         private void GenerateLines()
         {
-            List<string> lines = new List<string>();
+            List<TextSpan> lines = new List<TextSpan>();
 
-            List<string> hardLineBreaks = GetHardLineBreaks();
-            foreach(string s in hardLineBreaks)
+            List<TextSpan> hardLineBreaks = GetHardLineBreaks();
+            foreach(TextSpan s in hardLineBreaks)
             {
                 lines.AddRange(GetSoftLineBreaks(s));
             }
@@ -71,42 +69,42 @@ namespace MooTUI.Text
             Lines = lines;
         }
 
-        private List<string> GetHardLineBreaks()
+        private List<TextSpan> GetHardLineBreaks()
         {
-            List<string> lines = new List<string>();
+            List<TextSpan> lines = new List<TextSpan>();
 
             int i = 0;
-            if (Text.Length > 0)
+            if (Span.Length > 0)
             {
                 while (true)
                 {
-                    int next = Text.IndexOf('\n', i);
+                    int next = Span.Text.IndexOf('\n', i);
 
                     if (next == -1)
                         break;
 
                     next++;
 
-                    lines.Add(Text.Substring(i, next - i));
+                    lines.Add(Span.SubSpan(i, next - i));
                     i = next;
                 }
             }
 
-            lines.Add(Text.Substring(i));
+            lines.Add(Span.SubSpan(i));
 
             return lines;
         }
 
-        private List<string> GetSoftLineBreaks(string s)
+        private List<TextSpan> GetSoftLineBreaks(TextSpan s)
         {
-            List<string> lines = new List<string>();
+            List<TextSpan> lines = new List<TextSpan>();
 
             char curr;
             int wordLength = 0;
             int lineLength = 0;
             for (int i = 0; i < s.Length; i++)
             {
-                curr = s[i];
+                curr = s[i].Char ?? ' ';
 
                 if (char.IsWhiteSpace(curr))
                 {
@@ -122,7 +120,7 @@ namespace MooTUI.Text
                     wordLength++;
                     if (lineLength + wordLength > Width)
                     {
-                        lines.Add(s.Substring(i - lineLength - wordLength + 1, lineLength));
+                        lines.Add(s.SubSpan(i - lineLength - wordLength + 1, lineLength));
                         if (lineLength == 0)
                             wordLength = 0;
                         else
@@ -131,9 +129,18 @@ namespace MooTUI.Text
                 }
             }
 
-            lines.Add(s.Substring(s.Length - lineLength - wordLength));
+            lines.Add(s.SubSpan(s.Length - lineLength - wordLength));
 
             return lines;
+        }
+    }
+
+    public static class VisualTextAreaExtensions
+    {
+        public static void DrawTextArea(this Visual v, TextArea text)
+        {
+            Visual textVisual = text.Draw();
+            v.Merge(textVisual);
         }
     }
 }

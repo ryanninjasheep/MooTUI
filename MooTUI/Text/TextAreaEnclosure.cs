@@ -6,7 +6,7 @@ using System.Text;
 
 namespace MooTUI.Text
 {
-    public class TextSpanEnclosure
+    public class TextAreaEnclosure
     {
         public string Left { get; private set; }
         public string Right { get; private set; }
@@ -15,7 +15,7 @@ namespace MooTUI.Text
 
         public ColorPair Colors { get; set; }
 
-        public TextSpanEnclosure(string left, string right, ColorPair colors = new ColorPair())
+        public TextAreaEnclosure(string left, string right, ColorPair colors = new ColorPair())
         {
             if (left.Length != right.Length)
                 throw new ArgumentException("Left and Right must be same length");
@@ -25,9 +25,27 @@ namespace MooTUI.Text
             Colors = colors;
         }
 
-        public Visual DrawEnclosure(TextSpan span)
+        public Visual DrawEnclosure(TextArea text)
         {
-            Visual inner = span.Draw();
+            Visual inner = text.Draw();
+
+            Visual visual = new Visual(inner.Width + Left.Length + Right.Length, inner.Height);
+            visual.Merge(inner, HJustification.CENTER, VJustification.CENTER);
+
+            int vCenter = VJustification.CENTER.GetOffset(1, visual.Height);
+
+            for (int i = 0; i < Left.Length; i++)
+            {
+                visual[i, vCenter] = new Cell(Left[i], Colors);
+                visual[i + Left.Length + inner.Width, vCenter] = new Cell(Right[i], Colors);
+            }
+
+            return visual;
+        }
+
+        public Visual DrawEnclosure(TextSpan text)
+        {
+            Visual inner = text.Draw();
 
             Visual visual = new Visual(inner.Width + Left.Length + Right.Length, inner.Height);
             visual.Merge(inner, HJustification.CENTER, VJustification.CENTER);

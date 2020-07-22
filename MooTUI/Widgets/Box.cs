@@ -14,8 +14,8 @@ namespace MooTUI.Widgets
         public TextSpan Text { get; private set; }
         public BoxDrawing LineStyle { get; private set; }
 
-        public static TextSpanEnclosure Enclosure { get; set; } =
-            new TextSpanEnclosure("{ ", " }", new ColorPair());
+        public static TextAreaEnclosure Enclosure { get; set; } =
+            new TextAreaEnclosure("{ ", " }", new ColorPair());
 
         public Box(Widget w, string text = "", BoxDrawing lineStyle = null)
             : this(w.Bounds.WithRelativeSize(2, 2),
