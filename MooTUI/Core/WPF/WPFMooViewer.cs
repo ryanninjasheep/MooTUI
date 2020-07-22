@@ -133,7 +133,7 @@ namespace MooTUI.Core.WPF
                 {
                     charIndexes[i] = glyphTypeface.CharacterToGlyphMap[chars[i]];
                 }
-                catch (KeyNotFoundException e)
+                catch (KeyNotFoundException)
                 {
                     charIndexes[i] = glyphTypeface.CharacterToGlyphMap[' '];
                 }
