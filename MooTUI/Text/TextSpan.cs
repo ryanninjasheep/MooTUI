@@ -1,8 +1,11 @@
 ﻿using MooTUI.Core;
+using MooTUI.IO;
+using MooTUI.Widgets.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows;
 
 namespace MooTUI.Text
 {
@@ -19,7 +22,8 @@ namespace MooTUI.Text
                 text = value;
             }
         }
-        public TextSpanColorInfo ColorInfo { get; protected set; }
+
+        protected TextSpanColorInfo ColorInfo { get; set; }
 
         public TextSpan(string text = "", ColorPair c = new ColorPair())
         {
@@ -46,12 +50,11 @@ namespace MooTUI.Text
             string substring = Text.Substring(start, length);
             TextSpan span = new TextSpan(substring);
 
-            // TODO: FIX
-            //foreach (int k in ColorInfo.Keys)
-            //{
-            //    if (k > start && k < start + length)
-            //        span.SetColorInfo(k - start, ColorInfo.GetColorsAtIndex(k));
-            //}
+            foreach ((int i, ColorPair c) in ColorInfo.Data)
+            {
+                if (i > start && i < start + length)
+                    span.SetColorInfo(i - start, c);
+            }
 
             return span;
         }
@@ -69,16 +72,26 @@ namespace MooTUI.Text
             OnTextChanged(EventArgs.Empty);
         }
 
-        public void Append(string text, ColorPair colors)
+        public void Append(string text, ColorPair? colors = null)
         {
-            if (ColorInfo.GetColorsAtIndex(Text.Length) != colors)
-                ColorInfo.Add(Text.Length, colors);
+            if (colors is ColorPair c && ColorInfo.GetColorsAtIndex(Text.Length) != c)
+                ColorInfo.Add(Text.Length, c);
 
-            Append(text);
-        }
-        public void Append(string text)
-        {
             Text += text;
+        }
+
+        public void Insert(int index, string text, ColorPair? colors = null)
+        {
+            ColorInfo.Insert(index, text.Length, colors);
+
+            Text = Text.Insert(index, text);
+        }
+
+        public void Delete(int index, int length)
+        {
+            ColorInfo.Delete(index, length);
+
+            Text = Text.Remove(index, length);
         }
 
         public virtual Visual Draw()
@@ -138,7 +151,17 @@ namespace MooTUI.Text
                 Enum.TryParse(backText, true, out back);
                 return new ColorPair(fore, back);
             }
-            return new ColorPair();
+            else
+            {
+                try
+                {
+                    return Widget.Style.GetColorPair(s);
+                }
+                catch
+                {
+                    return new ColorPair();
+                }
+            }
         }
 
         private void OnTextChanged(EventArgs e)
@@ -147,13 +170,13 @@ namespace MooTUI.Text
             handler?.Invoke(this, e);
         }
 
-        public class TextSpanColorInfo
+        protected class TextSpanColorInfo
         {
-            private List<(int index, ColorPair colors)> _data;
+            public List<(int index, ColorPair colors)> Data { get; private set; }
 
             public TextSpanColorInfo(ColorPair c)
             {
-                _data = new List<(int index, ColorPair colors)>();
+                Data = new List<(int index, ColorPair colors)>();
                 Add(0, c);
             }
 
@@ -161,34 +184,70 @@ namespace MooTUI.Text
             {
                 // Since the list is sorted, I could do more efficient stuff, but this works :D
 
-                for (int i = 0; i < _data.Count - 1; i++)
+                for (int i = 0; i < Data.Count - 1; i++)
                 {
-                    if (index >= _data[i].index && index < _data[i + 1].index)
+                    if (index >= Data[i].index && index < Data[i + 1].index)
                     {
-                        return _data[i].colors;
+                        return Data[i].colors;
                     }
                 }
 
-                return _data.Last().colors;
+                return Data.Last().colors;
             }
 
             public void Add(int index, ColorPair c)
             {
-                for (int i = 0; i < _data.Count - 1; i++)
+                for (int i = 0; i < Data.Count - 1; i++)
                 {
-                    if (index == _data[i].index)
+                    if (index == Data[i].index)
                     {
-                        _data[i] = (_data[i].index, c);
+                        Data[i] = (Data[i].index, c);
                         return;
                     }
-                    else if (index > _data[i].index && index < _data[i + 1].index)
+                    else if (index > Data[i].index && index < Data[i + 1].index)
                     {
-                        _data.Insert(i + 1, (index, c));
+                        Data.Insert(i + 1, (index, c));
                         return;
                     }
                 }
 
-                _data.Add((index, c));
+                Data.Add((index, c));
+            }
+
+            public void Delete(int index, int length)
+            {
+                for (int i = 0; i < Data.Count; i++)
+                {
+                    if (Data[i].index >= index)
+                    {
+                        if (Data[i].index < index + length)
+                        {
+                            Data.RemoveAt(i);
+                        }
+                        else
+                        {
+                            Data[i] = (Data[i].index - length, Data[i].colors);
+                        }
+                    }
+                }
+            }
+
+            public void Insert(int index, int length, ColorPair? colors = null)
+            {
+                for (int i = 0; i < Data.Count; i++)
+                {
+                    if (Data[i].index >= index)
+                        Data[i] = (Data[i].index + length, Data[i].colors);
+                }
+
+                if (colors is ColorPair c)
+                {
+                    if (GetColorsAtIndex(index) != c)
+                    {
+                        Add(index + length, GetColorsAtIndex(index));
+                        Add(index, c);
+                    }
+                }
             }
         }
     }

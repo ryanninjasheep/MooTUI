@@ -52,17 +52,17 @@ namespace MooTUI.IO
             Viewer.InputEventHandler += Viewer_InputEventHandler;
         }
 
-        private void Content_RenderEventHandler(object sender, EventArgs e)
+        private void Content_RenderEventHandler(object sender, System.EventArgs e)
         {
             Viewer.SetVisual(Content.Visual);
         }
 
-        private void Content_ClaimFocus(object sender, FocusEventArgs e)
+        private void Content_ClaimFocus(object sender, EventArgs.FocusEventArgs e)
         {
             SetFocusedWidget(e.Sender);
         }
 
-        private void Content_LayoutUpdated(object sender, EventArgs e)
+        private void Content_LayoutUpdated(object sender, System.EventArgs e)
         {
             SetHoveredWidget(GetHoveredWidget());
             SetFocusedWidget(null);

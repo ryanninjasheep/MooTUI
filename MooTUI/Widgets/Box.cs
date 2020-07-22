@@ -56,6 +56,8 @@ namespace MooTUI.Widgets
                 Content.Bounds.HeightData.WithRelativeSize(2));
         }
 
+        protected override (int xOffset, int yOffset) GetOffset(Widget child) => (1, 1);
+
         protected override void Input(InputEventArgs e) { }
 
         protected override void Resize()

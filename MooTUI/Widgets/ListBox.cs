@@ -95,6 +95,8 @@ namespace MooTUI.Widgets
             // SHOULD NEVER HAPPEN
         }
 
+        protected override (int xOffset, int yOffset) GetOffset(Widget child) => (0, 0);
+
         protected override void Resize()
         {
             Lock = true;
@@ -160,6 +162,7 @@ namespace MooTUI.Widgets
                 {
                     _isCursor = value;
                     Render();
+                    EnsureRegionVisible(0, 0, Width, Height);
                 }
             }
             public bool IsSelected

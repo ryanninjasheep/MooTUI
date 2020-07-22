@@ -1,4 +1,5 @@
 ﻿using MooTUI.Input;
+using MooTUI.IO.EventArgs;
 using MooTUI.Layout;
 using System;
 using System.Collections.Generic;
@@ -36,6 +37,8 @@ namespace MooTUI.Widgets.Primitives
         /// </summary>
         protected abstract void OnChildResized(Widget child);
 
+        protected abstract (int xOffset, int yOffset) GetOffset(Widget child);
+
         protected void LinkChild(Widget child)
         {
             child.Bind();
@@ -45,6 +48,7 @@ namespace MooTUI.Widgets.Primitives
             child.BubbleFocus += Child_BubbleFocus;
             child.Resized += Child_Resized;
             child.LayoutUpdated += Child_LayoutUpdated;
+            child.EnsureVisible += Child_EnsureVisible;
         }
 
         protected void UnlinkChild(Widget child)
@@ -59,6 +63,7 @@ namespace MooTUI.Widgets.Primitives
             child.BubbleFocus -= Child_BubbleFocus;
             child.Resized -= Child_Resized;
             child.LayoutUpdated -= Child_LayoutUpdated;
+            child.EnsureVisible -= Child_EnsureVisible;
         }
 
         private void Child_Rendered(object sender, EventArgs e)
@@ -70,7 +75,7 @@ namespace MooTUI.Widgets.Primitives
             Render();
         }
         private void Child_BubbleInput(object sender, InputEventArgs e) => HandleInput(e);
-        private void Child_BubbleFocus(object sender, IO.FocusEventArgs e) => OnClaimFocus(e);
+        private void Child_BubbleFocus(object sender, FocusEventArgs e) => OnClaimFocus(e);
         private void Child_Resized(object sender, EventArgs e) 
         {
             if (Lock)
@@ -79,5 +84,10 @@ namespace MooTUI.Widgets.Primitives
             OnChildResized(sender as Widget);
         }
         private void Child_LayoutUpdated(object sender, EventArgs e) => OnLayoutUpdated(e);
+        private void Child_EnsureVisible(object sender, RegionEventArgs e)
+        {
+            (int xOffset, int yOffset) = GetOffset(sender as Widget);
+            EnsureRegionVisible(e.XStart + xOffset, e.YStart + yOffset, e.Width, e.Height);
+        }
     }
 }

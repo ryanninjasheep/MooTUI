@@ -214,6 +214,17 @@ namespace MooTUI.Widgets
 
         protected override void OnChildResized(Widget child) => CalculateLayout();
 
+        protected override (int xOffset, int yOffset) GetOffset(Widget child)
+        {
+            foreach(WidgetWithLocation w in ChildrenWithLocation)
+            {
+                if (w.Widget == child)
+                    return (w.X, w.Y);
+            }
+
+            throw new ArgumentException("Not a child of this container!");
+        }
+
         protected override void Input(InputEventArgs e) { }
 
         private void AssertMinSizesFit()

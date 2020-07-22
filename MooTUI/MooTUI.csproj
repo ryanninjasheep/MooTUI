@@ -9,6 +9,7 @@
     <Compile Remove="IO\EditableSpan.cs" />
     <Compile Remove="IO\EventArgs\LogicalBubbleEventArgs.cs" />
     <Compile Remove="IO\EventArgs\MessageEventArgs.cs" />
+    <Compile Remove="IO\IEnsureCursorVisible.cs" />
     <Compile Remove="IO\IPushMessage.cs" />
     <Compile Remove="IO\Message.cs" />
     <Compile Remove="IO\SelectableSpan.cs" />
@@ -35,6 +36,7 @@
     <None Include="IO\EditableSpan.cs" />
     <None Include="IO\EventArgs\LogicalBubbleEventArgs.cs" />
     <None Include="IO\EventArgs\MessageEventArgs.cs" />
+    <None Include="IO\IEnsureCursorVisible.cs" />
     <None Include="IO\IPushMessage.cs" />
     <None Include="IO\Message.cs" />
     <None Include="IO\SelectableSpan.cs" />

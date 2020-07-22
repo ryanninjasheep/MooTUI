@@ -12,7 +12,7 @@ namespace MooTUI.Text
         public HJustification Justification { get; set; }
         public int Width { get; private set; }
 
-        private List<string> Lines { get; set; }
+        public List<string> Lines { get; private set; }
 
         public MultilineTextSpan(string text, int width, ColorPair c = new ColorPair(), 
             HJustification justification = HJustification.LEFT)
@@ -76,15 +76,20 @@ namespace MooTUI.Text
             List<string> lines = new List<string>();
 
             int i = 0;
-            while (true)
+            if (Text.Length > 0)
             {
-                int next = Text.IndexOf('\n', i + 1);
+                while (true)
+                {
+                    int next = Text.IndexOf('\n', i);
 
-                if (next == -1)
-                    break;
+                    if (next == -1)
+                        break;
 
-                lines.Add(Text.Substring(i, next - i));
-                i = next;
+                    next++;
+
+                    lines.Add(Text.Substring(i, next - i));
+                    i = next;
+                }
             }
 
             lines.Add(Text.Substring(i));
@@ -126,7 +131,7 @@ namespace MooTUI.Text
                 }
             }
 
-            lines.Add(s.Substring(Text.Length - lineLength - wordLength));
+            lines.Add(s.Substring(s.Length - lineLength - wordLength));
 
             return lines;
         }

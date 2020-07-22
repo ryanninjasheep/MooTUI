@@ -292,6 +292,16 @@ namespace MooTUI.Widgets
             Render();
         }
 
+        protected override void EnsureRegionVisible(int x, int y, int width = 1, int height = 1)
+        {
+            if (width > 1 || height > 1)
+                ScrollToPoint(x + width - 1, y + height - 1);
+
+            ScrollToPoint(x - 1, y - 1);
+
+            base.EnsureRegionVisible(x - HorizontalOffset, y - VerticalOffset, width, height);
+        }
+
         protected override void Resize()
         {
             Lock = true;

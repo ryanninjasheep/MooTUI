@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using MooTUI.Core;
+using MooTUI.IO.EventArgs;
 
 namespace MooTUI.Widgets.Primitives
 {
@@ -97,6 +98,9 @@ namespace MooTUI.Widgets.Primitives
         /// </summary>
         protected virtual void Resize() { }
 
+        protected virtual void EnsureRegionVisible(int x, int y, int width = 1, int height = 1) =>
+            OnEnsureVisible(new RegionEventArgs(x, y, width, height));
+
         private void Bounds_SizeChanged(object sender, EventArgs e) => OnSizeChanged();
 
         private void OnSizeChanged()
@@ -142,10 +146,16 @@ namespace MooTUI.Widgets.Primitives
             EventHandler handler = LayoutUpdated;
             handler?.Invoke(this, e);
         }
+        internal void OnEnsureVisible(RegionEventArgs e)
+        {
+            EventHandler<RegionEventArgs> handler = EnsureVisible;
+            handler?.Invoke(this, e);
+        }
 
         internal event EventHandler<InputEventArgs> BubbleInput;
         internal event EventHandler<FocusEventArgs> BubbleFocus;
         internal event EventHandler LayoutUpdated;
+        internal event EventHandler<RegionEventArgs> EnsureVisible;
 
         /// <summary>
         /// !!! ONLY CALL FROM Container.LinkChild !!!

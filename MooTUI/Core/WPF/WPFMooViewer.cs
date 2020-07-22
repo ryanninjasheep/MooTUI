@@ -5,6 +5,7 @@ using SystemInput = System.Windows.Input;
 using System.ComponentModel;
 using System.Windows.Navigation;
 using MooTUI.Input;
+using System.Collections.Generic;
 
 namespace MooTUI.Core.WPF
 {
@@ -128,7 +129,14 @@ namespace MooTUI.Core.WPF
             double[] advanceWidths = new double[length];
             for (int i = 0; i < length; i++)
             {
-                charIndexes[i] = glyphTypeface.CharacterToGlyphMap[chars[i]];
+                try
+                {
+                    charIndexes[i] = glyphTypeface.CharacterToGlyphMap[chars[i]];
+                }
+                catch (KeyNotFoundException e)
+                {
+                    charIndexes[i] = glyphTypeface.CharacterToGlyphMap[' '];
+                }
                 advanceWidths[i] = cellWidth;
             }
 

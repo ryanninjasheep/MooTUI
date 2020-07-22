@@ -32,6 +32,8 @@ namespace MooTUI_Test
         {
             InitializeComponent();
 
+            Widget.Style = MooTUI.IO.Style.Light;
+
             Container = new LayoutContainer(
                 new LayoutRect(
                     new FlexSize(30),
@@ -58,7 +60,7 @@ namespace MooTUI_Test
             Button addToList = new Button(
                 "{green/}add an item to the list!",
                 new LayoutRect(
-                    new FlexSize(30),
+                    new FlexSize(35),
                     new Size(1)));
             addToList.Click += (s, e) =>
             {
@@ -67,7 +69,7 @@ namespace MooTUI_Test
             Button removeList = new Button(
                 "{red/}remove selected listitem!",
                 new LayoutRect(
-                    new FlexSize(30),
+                    new FlexSize(35),
                     new Size(1)));
             removeList.Click += (s, e) =>
             {
@@ -76,6 +78,20 @@ namespace MooTUI_Test
 
             Container.AddChild(addToList);
             Container.AddChild(removeList);
+
+            TextInput t = new TextInput(
+                new LayoutRect(
+                    new Size(80),
+                    new Size(2)),
+                "Prompt!!!");
+
+            ScrollBox b = new ScrollBox(
+                new LayoutRect(
+                    new FlexSize(35),
+                    new Size(5)),
+                t);
+
+            Container.AddChild(b);
         }
     }
 }
