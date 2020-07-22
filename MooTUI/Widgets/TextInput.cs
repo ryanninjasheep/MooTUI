@@ -44,7 +44,10 @@ namespace MooTUI.Widgets
         public TextInput(LayoutRect bounds, string promptText = "") : base(bounds)
         {
             TextArea = new TextArea("", Width);
-            Prompt = new TextArea(promptText, Width, Style.GetColorPair("Disabled"));
+            Prompt = new TextArea(
+                promptText, 
+                Width, 
+                new ColorPair(Style.GetFore("Disabled"), Color.None));
         }
 
         public event EventHandler TextChanged;
