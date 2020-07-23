@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
+using System.Windows.Documents;
 using Sys = System.Windows.Input;
 
 namespace MooTUI.Widgets
@@ -41,13 +42,16 @@ namespace MooTUI.Widgets
 
         private TextArea Prompt { get; set; }
 
-        public TextInput(LayoutRect bounds, string promptText = "") : base(bounds)
+        public TextInput(LayoutRect bounds, bool doesExpand = false, string promptText = "") : base(bounds)
         {
             TextArea = new TextArea("", Width);
             Prompt = new TextArea(
                 promptText, 
                 Width, 
                 new ColorPair(Style.GetFore("Disabled"), Color.None));
+
+            if (doesExpand)
+                TextArea.Overflow += TextArea_Overflow;
         }
 
         public event EventHandler TextChanged;
@@ -74,6 +78,11 @@ namespace MooTUI.Widgets
             MoveCursor(s.Length, 0);
 
             OnTextChanged(EventArgs.Empty);
+        }
+
+        protected override void Resize()
+        {
+            TextArea.Resize(Width);
         }
 
         protected override void Input(InputEventArgs e)
@@ -331,6 +340,39 @@ namespace MooTUI.Widgets
         {
             EventHandler handler = TextChanged;
             handler?.Invoke(this, e);
+        }
+
+        private void TextArea_Overflow(object sender, EventArgs e)
+        {
+            if (Height == 1)
+            {
+                if (Bounds.WidthData is FlexSize)
+                {
+                    Bounds.SetSizes(
+                        new FlexSize(Text.Length + 1),
+                        Bounds.HeightData);
+                }
+                else
+                {
+                    TextArea.Span.Delete(Width, Text.Length - Width);
+                    SetCursorCoords(Width, Height);
+                }
+            }
+            else
+            {
+                if (Bounds.HeightData is FlexSize)
+                {
+                    Bounds.SetSizes(
+                        Bounds.WidthData,
+                        new FlexSize(TextArea.Draw().Height + 1));
+                }
+                else
+                {
+                    TextArea.Span.Delete(Width * Height, Text.Length - (Width * Height));
+                    SetCursorCoords(Width, Height);
+                }
+            }
+
         }
     }
 }

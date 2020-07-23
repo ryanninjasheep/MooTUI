@@ -24,6 +24,7 @@ namespace MooTUI.Text
         public TextArea(TextSpan text, int width, HJustification justification = HJustification.LEFT)
         {
             Span = text;
+            Span.TextChanged += Span_TextChanged;
 
             Width = width;
             Justification = justification;
@@ -32,6 +33,9 @@ namespace MooTUI.Text
         public static TextArea FromString(string s, int width, 
             HJustification justification = HJustification.LEFT) =>
             new TextArea(TextSpan.FromString(s), width, justification);
+
+        public event EventHandler TextChanged;
+        public event EventHandler Overflow;
 
         public Visual Draw()
         {
@@ -56,6 +60,12 @@ namespace MooTUI.Text
             return visual;
         }
 
+        public void Resize(int width)
+        {
+            Width = width;
+            GenerateLines();
+        }
+
         private void GenerateLines()
         {
             List<TextSpan> lines = new List<TextSpan>();
@@ -66,7 +76,12 @@ namespace MooTUI.Text
                 lines.AddRange(GetSoftLineBreaks(s));
             }
 
+            bool overflow = Lines != null && Lines.Count < lines.Count;
+
             Lines = lines;
+
+            if (overflow)
+                OnOverflow(EventArgs.Empty);
         }
 
         private List<TextSpan> GetHardLineBreaks()
@@ -132,6 +147,18 @@ namespace MooTUI.Text
             lines.Add(s.SubSpan(s.Length - lineLength - wordLength));
 
             return lines;
+        }
+
+        private void Span_TextChanged(object sender, EventArgs e)
+        {
+            EventHandler handler = TextChanged;
+            handler?.Invoke(sender, e);
+        }
+
+        private void OnOverflow(EventArgs e)
+        {
+            EventHandler handler = Overflow;
+            handler?.Invoke(this, e);
         }
     }
 

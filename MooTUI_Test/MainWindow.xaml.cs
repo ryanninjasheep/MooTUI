@@ -81,8 +81,9 @@ namespace MooTUI_Test
 
             TextInput t = new TextInput(
                 new LayoutRect(
-                    new Size(80),
-                    new Size(2)),
+                    new FlexSize(80),
+                    new FlexSize(2)),
+                true,
                 "Prompt!!!");
 
             ScrollBox b = new ScrollBox(
