@@ -93,8 +93,8 @@ namespace MooTUI.Widgets
 
         private void CalculateScrollInfo()
         {
-            if ((VScrollBarVisibility == ScrollBarVisibility.DISABLED && Content.Height > Height) ||
-                (HScrollBarVisibility == ScrollBarVisibility.DISABLED && Content.Width > Width))
+            if ((VScrollBarVisibility == ScrollBarVisibility.DISABLED && Content.Height > ViewportHeight) ||
+                (HScrollBarVisibility == ScrollBarVisibility.DISABLED && Content.Width > ViewportWidth))
                 throw new SizeException(
                     "If the scrollbar is disabled in a certain dimension, content cannot be larger than the viewer!");
 
