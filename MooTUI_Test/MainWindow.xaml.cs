@@ -81,16 +81,17 @@ namespace MooTUI_Test
 
             TextInput t = new TextInput(
                 new LayoutRect(
-                    new FlexSize(80),
-                    new FlexSize(2)),
+                    new FlexSize(10),
+                    new Size(1)),
                 true,
                 "Prompt!!!");
 
             ScrollBox b = new ScrollBox(
                 new LayoutRect(
                     new FlexSize(35),
-                    new Size(5)),
-                t);
+                    new Size(3)),
+                t,
+                vScrollbarVisibility: ScrollBox.ScrollBarVisibility.DISABLED);
 
             Container.AddChild(b);
         }

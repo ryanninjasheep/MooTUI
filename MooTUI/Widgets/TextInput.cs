@@ -40,6 +40,9 @@ namespace MooTUI.Widgets
         private bool IsFocused { get; set; }
         private bool IsHovered { get; set; }
 
+        // Only used if auto-resizing
+        private int MinSize { get; }
+
         private TextArea Prompt { get; set; }
 
         public TextInput(LayoutRect bounds, bool doesExpand = false, string promptText = "") : base(bounds)
@@ -51,7 +54,18 @@ namespace MooTUI.Widgets
                 new ColorPair(Style.GetFore("Disabled"), Color.None));
 
             if (doesExpand)
-                TextArea.HeightChanged += TextArea_HeightChanged;
+            {
+                if (Height == 1)
+                {
+                    TextArea.TextChanged += TextArea_TextChanged;
+                    MinSize = Width;
+                }
+                else
+                {
+                    TextArea.HeightChanged += TextArea_HeightChanged;
+                    MinSize = Height;
+                }
+            }
         }
 
         public event EventHandler TextChanged;
@@ -329,9 +343,6 @@ namespace MooTUI.Widgets
                 y++;
             }
 
-            //if (y > 0)
-            //    x -= TextArea.Lines[y - 1].Length;
-
             x = Math.Min(x, Width - 1);
 
             return (x, y);
@@ -345,35 +356,32 @@ namespace MooTUI.Widgets
 
         private void TextArea_HeightChanged(object sender, EventArgs e)
         {
-            if (Height == 1)
+            if (Bounds.HeightData is FlexSize)
             {
-                if (Bounds.WidthData is FlexSize)
-                {
-                    Bounds.SetSizes(
-                        new FlexSize(Text.Length + 1),
-                        Bounds.HeightData);
-                }
-                else
-                {
-                    TextArea.Span.Delete(Width, Text.Length - Width);
-                    SetCursorCoords(Width, Height);
-                }
+                Bounds.SetSizes(
+                    Bounds.WidthData,
+                    new FlexSize(Math.Max(TextArea.Draw().Height + 1, MinSize)));
             }
             else
             {
-                if (Bounds.HeightData is FlexSize)
-                {
-                    Bounds.SetSizes(
-                        Bounds.WidthData,
-                        new FlexSize(TextArea.Draw().Height + 1));
-                }
-                else
-                {
-                    TextArea.Span.Delete(Width * Height, Text.Length - (Width * Height));
-                    SetCursorCoords(Width, Height);
-                }
+                TextArea.Span.Delete(Width * Height, Text.Length - (Width * Height));
+                SetCursorCoords(Width, Height);
             }
+        }
 
+        private void TextArea_TextChanged(object sender, EventArgs e)
+        {
+            if (Bounds.WidthData is FlexSize)
+            {
+                Bounds.SetSizes(
+                    new FlexSize(Math.Max(Text.Length + 1, MinSize)),
+                    Bounds.HeightData);
+            }
+            else
+            {
+                TextArea.Span.Delete(Width, Text.Length - Width);
+                SetCursorCoords(Width, Height);
+            }
         }
     }
 }

@@ -19,8 +19,8 @@ namespace MooTUI.Text
             get => text;
             protected set
             {
-                OnTextChanged(EventArgs.Empty);
                 text = value;
+                OnTextChanged(EventArgs.Empty);
             }
         }
 
