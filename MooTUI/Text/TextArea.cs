@@ -76,11 +76,11 @@ namespace MooTUI.Text
                 lines.AddRange(GetSoftLineBreaks(s));
             }
 
-            bool overflow = Lines?.Count != lines.Count;
+            bool heightChanged = Lines?.Count != lines.Count;
 
             Lines = lines;
 
-            if (overflow)
+            if (heightChanged)
                 OnHeightChanged(EventArgs.Empty);
         }
 
@@ -89,20 +89,17 @@ namespace MooTUI.Text
             List<TextSpan> lines = new List<TextSpan>();
 
             int i = 0;
-            if (Span.Length > 0)
+            while (true)
             {
-                while (true)
-                {
-                    int next = Span.Text.IndexOf('\n', i);
+                int next = Span.Text.IndexOf('\n', i);
 
-                    if (next == -1)
-                        break;
+                if (next == -1)
+                    break;
 
-                    next++;
+                next++;
 
-                    lines.Add(Span.SubSpan(i, next - i));
-                    i = next;
-                }
+                lines.Add(Span.SubSpan(i, next - i));
+                i = next;
             }
 
             lines.Add(Span.SubSpan(i));
