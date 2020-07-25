@@ -38,14 +38,14 @@ namespace MooTUI.Widgets
             HIDDEN
         }
 
-        public ScrollBarVisibility HScrollBarVisibility { get; private set; }
-        public ScrollBarVisibility VScrollBarVisibility { get; private set; }
+        public ScrollBarVisibility HScrollBarVisibility { get; }
+        public ScrollBarVisibility VScrollBarVisibility { get; }
 
         public int HorizontalOffset { get; private set; }
         public int VerticalOffset { get; private set; }
 
-        private ScrollBar HScrollBar { get; set; }
-        private ScrollBar VScrollBar { get; set; }
+        private ScrollBar HScrollBar { get; }
+        private ScrollBar VScrollBar { get; }
 
         private int ViewportWidth => Width - 2;
         private int ViewportHeight => Height - 2;
@@ -66,16 +66,23 @@ namespace MooTUI.Widgets
             string text = "", BoxDrawing lineStyle = null)
             : base(bounds, w, text, lineStyle)
         {
-            bounds.AssertMinSize(5, 5);
-
             HScrollBarVisibility = hScrollbarVisibility;
             VScrollBarVisibility = vScrollbarVisibility;
 
-            HScrollBar = ScrollBar.Factory(Orientation.Horizontal, ViewportWidth, this);
-            VScrollBar = ScrollBar.Factory(Orientation.Vertical, ViewportHeight, this);
+            bounds.AssertMinSize(
+                HScrollBarVisibility == ScrollBarVisibility.DISABLED ? 3 : 5,
+                VScrollBarVisibility == ScrollBarVisibility.DISABLED ? 3 : 5);
 
-            LinkChild(HScrollBar);
-            LinkChild(VScrollBar);
+            if (HScrollBarVisibility != ScrollBarVisibility.DISABLED)
+            {
+                HScrollBar = ScrollBar.Factory(Orientation.Horizontal, ViewportWidth, this);
+                LinkChild(HScrollBar);
+            }
+            if (VScrollBarVisibility != ScrollBarVisibility.DISABLED)
+            {
+                VScrollBar = ScrollBar.Factory(Orientation.Vertical, ViewportHeight, this);
+                LinkChild(VScrollBar);
+            }
 
             TryStretchContent();
 
@@ -306,8 +313,10 @@ namespace MooTUI.Widgets
         {
             Lock = true;
 
-            HScrollBar.Bounds.WidthData.ActualSize = Width - 2;
-            VScrollBar.Bounds.HeightData.ActualSize = Height - 2;
+            if (HScrollBar != null)
+                HScrollBar.Bounds.WidthData.ActualSize = Width - 2;
+            if (VScrollBar != null)
+                VScrollBar.Bounds.HeightData.ActualSize = Height - 2;
 
             TryStretchContent();
 
