@@ -66,8 +66,6 @@ namespace MooTUI.Widgets
             string text = "", BoxDrawing lineStyle = null)
             : base(bounds, w, text, lineStyle)
         {
-            TryStretchContent();
-
             bounds.AssertMinSize(5, 5);
 
             HScrollBarVisibility = hScrollbarVisibility;
@@ -78,6 +76,8 @@ namespace MooTUI.Widgets
 
             LinkChild(HScrollBar);
             LinkChild(VScrollBar);
+
+            TryStretchContent();
 
             CalculateScrollInfo();
         }

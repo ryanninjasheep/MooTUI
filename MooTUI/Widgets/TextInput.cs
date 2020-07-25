@@ -51,7 +51,7 @@ namespace MooTUI.Widgets
                 new ColorPair(Style.GetFore("Disabled"), Color.None));
 
             if (doesExpand)
-                TextArea.Overflow += TextArea_Overflow;
+                TextArea.HeightChanged += TextArea_HeightChanged;
         }
 
         public event EventHandler TextChanged;
@@ -325,11 +325,12 @@ namespace MooTUI.Widgets
 
             while (y < TextArea.Lines.Count - 1 && x >= TextArea.Lines[y].Length)
             {
+                x -= TextArea.Lines[y].Length;
                 y++;
             }
 
-            if (y > 0)
-                x -= TextArea.Lines[y - 1].Length;
+            //if (y > 0)
+            //    x -= TextArea.Lines[y - 1].Length;
 
             x = Math.Min(x, Width - 1);
 
@@ -342,7 +343,7 @@ namespace MooTUI.Widgets
             handler?.Invoke(this, e);
         }
 
-        private void TextArea_Overflow(object sender, EventArgs e)
+        private void TextArea_HeightChanged(object sender, EventArgs e)
         {
             if (Height == 1)
             {
