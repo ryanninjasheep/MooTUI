@@ -95,7 +95,15 @@ namespace MooTUI_Test
                 t,
                 vScrollbarVisibility: ScrollBox.ScrollBarVisibility.DISABLED);
 
+            Button setText = new Button(
+                "set the text of the textInput",
+                new LayoutRect(
+                    new FlexSize(35),
+                    new Size(1)));
+            setText.Click += (s, e) => t.SetText("TEXT :)");
+
             Container.AddChild(b);
+            Container.AddChild(setText);
         }
     }
 }

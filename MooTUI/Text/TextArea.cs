@@ -66,6 +66,12 @@ namespace MooTUI.Text
             GenerateLines();
         }
 
+        public void SetText(string text)
+        {
+            Span.Delete(0, Span.Length);
+            Span.Append(text);
+        }
+
         private void GenerateLines()
         {
             List<TextSpan> lines = new List<TextSpan>();

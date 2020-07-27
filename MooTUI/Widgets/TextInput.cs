@@ -103,6 +103,13 @@ namespace MooTUI.Widgets
             OnTextChanged(EventArgs.Empty);
         }
 
+        public void SetText(string s)
+        {
+            Cursor = -1;
+            TextArea.SetText(s);
+            Render();
+        }
+
         protected override void Resize()
         {
             TextArea.Resize(Width);
@@ -133,11 +140,14 @@ namespace MooTUI.Widgets
                     break;
                 case InputTypes.KEY_DOWN:
                     OnKeyDown(e);
-                    (int x, int y) = GetCursorCoords();
-                    if (x > 0)
-                        EnsureRegionVisible(x - 1, y, 2, 1);
-                    else
-                        EnsureRegionVisible(x, y);
+                    if (Cursor != -1)
+                    {
+                        (int x, int y) = GetCursorCoords();
+                        if (x > 0)
+                            EnsureRegionVisible(x - 1, y, 2, 1);
+                        else
+                            EnsureRegionVisible(x, y);
+                    }
                     break;
                 default:
                     break;
