@@ -129,29 +129,36 @@ namespace MooTUI.Core
             { Color.AltMagenta, Media.Color.FromRgb(0xd3, 0x36, 0x82) },
         });
 
-        //// By w0ng
-        //public static readonly Theme Hybrid = new Theme(new Dictionary<Color, Media.Color>()
-        //{
-        //    { Color.None,       Colors.Transparent },
-        //    { Color.Foreground, Media.Color.FromRgb(0xc5, 0xc8, 0xc6)},
-        //    { Color.Background, Media.Color.FromRgb(0x1d, 0x1f, 0x21)},
-        //    { Color.Black,      Media.Color.FromRgb(0x28, 0x2a, 0x2e)},
-        //    { Color.DarkGrey,   Media.Color.FromRgb(0x37, 0x3b, 0x41)},
-        //    { Color.LightGrey,  Media.Color.FromRgb(0x70, 0x78, 0x80)},
-        //    { Color.White,      Media.Color.FromRgb(0xc5, 0xc8, 0xc6)},
-        //    { Color.Red,        Media.Color.FromRgb(0xa5, 0x42, 0x42)},
-        //    { Color.AltRed,     Media.Color.FromRgb(0xcc, 0x66, 0x66)},
-        //    { Color.Magenta,    Media.Color.FromRgb(0x85, 0x67, 0x8f)},
-        //    { Color.AltMagenta, Media.Color.FromRgb(0xb2, 0x94, 0xbb)},
-        //    { Color.Blue,       Media.Color.FromRgb(0x5f, 0x81, 0x9d)},
-        //    { Color.AltBlue,    Media.Color.FromRgb(0x81, 0xa2, 0xbe)},
-        //    { Color.Cyan,       Media.Color.FromRgb(0x5e, 0x8d, 0x87)},
-        //    { Color.AltCyan,    Media.Color.FromRgb(0x8a, 0xbe, 0xb7)},
-        //    { Color.Green,      Media.Color.FromRgb(0x8c, 0x94, 0x40)},
-        //    { Color.AltGreen,   Media.Color.FromRgb(0xb5, 0xbd, 0x68)},
-        //    { Color.Yellow,     Media.Color.FromRgb(0xde, 0x93, 0x5f)},
-        //    { Color.AltYellow,  Media.Color.FromRgb(0xf0, 0xc6, 0x74)},
-        //});
+        public static readonly Theme Gruvbox = new Theme(new Dictionary<Color, Media.Color>()
+        {
+            { Color.None,       Colors.Transparent },
+            { Color.Base03,     Media.Color.FromRgb(0x3c, 0x38, 0x36) },
+            { Color.Base02,     Media.Color.FromRgb(0x50, 0x49, 0x45) },
+            { Color.Base01,     Media.Color.FromRgb(0x66, 0x5c, 0x54) },
+            { Color.Base00,     Media.Color.FromRgb(0x7c, 0x6f, 0x64) },
+            { Color.Base0,      Media.Color.FromRgb(0xa8, 0x99, 0x84) },
+            { Color.Base1,      Media.Color.FromRgb(0xbd, 0xae, 0x93) },
+            { Color.Base2,      Media.Color.FromRgb(0xd5, 0xc4, 0xa1) },
+            { Color.Base3,      Media.Color.FromRgb(0xed, 0xdb, 0xb2) },
+
+            { Color.Red,        Media.Color.FromRgb(0xcc, 0x24, 0x1d) },
+            { Color.Orange,     Media.Color.FromRgb(0xd6, 0x5d, 0x0e) },
+            { Color.Yellow,     Media.Color.FromRgb(0xd7, 0x99, 0x21) },
+            { Color.Green,      Media.Color.FromRgb(0x98, 0x97, 0x1a) },
+            { Color.Cyan,       Media.Color.FromRgb(0x68, 0x9d, 0x6a) },
+            { Color.Blue,       Media.Color.FromRgb(0x45, 0x85, 0x88) },
+            { Color.Purple,     Media.Color.FromRgb(0x8f, 0x3f, 0x71) },
+            { Color.Magenta,    Media.Color.FromRgb(0xb1, 0x62, 0x86) },
+
+            { Color.AltRed,     Media.Color.FromRgb(0xfb, 0x49, 0x34) },
+            { Color.AltOrange,  Media.Color.FromRgb(0xfe, 0x80, 0x19) },
+            { Color.AltYellow,  Media.Color.FromRgb(0xfa, 0xbd, 0x2f) },
+            { Color.AltGreen,   Media.Color.FromRgb(0xb8, 0xbb, 0x26) },
+            { Color.AltCyan,    Media.Color.FromRgb(0x8e, 0xc0, 0x7c) },
+            { Color.AltBlue,    Media.Color.FromRgb(0x83, 0xa5, 0x98) },
+            { Color.AltPurple,  Media.Color.FromRgb(0xb1, 0x62, 0x86) },
+            { Color.AltMagenta, Media.Color.FromRgb(0xd3, 0x86, 0x9b) },
+        });
     }
 
     public struct ColorPair : IEquatable<ColorPair>
