@@ -318,7 +318,7 @@ namespace MooTUI.Widgets
 
                     float sizeRatio = f.PreferredSize / totalPreferred;
                     float growth = sizeRatio * freeSpace;
-                    int newSize = Math.Max(f.ActualSize + (int)Math.Round(growth), f.Min);
+                    int newSize = Math.Max(f.ActualSize + (int)Math.Round(growth, MidpointRounding.AwayFromZero), f.Min);
 
                     f.ActualSize = newSize;
                 }
