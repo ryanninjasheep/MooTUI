@@ -53,6 +53,7 @@ namespace MooTUI_Test
                     new FlexSize(20),
                     new FlexSize(10)),
                 "List!",
+                true,
                 BoxDrawing.Leaf);
 
             Container.AddChild(list);

@@ -18,6 +18,8 @@ namespace MooTUI.Widgets
 
         public int Count => Container.Children.Count;
 
+        public bool IsSelectionEnabled { get; }
+
         private LayoutContainer Container => (Content as ScrollBox).Content as LayoutContainer;
 
         private ListBoxElement CursorElement => 
@@ -25,7 +27,15 @@ namespace MooTUI.Widgets
                 ? Container.Children[CursorIndex] as ListBoxElement
                 : null;
 
-        public ListBox(LayoutRect bounds, string title = "", BoxDrawing lineStyle = null) : base(bounds)
+        public int SelectionStart => Math.Min(SelectionFrom, SelectionTo);
+        public int SelectionEnd => Math.Max(SelectionFrom, SelectionTo);
+        public bool IsSelectionActive => IsSelectionEnabled && SelectionFrom != SelectionTo;
+
+        private int SelectionFrom { get; set; }
+        private int SelectionTo { get; set; }
+
+        public ListBox(LayoutRect bounds, string title = "", 
+            bool selectionEnabled = false, BoxDrawing lineStyle = null) : base(bounds)
         {
             LayoutContainer container = new LayoutContainer(
                 new LayoutRect(
@@ -39,7 +49,11 @@ namespace MooTUI.Widgets
                 container,
                 text: title,
                 lineStyle: lineStyle));
+
+            IsSelectionEnabled = selectionEnabled;
         }
+
+        public event EventHandler CursorMoved;
 
         public override Widget GetHoveredWidget(MouseContext m) => Content;
 
@@ -57,20 +71,12 @@ namespace MooTUI.Widgets
             SetCursorIndex(CursorIndex);
         }
 
-        public void SetCursorIndex(int index, bool shift = false)
+        public void SetCursorIndex(int index, bool selectionActive = false)
         {
             if (index < -1 || index >= Count)
             {
                 SetCursorIndex(-1);
                 return;
-            }
-
-            if (!shift)
-            {
-                foreach (ListBoxElement e in GetSelectedElements())
-                {
-                    e.IsSelected = false;
-                }
             }
 
             if (CursorElement != null)
@@ -80,9 +86,24 @@ namespace MooTUI.Widgets
             CursorIndex = index;
             if (CursorElement != null)
             {
-                CursorElement.IsSelected = !CursorElement.IsSelected;
                 CursorElement.IsCursor = true;
             }
+
+            if (CursorIndex == -1)
+            {
+                SelectionFrom = 0;
+                SelectionTo = 0;
+            }
+            else if (IsSelectionEnabled)
+            {
+                if (!selectionActive)
+                    SelectionFrom = CursorIndex;
+                SelectionTo = CursorIndex;
+            }
+
+            RefreshSelection();
+
+            OnCursorMoved(EventArgs.Empty);
         }
 
         protected override void DrawChild(Widget child)
@@ -124,6 +145,25 @@ namespace MooTUI.Widgets
                 .ToList();
         }
 
+        private void RefreshSelection()
+        {
+            if (!IsSelectionEnabled)
+                return;
+
+            foreach (ListBoxElement e in GetSelectedElements())
+            {
+                e.IsSelected = false;
+            }
+
+            if (IsSelectionActive)
+            {
+                for (int i = SelectionStart; i <= SelectionEnd; i++)
+                {
+                    (Container.Children[i] as ListBoxElement).IsSelected = true;
+                }
+            }
+        }
+
         private bool TryMoveCursorUp(bool shift)
         {
             if (CursorIndex > 0)
@@ -141,6 +181,12 @@ namespace MooTUI.Widgets
                 return true;
             }
             return false;
+        }
+
+        private void OnCursorMoved(EventArgs e)
+        {
+            EventHandler handler = CursorMoved;
+            handler?.Invoke(this, e);
         }
 
         private class ListBoxElement : Widget
