@@ -62,6 +62,9 @@ namespace MooTUI.Widgets
 
         protected override void Resize()
         {
+            if (Lock)
+                return;
+
             Lock = true;
 
             Content.Bounds.TryResize(Width - 2, Height - 2);
