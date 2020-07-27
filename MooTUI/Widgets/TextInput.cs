@@ -40,12 +40,15 @@ namespace MooTUI.Widgets
         private bool IsFocused { get; set; }
         private bool IsHovered { get; set; }
 
+        private int? CharLimit { get; }
+
         // Only used if auto-resizing
-        private int MinSize { get; }
+        private int? MinSize { get; }
 
         private TextArea Prompt { get; set; }
 
-        public TextInput(LayoutRect bounds, bool doesExpand = false, string promptText = "") : base(bounds)
+        public TextInput(LayoutRect bounds, bool doesExpand = false, int? charLimit = null, 
+            string promptText = "") : base(bounds)
         {
             TextArea = new TextArea("", Width);
             Prompt = new TextArea(
@@ -57,7 +60,6 @@ namespace MooTUI.Widgets
             {
                 if (Height == 1)
                 {
-                    TextArea.TextChanged += TextArea_TextChanged;
                     MinSize = Width;
                 }
                 else
@@ -66,6 +68,10 @@ namespace MooTUI.Widgets
                     MinSize = Height;
                 }
             }
+
+            TextArea.TextChanged += TextArea_TextChanged;
+
+            CharLimit = charLimit;
         }
 
         public event EventHandler TextChanged;
@@ -87,6 +93,9 @@ namespace MooTUI.Widgets
 
             if (IsSelectionActive)
                 ClearSelection();
+
+            if (CharLimit is int limit && TextArea.Text.Length + s.Length > limit)
+                s = s.Substring(0, limit - TextArea.Text.Length);
 
             TextArea.Span.Insert(Cursor, s);
             MoveCursor(s.Length, 0);
@@ -356,31 +365,21 @@ namespace MooTUI.Widgets
 
         private void TextArea_HeightChanged(object sender, EventArgs e)
         {
-            if (Bounds.HeightData is FlexSize)
+            if (Bounds.HeightData is FlexSize && MinSize is int min)
             {
                 Bounds.SetSizes(
                     Bounds.WidthData,
-                    new FlexSize(Math.Max(TextArea.Draw().Height + 1, MinSize)));
-            }
-            else
-            {
-                TextArea.Span.Delete(Width * Height, Text.Length - (Width * Height));
-                SetCursorCoords(Width, Height);
+                    new FlexSize(Math.Max(TextArea.Draw().Height + 1, min)));
             }
         }
 
         private void TextArea_TextChanged(object sender, EventArgs e)
         {
-            if (Bounds.WidthData is FlexSize)
+            if (Height == 1 && Bounds.WidthData is FlexSize && MinSize is int min)
             {
                 Bounds.SetSizes(
-                    new FlexSize(Math.Max(Text.Length + 1, MinSize)),
+                    new FlexSize(Math.Max(Text.Length + 1, min)),
                     Bounds.HeightData);
-            }
-            else
-            {
-                TextArea.Span.Delete(Width, Text.Length - Width);
-                SetCursorCoords(Width, Height);
             }
         }
     }

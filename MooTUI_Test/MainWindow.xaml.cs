@@ -32,7 +32,7 @@ namespace MooTUI_Test
         {
             InitializeComponent();
 
-            Widget.Style = MooTUI.IO.Style.Light;
+            Widget.Style = MooTUI.IO.Style.Dark;
 
             Container = new LayoutContainer(
                 new LayoutRect(
@@ -46,7 +46,7 @@ namespace MooTUI_Test
                 Container,
                 lineStyle: BoxDrawing.Leaf);
 
-            WPFMooTUIBuilder.GenerateViewer(this, scroll, Theme.Solarized);
+            WPFMooTUIBuilder.GenerateViewer(this, scroll, Theme.Gruvbox);
 
             ListBox list = new ListBox(
                 new LayoutRect(
@@ -83,7 +83,8 @@ namespace MooTUI_Test
                 new LayoutRect(
                     new FlexSize(10),
                     new Size(1)),
-                true,
+                false,
+                10,
                 "Prompt!!!");
 
             ScrollBox b = new ScrollBox(
