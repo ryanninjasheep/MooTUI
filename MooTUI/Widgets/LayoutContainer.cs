@@ -5,6 +5,7 @@ using MooTUI.Layout;
 using MooTUI.Widgets.Primitives;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -305,8 +306,11 @@ namespace MooTUI.Widgets
 
         private void UpdateFlexSizeToFit(List<FlexSize> flexible, int freeSpace)
         {
-            while (freeSpace != 0 && flexible.Count > 0)
+            for (int i = 0; i < 10; i++)
             {
+                if (freeSpace == 0 || flexible.Count == 0)
+                    return;
+
                 if (freeSpace < 0)
                     flexible = flexible
                         .Where((f) => f.ActualSize > f.Min)
@@ -318,7 +322,7 @@ namespace MooTUI.Widgets
 
                     float sizeRatio = f.PreferredSize / totalPreferred;
                     float growth = sizeRatio * freeSpace;
-                    int newSize = Math.Max(f.ActualSize + (int)Math.Round(growth, MidpointRounding.AwayFromZero), f.Min);
+                    int newSize = Math.Max(f.ActualSize + (int)Math.Round(growth), f.Min);
 
                     f.ActualSize = newSize;
                 }
@@ -326,6 +330,8 @@ namespace MooTUI.Widgets
                 freeSpace = OrientationSize -
                     Children.Sum((s) => s.Bounds.GetSizeInMainAxis(Orientation).ActualSize);
             }
+
+            Debug.WriteLine("Failed to fit sizes perfectly");
         }
 
         private class WidgetWithLocation
