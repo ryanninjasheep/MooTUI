@@ -51,13 +51,9 @@ namespace MooTUI.Widgets
 
         protected override void OnChildResized(Widget child)
         {
-            Lock = true;
-
             Bounds.SetSizes(
                 Content.Bounds.WidthData.WithRelativeSize(2),
                 Content.Bounds.HeightData.WithRelativeSize(2));
-
-            Lock = false;
         }
 
         protected override (int xOffset, int yOffset) GetOffset(Widget child) => (1, 1);
@@ -66,9 +62,6 @@ namespace MooTUI.Widgets
 
         protected override void Resize()
         {
-            if (Lock)
-                return;
-
             Lock = true;
 
             Content.Bounds.TryResize(Width - 2, Height - 2);
