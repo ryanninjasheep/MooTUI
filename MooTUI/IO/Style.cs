@@ -30,7 +30,7 @@ namespace MooTUI.IO
             { "Message",   new ColorPair(Color.Base0,    Color.Base02)   },
             { "Error",     new ColorPair(Color.Red,      Color.Base02)   },
             { "Warning",   new ColorPair(Color.Yellow,   Color.Base02)   },
-            { "Info",      new ColorPair(Color.Blue,     Color.Base02)   },
+            { "Info",      new ColorPair(Color.Cyan,     Color.Base02)   },
         });
         public static readonly Style Light = new Style(new Dictionary<string, ColorPair>()
         {
@@ -43,7 +43,20 @@ namespace MooTUI.IO
             { "Message",   new ColorPair(Color.Base3,    Color.Base1)    },
             { "Error",     new ColorPair(Color.Base3,    Color.Red)      },
             { "Warning",   new ColorPair(Color.Base3,    Color.Yellow)   },
-            { "Info",      new ColorPair(Color.Base3,    Color.Blue)     },
+            { "Info",      new ColorPair(Color.Base3,    Color.Cyan)     },
+        });
+        public static readonly Style HighContrast = new Style(new Dictionary<string, ColorPair>()
+        {
+            { "Default",   new ColorPair(Color.Base3,    Color.Base03)   },
+            { "Disabled",  new ColorPair(Color.Base2,    Color.Base03)   },
+            { "Hover",     new ColorPair(Color.Base3,    Color.Base02)   },
+            { "Active",    new ColorPair(Color.Base3,    Color.Base02)   },
+            { "Cursor",    new ColorPair(Color.Base03,   Color.Base3)    },
+            { "Selection", new ColorPair(Color.Base03,   Color.Base2)    },
+            { "Message",   new ColorPair(Color.Base03,   Color.Base0)    },
+            { "Error",     new ColorPair(Color.Base03,   Color.Red)      },
+            { "Warning",   new ColorPair(Color.Base03,   Color.Yellow)   },
+            { "Info",      new ColorPair(Color.Base03,   Color.Cyan)     },
         });
     }
 }

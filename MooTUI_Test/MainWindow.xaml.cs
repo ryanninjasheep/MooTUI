@@ -32,7 +32,7 @@ namespace MooTUI_Test
         {
             InitializeComponent();
 
-            Widget.Style = MooTUI.IO.Style.Dark;
+            Widget.Style = MooTUI.IO.Style.HighContrast;
 
             Container = new LayoutContainer(
                 new LayoutRect(
