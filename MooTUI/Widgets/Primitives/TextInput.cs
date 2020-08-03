@@ -11,9 +11,9 @@ using System.Windows;
 using System.Windows.Documents;
 using Sys = System.Windows.Input;
 
-namespace MooTUI.Widgets
+namespace MooTUI.Widgets.Primitives
 {
-    public class TextInput : Widget
+    public abstract class TextInput : Widget
     {
         private TextArea _text;
 
@@ -42,34 +42,15 @@ namespace MooTUI.Widgets
 
         private int? CharLimit { get; }
 
-        // Only used if auto-resizing
-        private int? MinSize { get; }
-
         private TextArea Prompt { get; set; }
 
-        public TextInput(LayoutRect bounds, bool doesExpand = false, int? charLimit = null, 
-            string promptText = "") : base(bounds)
+        public TextInput(LayoutRect bounds, int? charLimit, string promptText = "") : base(bounds)
         {
             TextArea = new TextArea("", Width);
             Prompt = new TextArea(
                 promptText, 
                 Width, 
                 new ColorPair(Style.GetFore("Disabled"), Color.None));
-
-            if (doesExpand)
-            {
-                if (Height == 1)
-                {
-                    MinSize = Width;
-                }
-                else
-                {
-                    TextArea.HeightChanged += TextArea_HeightChanged;
-                    MinSize = Height;
-                }
-            }
-
-            TextArea.TextChanged += TextArea_TextChanged;
 
             CharLimit = charLimit;
         }
@@ -371,26 +352,6 @@ namespace MooTUI.Widgets
         {
             EventHandler handler = TextChanged;
             handler?.Invoke(this, e);
-        }
-
-        private void TextArea_HeightChanged(object sender, EventArgs e)
-        {
-            if (Bounds.HeightData is FlexSize && MinSize is int min)
-            {
-                Bounds.SetSizes(
-                    Bounds.WidthData,
-                    new FlexSize(Math.Max(TextArea.Draw().Height + 1, min)));
-            }
-        }
-
-        private void TextArea_TextChanged(object sender, EventArgs e)
-        {
-            if (Height == 1 && Bounds.WidthData is FlexSize && MinSize is int min)
-            {
-                Bounds.SetSizes(
-                    new FlexSize(Math.Max(Text.Length + 1, min)),
-                    Bounds.HeightData);
-            }
         }
     }
 }

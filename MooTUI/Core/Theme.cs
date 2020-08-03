@@ -91,5 +91,37 @@ namespace MooTUI.Core
             { Color.AltPurple,  Media.Color.FromRgb(0xb1, 0x62, 0x86) },
             { Color.AltMagenta, Media.Color.FromRgb(0xd3, 0x86, 0x9b) },
         });
+
+        public static readonly Theme Basic = new Theme(new Dictionary<Color, Media.Color>()
+        {
+            { Color.None,       Colors.Transparent },
+            { Color.Base03,     Media.Color.FromRgb(0x00, 0x00, 0x00) },
+            { Color.Base02,     Media.Color.FromRgb(0x33, 0x33, 0x33) },
+            { Color.Base01,     Media.Color.FromRgb(0x55, 0x55, 0x55) },
+            { Color.Base00,     Media.Color.FromRgb(0x77, 0x77, 0x77) },
+            { Color.Base0,      Media.Color.FromRgb(0x99, 0x99, 0x99) },
+            { Color.Base1,      Media.Color.FromRgb(0xBB, 0xBB, 0xBB) },
+            { Color.Base2,      Media.Color.FromRgb(0xDD, 0xDD, 0xDD) },
+            { Color.Base3,      Media.Color.FromRgb(0xFF, 0xFF, 0xFF) },
+
+            { Color.Red,        Media.Color.FromRgb(0xFF, 0x00, 0x00) },
+            { Color.Orange,     Media.Color.FromRgb(0xFF, 0x99, 0x00) },
+            { Color.Yellow,     Media.Color.FromRgb(0xFF, 0xFF, 0x00) },
+            { Color.Green,      Media.Color.FromRgb(0x00, 0xFF, 0x00) },
+            { Color.Cyan,       Media.Color.FromRgb(0x00, 0xFF, 0xFF) },
+            { Color.Blue,       Media.Color.FromRgb(0x00, 0x00, 0xFF) },
+            { Color.Purple,     Media.Color.FromRgb(0x99, 0x00, 0xFF) },
+            { Color.Magenta,    Media.Color.FromRgb(0xFF, 0x00, 0xFF) },
+
+            { Color.AltRed,     Media.Color.FromRgb(0xC3, 0x00, 0x00) },
+            { Color.AltOrange,  Media.Color.FromRgb(0xC3, 0x74, 0x00) },
+            { Color.AltYellow,  Media.Color.FromRgb(0xC3, 0xC3, 0x00) },
+            { Color.AltGreen,   Media.Color.FromRgb(0x00, 0xC3, 0x00) },
+            { Color.AltCyan,    Media.Color.FromRgb(0x00, 0xC3, 0xC3) },
+            { Color.AltBlue,    Media.Color.FromRgb(0x00, 0x00, 0xC3) },
+            { Color.AltPurple,  Media.Color.FromRgb(0x74, 0x00, 0xC3) },
+            { Color.AltMagenta, Media.Color.FromRgb(0xC3, 0x00, 0xC3) },
+        });
+
     }
 }

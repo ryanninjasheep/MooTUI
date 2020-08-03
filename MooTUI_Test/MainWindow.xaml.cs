@@ -46,7 +46,7 @@ namespace MooTUI_Test
                 Container,
                 lineStyle: BoxDrawing.Leaf);
 
-            WPFMooTUIBuilder.GenerateViewer(this, scroll, Theme.Gruvbox);
+            WPFMooTUIBuilder.GenerateViewer(this, scroll, Theme.Basic);
 
             ListBox list = new ListBox(
                 new LayoutRect(
@@ -80,12 +80,10 @@ namespace MooTUI_Test
             Container.AddChild(addToList);
             Container.AddChild(removeList);
 
-            TextInput t = new TextInput(
-                new LayoutRect(
-                    new FlexSize(10),
-                    new Size(1)),
-                false,
+            SimpleTextInput t = new SimpleTextInput(
+                new FlexSize(10),
                 10,
+                false,
                 "Prompt!!!");
 
             ScrollBox b = new ScrollBox(
