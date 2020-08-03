@@ -170,6 +170,8 @@ namespace MooTUI.Widgets.Primitives
             }
         }
 
+        protected abstract bool HandleEnter();
+
         private void DrawSelection()
         {
             if (!IsSelectionActive)
@@ -215,8 +217,7 @@ namespace MooTUI.Widgets.Primitives
             switch (e.Keyboard.LastKeyPressed)
             {
                 case Sys.Key.Enter:
-                    Write("\n");
-                    e.Handled = true;
+                    e.Handled = HandleEnter();
                     return;
                 case Sys.Key.Back:
                     if (IsSelectionActive)

@@ -21,6 +21,14 @@ namespace MooTUI.Widgets
             }
         }
 
+        public event EventHandler Submit;
+
+        protected override bool HandleEnter()
+        {
+            OnSubmit(EventArgs.Empty);
+            return true;
+        }
+
         private void TextArea_TextChanged(object sender, EventArgs e)
         {
             if (Bounds.WidthData is FlexSize && MinWidth is int min)
@@ -29,6 +37,12 @@ namespace MooTUI.Widgets
                     new FlexSize(Math.Max(Text.Length + 1, min)),
                     Bounds.HeightData);
             }
+        }
+
+        private void OnSubmit(EventArgs e)
+        {
+            EventHandler handler = Submit;
+            handler?.Invoke(this, e);
         }
     }
 }

@@ -21,6 +21,12 @@ namespace MooTUI.Widgets
             }
         }
 
+        protected override bool HandleEnter()
+        {
+            Write("\n");
+            return true;
+        }
+
         private void TextArea_HeightChanged(object sender, EventArgs e)
         {
             if (Bounds.HeightData is FlexSize && MinHeight is int min)
