@@ -87,6 +87,9 @@ namespace MooTUI.Core.WPF
                 null, new Rect(0, 0, Width, Height)
                 );
 
+            if (Visual is null)
+                return;
+
             // Background
             for (int j = 0; j < Visual.Height; j++) // Go row by row
             {
