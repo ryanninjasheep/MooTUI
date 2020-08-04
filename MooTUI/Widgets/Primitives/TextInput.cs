@@ -244,10 +244,30 @@ namespace MooTUI.Widgets.Primitives
                     e.Handled = MoveCursor(0, 1, e.Keyboard.Shift);
                     return;
                 case Sys.Key.Left:
-                    e.Handled = MoveCursor(-1, 0, e.Keyboard.Shift);
+                    if (IsSelectionActive && !e.Keyboard.Shift && Cursor != SelectionStart)
+                    {
+                        Cursor = SelectionStart;
+                        ClearSelection();
+                        Render();
+                        e.Handled = true;
+                    }
+                    else
+                    {
+                        e.Handled = MoveCursor(-1, 0, e.Keyboard.Shift);
+                    }
                     return;
                 case Sys.Key.Right:
-                    e.Handled = MoveCursor(1, 0, e.Keyboard.Shift);
+                    if (IsSelectionActive && !e.Keyboard.Shift && Cursor != SelectionEnd)
+                    {
+                        Cursor = SelectionEnd;
+                        ClearSelection();
+                        Render();
+                        e.Handled = true;
+                    }
+                    else
+                    {
+                        e.Handled = MoveCursor(1, 0, e.Keyboard.Shift);
+                    }
                     return;
             }
 
