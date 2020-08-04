@@ -255,4 +255,13 @@ namespace MooTUI.Text
             }
         }
     }
+
+    public static class VisualTextSpanExtensions
+    {
+        public static void DrawTextSpan(this Visual v, TextSpan text, int x = 0, int y = 0)
+        {
+            Visual textVisual = text.Draw();
+            v.Merge(textVisual, x, y);
+        }
+    }
 }
