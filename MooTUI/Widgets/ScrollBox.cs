@@ -313,10 +313,10 @@ namespace MooTUI.Widgets
         {
             Lock = true;
 
-            if (HScrollBar != null)
-                HScrollBar.Bounds.WidthData.ActualSize = Width - 2;
-            if (VScrollBar != null)
-                VScrollBar.Bounds.HeightData.ActualSize = Height - 2;
+            if (HScrollBar != null && HScrollBar.Bounds.WidthData is FlexSize w)
+                w.TryResize(Width - 2);
+            if (VScrollBar != null && VScrollBar.Bounds.HeightData is FlexSize h)
+                h.TryResize(Height - 2);
 
             TryStretchContent();
 
@@ -433,9 +433,9 @@ namespace MooTUI.Widgets
         private void TryStretchContent()
         {
             if (Content.Bounds.Width < ViewportWidth && Content.Bounds.WidthData is FlexSize width)
-                width.ActualSize = ViewportWidth;
+                width.TryResize(ViewportWidth);
             if (Content.Bounds.Height < ViewportHeight && Content.Bounds.HeightData is FlexSize height)
-                height.ActualSize = ViewportHeight;
+                height.TryResize(ViewportHeight);
         }
 
         /// <summary>
@@ -463,7 +463,7 @@ namespace MooTUI.Widgets
             /// <summary>
             /// Only called by factory!
             /// </summary>
-            private ScrollBar(int width, int height) : base(new LayoutRect(width, height))
+            private ScrollBar(LayoutRect bounds) : base(bounds)
             {
                 Region = HoverRegion.NONE;
             }
@@ -476,9 +476,15 @@ namespace MooTUI.Widgets
                 ScrollBar s;
 
                 if (orientation == Orientation.Horizontal)
-                    s = new ScrollBar(length, 1);
+                    s = new ScrollBar(
+                            new LayoutRect(
+                                new FlexSize(3, length),
+                                new Size(1)));
                 else if (orientation == Orientation.Vertical)
-                    s = new ScrollBar(1, length);
+                    s = new ScrollBar(
+                            new LayoutRect(
+                                new Size(1),
+                                new FlexSize(3, length)));
                 else
                     throw new InvalidEnumArgumentException();
 

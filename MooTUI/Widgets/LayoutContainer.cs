@@ -94,7 +94,7 @@ namespace MooTUI.Widgets
                 && Bounds.GetSizeInMainAxis(Orientation) is FlexSize size)
             {
                 Lock = true;
-                size.ActualSize = Math.Max(GetMinContentSize(), size.Min);
+                size.TryResize(GetMinContentSize());
             }
 
             AssertMinSizesFit();
@@ -262,7 +262,7 @@ namespace MooTUI.Widgets
                 case Orientation.Horizontal:
                     if (w.Widget.Bounds.HeightData is FlexSize g)
                     {
-                        g.ActualSize = Height;
+                        g.TryResize(Height);
                         w.Y = 0;
                     }
                     else
@@ -282,7 +282,7 @@ namespace MooTUI.Widgets
                 case Orientation.Vertical:
                     if (w.Widget.Bounds.WidthData is FlexSize f)
                     {
-                        f.ActualSize = Width;
+                        f.TryResize(Width);
                         w.X = 0;
                     }
                     else
@@ -322,9 +322,9 @@ namespace MooTUI.Widgets
 
                     float sizeRatio = f.Min / totalMin;
                     float growth = sizeRatio * freeSpace;
-                    int newSize = Math.Max(f.ActualSize + (int)Math.Round(growth), f.Min);
+                    int newSize = f.ActualSize + (int)Math.Round(growth);
 
-                    f.ActualSize = newSize;
+                    f.TryResize(newSize);
                 }
 
                 freeSpace = OrientationSize -

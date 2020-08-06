@@ -35,10 +35,10 @@ namespace MooTUI.Layout
         public void TryResize(int width, int height)
         {
             if (WidthData is FlexSize f)
-                f.ActualSize = width;
+                f.TryResize(width);
 
             if (HeightData is FlexSize g)
-                g.ActualSize = height;
+                g.TryResize(height);
         }
 
         public void AssertMinSize(int width, int height)
