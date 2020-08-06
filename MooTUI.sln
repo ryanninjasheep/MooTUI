@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MooTUI", "MooTUI\MooTUI.csproj", "{CE63E0C1-460D-4A06-A68E-95FD88226892}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MooTUI", "MooTUI\MooTUI.csproj", "{CE63E0C1-460D-4A06-A68E-95FD88226892}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MooTUI_Test", "MooTUI_Test\MooTUI_Test.csproj", "{26E36E09-6291-4DD2-B5E9-B786852631B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MooTUI_Test", "MooTUI_Test\MooTUI_Test.csproj", "{26E36E09-6291-4DD2-B5E9-B786852631B2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimelineTUI", "..\TimelineTUI\TimelineTUI\TimelineTUI.csproj", "{8BFD6795-9345-4D2A-9C1A-DFA3C3F9F418}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{26E36E09-6291-4DD2-B5E9-B786852631B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{26E36E09-6291-4DD2-B5E9-B786852631B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{26E36E09-6291-4DD2-B5E9-B786852631B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8BFD6795-9345-4D2A-9C1A-DFA3C3F9F418}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BFD6795-9345-4D2A-9C1A-DFA3C3F9F418}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BFD6795-9345-4D2A-9C1A-DFA3C3F9F418}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BFD6795-9345-4D2A-9C1A-DFA3C3F9F418}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -12,7 +12,7 @@ namespace MooTUI.Core
 
         public Cell(char? c, Color fore, Color back)
         {
-            Char = c;
+            Char = c is char ch && char.IsWhiteSpace(ch) ? ' ' : c;
             Fore = fore;
             Back = back;
         }
