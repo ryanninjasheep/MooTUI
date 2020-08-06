@@ -102,6 +102,8 @@ namespace MooTUI_Test
 
             Container.AddChild(b);
             Container.AddChild(setText);
+
+            Container.AddChild(new Toggle(TextSpan.FromString("Check?")));
         }
     }
 }
