@@ -432,10 +432,7 @@ namespace MooTUI.Widgets
 
         private void TryStretchContent()
         {
-            if (Content.Bounds.Width < ViewportWidth && Content.Bounds.WidthData is FlexSize width)
-                width.TryResize(ViewportWidth);
-            if (Content.Bounds.Height < ViewportHeight && Content.Bounds.HeightData is FlexSize height)
-                height.TryResize(ViewportHeight);
+            Content.Bounds.TryResize(ViewportWidth, ViewportHeight);
         }
 
         /// <summary>

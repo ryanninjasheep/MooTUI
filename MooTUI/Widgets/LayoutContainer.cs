@@ -94,7 +94,7 @@ namespace MooTUI.Widgets
                 && Bounds.GetSizeInMainAxis(Orientation) is FlexSize size)
             {
                 Lock = true;
-                size.TryResize(GetMinContentSize());
+                size.SetMin(GetMinContentSize());
             }
 
             AssertMinSizesFit();
