@@ -32,19 +32,6 @@ namespace MooTUI.Layout
         public LayoutRect WithRelativeSize(int widthDiff, int heightDiff) =>
             new LayoutRect(WidthData.WithRelativeSize(widthDiff), HeightData.WithRelativeSize(heightDiff));
 
-        public Size GetSizeInMainAxis(Orientation orientation) => orientation switch
-        {
-            Orientation.Horizontal => WidthData,
-            Orientation.Vertical => HeightData,
-            _ => throw new InvalidEnumArgumentException(),
-        };
-        public Size GetSizeInCrossAxis(Orientation orientation) => orientation switch
-        {
-            Orientation.Horizontal => HeightData,
-            Orientation.Vertical => WidthData,
-            _ => throw new InvalidEnumArgumentException(),
-        };
-
         public void TryResize(int width, int height)
         {
             if (WidthData is FlexSize f)

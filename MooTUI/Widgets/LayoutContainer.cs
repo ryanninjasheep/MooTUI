@@ -347,4 +347,20 @@ namespace MooTUI.Widgets
             }
         }
     }
+
+    public static class LayoutExtensions
+    {
+        public static Size GetSizeInMainAxis(this LayoutRect r, Orientation orientation) => orientation switch
+        {
+            Orientation.Horizontal => r.WidthData,
+            Orientation.Vertical => r.HeightData,
+            _ => throw new System.ComponentModel.InvalidEnumArgumentException(),
+        };
+        public static Size GetSizeInCrossAxis(this LayoutRect r, Orientation orientation) => orientation switch
+        {
+            Orientation.Horizontal => r.HeightData,
+            Orientation.Vertical => r.WidthData,
+            _ => throw new System.ComponentModel.InvalidEnumArgumentException(),
+        };
+    }
 }
