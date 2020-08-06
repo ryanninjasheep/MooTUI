@@ -121,7 +121,7 @@ namespace MooTUI.Widgets
         protected override void Resize()
         {
             Lock = true;
-            Content.Bounds.SetSizes(Bounds.WidthData.Clone(), Bounds.HeightData.Clone());
+            Content.Bounds.TryResize(Width, Height);
             Lock = false;
         }
 

@@ -37,11 +37,6 @@ namespace MooTUI.Layout
 
     public class FlexSize : Size
     {
-        /// <summary>
-        /// The preferred length of this size object.  If actual size changes, it will be
-        /// proportional to the preferred size.
-        /// </summary>
-        public int PreferredSize { get; private set; }
         public int Min { get; private set; }
 
         public override int ActualSize 
@@ -56,19 +51,17 @@ namespace MooTUI.Layout
             }
         }
 
-        public FlexSize(int preferredSize, int min) : this(preferredSize, min, preferredSize) { }
-        public FlexSize(int preferredSize) : this(preferredSize, preferredSize) { }
+        public FlexSize(int min) : this(min, min) { }
 
-        private FlexSize(int preferredSize, int min, int actualSize) : base(actualSize)
+        private FlexSize(int min, int actualSize) : base(actualSize)
         {
-            PreferredSize = preferredSize;
             Min = min;
         }
 
-        public void Reset() => ActualSize = PreferredSize;
+        public void Reset() => ActualSize = Min;
 
         public override Size WithRelativeSize(int difference) => 
-            new FlexSize(PreferredSize + difference, Min + difference);
-        public override Size Clone() => new FlexSize(PreferredSize, Min, ActualSize);
+            new FlexSize(Min + difference);
+        public override Size Clone() => new FlexSize(Min, ActualSize);
     }
 }

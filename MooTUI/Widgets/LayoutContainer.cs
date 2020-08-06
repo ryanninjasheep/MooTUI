@@ -318,9 +318,9 @@ namespace MooTUI.Widgets
 
                 foreach (FlexSize f in flexible)
                 {
-                    float totalPreferred = flexible.Sum((f) => f.PreferredSize);
+                    float totalMin = flexible.Sum((f) => f.Min);
 
-                    float sizeRatio = f.PreferredSize / totalPreferred;
+                    float sizeRatio = f.Min / totalMin;
                     float growth = sizeRatio * freeSpace;
                     int newSize = Math.Max(f.ActualSize + (int)Math.Round(growth), f.Min);
 

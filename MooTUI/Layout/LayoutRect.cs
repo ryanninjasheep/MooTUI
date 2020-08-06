@@ -27,13 +27,6 @@ namespace MooTUI.Layout
 
         public event EventHandler SizeChanged;
 
-        public LayoutRect WithSize(Orientation orientation, Size s) => orientation switch
-        {
-            Orientation.Horizontal => new LayoutRect(s, HeightData),
-            Orientation.Vertical => new LayoutRect(WidthData, s),
-            _ => throw new InvalidEnumArgumentException(),
-        };
-
         public LayoutRect Clone() => new LayoutRect(WidthData.Clone(), HeightData.Clone());
 
         public LayoutRect WithRelativeSize(int widthDiff, int heightDiff) =>
@@ -59,14 +52,6 @@ namespace MooTUI.Layout
 
             if (HeightData is FlexSize g)
                 g.ActualSize = height;
-        }
-
-        public void SetSizes(Size width, Size height)
-        {
-            WidthData = width;
-            HeightData = height;
-
-            BubbleSizeChanged(this, EventArgs.Empty);
         }
 
         public void AssertMinSize(int width, int height)

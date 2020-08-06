@@ -29,11 +29,9 @@ namespace MooTUI.Widgets
 
         private void TextArea_HeightChanged(object sender, EventArgs e)
         {
-            if (Bounds.HeightData is FlexSize && MinHeight is int min)
+            if (MinHeight is int min)
             {
-                Bounds.SetSizes(
-                    Bounds.WidthData,
-                    new FlexSize(Math.Max(TextArea.Draw().Height + 1, min)));
+                Bounds.TryResize(Width, Math.Max(TextArea.Draw().Height + 1, min));
             }
         }
     }

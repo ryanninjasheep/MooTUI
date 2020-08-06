@@ -31,11 +31,9 @@ namespace MooTUI.Widgets
 
         private void TextArea_TextChanged(object sender, EventArgs e)
         {
-            if (Bounds.WidthData is FlexSize && MinWidth is int min)
+            if (MinWidth is int min)
             {
-                Bounds.SetSizes(
-                    new FlexSize(Math.Max(Text.Length + 1, min)),
-                    Bounds.HeightData);
+                Bounds.TryResize(Math.Max(Text.Length + 1, min), Height);
             }
         }
 
