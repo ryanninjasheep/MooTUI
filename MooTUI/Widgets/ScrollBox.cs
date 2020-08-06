@@ -362,16 +362,16 @@ namespace MooTUI.Widgets
             if (e.Keyboard.Shift || !IsVScrollBarVisible)
             {
                 if (delta < 0)
-                    e.Handled = ScrollX(-1);
+                    e.Handled = ScrollX(e.Keyboard.Ctrl ? -5 : -1);
                 else
-                    e.Handled = ScrollX(1);
+                    e.Handled = ScrollX(e.Keyboard.Ctrl ? 5 : 1);
             }
             else
             {
                 if (delta < 0)
-                    e.Handled = ScrollY(1);
+                    e.Handled = ScrollY(e.Keyboard.Ctrl ? 5 : 1);
                 else
-                    e.Handled = ScrollY(-1);
+                    e.Handled = ScrollY(e.Keyboard.Ctrl ? -5 : -1);
             }
         }
 
