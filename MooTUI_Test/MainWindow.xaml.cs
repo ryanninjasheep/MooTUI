@@ -34,24 +34,37 @@ namespace MooTUI_Test
 
             Widget.Style = MooTUI.IO.Style.HighContrast;
 
+            TabBox tabs = new TabBox(
+                new LayoutRect(
+                    new FlexSize(80),
+                    new FlexSize(40)),
+                BoxDrawing.Leaf);
+
+            WPFMooTUIBuilder.GenerateViewer(this, tabs, Theme.Basic);
+
             Container = new LayoutContainer(
                 new LayoutRect(
-                    new FlexSize(30),
-                    new FlexSize(3)),
+                    new FlexSize(70),
+                    new FlexSize(35)),
                 Orientation.Vertical,
                 crossJustification: LayoutContainer.CrossAxisJustification.STRETCH);
 
             ScrollBox scroll = new ScrollBox(
-                new LayoutRect(50, 20),
+                new LayoutRect(75, 30),
                 Container,
                 lineStyle: BoxDrawing.Leaf);
 
-            WPFMooTUIBuilder.GenerateViewer(this, scroll, Theme.Basic);
+            tabs.AddTab(scroll, TextSpan.FromString("{base03/altyellow}Tab 01"));
+
+            Button bigboi = new Button("This is a beeg boi",
+                new LayoutRect(new FlexSize(30), new FlexSize(10)));
+
+            tabs.AddTab(bigboi, TextSpan.FromString("This tab has a button"));
 
             ListBox list = new ListBox(
                 new LayoutRect(
                     new FlexSize(20),
-                    new FlexSize(10)),
+                    new Size(10)),
                 "List!",
                 true,
                 BoxDrawing.Leaf);
