@@ -35,7 +35,6 @@ namespace MooTUI.Widgets
 
             if (Content.HitTest(x - 1, y - 1))
             {
-                m.SetRelativeMouse(-1, -1);
                 return Content;
             }
             else
@@ -54,7 +53,7 @@ namespace MooTUI.Widgets
             Bounds.TryResize(Content.Width + 2, Content.Height + 2);
         }
 
-        protected override (int xOffset, int yOffset) GetOffset(Widget child) => (1, 1);
+        protected internal override (int xOffset, int yOffset) GetChildOffset(Widget child) => (1, 1);
 
         protected override void Input(InputEventArgs e) { }
 

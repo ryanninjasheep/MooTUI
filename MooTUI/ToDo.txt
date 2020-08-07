@@ -2,7 +2,7 @@
 
 Long-Term:
  - Add more controls
-    - Editable span
+    - TabView
     - Radio Button
        -> actually, "radio group" makes more sense
     - Slider

@@ -116,7 +116,7 @@ namespace MooTUI.Widgets
             // SHOULD NEVER HAPPEN
         }
 
-        protected override (int xOffset, int yOffset) GetOffset(Widget child) => (0, 0);
+        protected internal override (int xOffset, int yOffset) GetChildOffset(Widget child) => (0, 0);
 
         protected override void Resize()
         {

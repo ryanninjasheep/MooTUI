@@ -37,7 +37,7 @@ namespace MooTUI.Widgets.Primitives
         /// </summary>
         protected abstract void OnChildResized(Widget child);
 
-        protected abstract (int xOffset, int yOffset) GetOffset(Widget child);
+        protected internal abstract (int xOffset, int yOffset) GetChildOffset(Widget child);
 
         protected void LinkChild(Widget child)
         {
@@ -74,7 +74,12 @@ namespace MooTUI.Widgets.Primitives
             DrawChild(sender as Widget);
             Render();
         }
-        private void Child_BubbleInput(object sender, InputEventArgs e) => HandleInput(e);
+        private void Child_BubbleInput(object sender, InputEventArgs e)
+        {
+            (int xOffset, int yOffset) = GetChildOffset(sender as Widget);
+            e.Mouse.SetRelativeMouse(xOffset, yOffset);
+            HandleInput(e);
+        }
         private void Child_BubbleFocus(object sender, FocusEventArgs e) => OnClaimFocus(e);
         private void Child_Resized(object sender, EventArgs e) 
         {
@@ -86,7 +91,7 @@ namespace MooTUI.Widgets.Primitives
         private void Child_LayoutUpdated(object sender, EventArgs e) => OnLayoutUpdated(e);
         private void Child_EnsureVisible(object sender, RegionEventArgs e)
         {
-            (int xOffset, int yOffset) = GetOffset(sender as Widget);
+            (int xOffset, int yOffset) = GetChildOffset(sender as Widget);
             EnsureRegionVisible(e.XStart + xOffset, e.YStart + yOffset, e.Width, e.Height);
         }
     }

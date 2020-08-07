@@ -262,21 +262,35 @@ namespace MooTUI.Widgets
             if (x > 0 && x < 1 + ViewportWidth && y > 0 && y < 1 + ViewportHeight
                 && Content.HitTest(x + HorizontalOffset - 1, y + VerticalOffset - 1))
             {
-                m.SetRelativeMouse(HorizontalOffset - 1, VerticalOffset - 1);
                 return Content;
             }
             else if (IsHScrollBarVisible && y == Height - 1 && x > 0 && x < 1 + ViewportWidth)
             {
-                m.SetRelativeMouse(-1, -(Height - 1));
                 return HScrollBar;
             }
             else if (IsVScrollBarVisible && x == Width - 1 && y > 0 && y < 1 + ViewportHeight)
             {
-                m.SetRelativeMouse(-(Width - 1), -1);
                 return VScrollBar;
             }
 
             return this;
+        }
+
+        protected internal override (int xOffset, int yOffset) GetChildOffset(Widget child)
+        {
+            if (child == Content)
+            {
+                return (1, 1);
+            }
+            else if (child == HScrollBar)
+            {
+                return (1, Height - 1);
+            }
+            else if (child == VScrollBar)
+            {
+                return (Width - 1, 1);
+            }
+            throw new ArgumentException("Not a child of this container", nameof(child));
         }
 
         protected override void DrawChild(Widget child)

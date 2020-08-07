@@ -104,6 +104,8 @@ namespace MooTUI.IO
                 hovered = c.GetHoveredWidget(MouseContext);
                 if (c == hovered)
                     break;
+                (int xOffset, int yOffset) = c.GetChildOffset(hovered);
+                MouseContext.SetRelativeMouse(-xOffset, -yOffset);
             }
 
             return hovered;

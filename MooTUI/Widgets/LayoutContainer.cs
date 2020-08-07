@@ -180,8 +180,6 @@ namespace MooTUI.Widgets
                 if (x >= w.X && x < w.X + w.Widget.Width
                     && y >= w.Y && y < w.Y + w.Widget.Height)
                 {
-                    m.SetRelativeMouse(-w.X, -w.Y);
-
                     return w.Widget;
                 }
             }
@@ -215,7 +213,7 @@ namespace MooTUI.Widgets
 
         protected override void OnChildResized(Widget child) => CalculateLayout();
 
-        protected override (int xOffset, int yOffset) GetOffset(Widget child)
+        protected internal override (int xOffset, int yOffset) GetChildOffset(Widget child)
         {
             foreach(WidgetWithLocation w in ChildrenWithLocation)
             {
