@@ -56,8 +56,8 @@ namespace MooTUI_Test
 
             tabs.AddTab(scroll, TextSpan.FromString("{base03/altyellow}Tab 01"));
 
-            Button bigboi = new Button("This is a beeg boi",
-                new LayoutRect(new FlexSize(30), new FlexSize(10)));
+            Button bigboi = new Button(new LayoutRect(new FlexSize(30), new FlexSize(10)),
+                "This is a beeg boi");
 
             tabs.AddTab(bigboi, TextSpan.FromString("This tab has a button"));
 
@@ -72,19 +72,19 @@ namespace MooTUI_Test
             Container.AddChild(list);
 
             Button addToList = new Button(
-                "{green/}add an item to the list!",
                 new LayoutRect(
                     new FlexSize(35),
-                    new Size(1)));
+                    new Size(1)),
+                "{green/}add an item to the list!");
             addToList.Click += (s, e) =>
             {
                 list.Add("This is a {yellow/}listitem!");
             };
             Button removeList = new Button(
-                "{red/}remove selected listitem!",
                 new LayoutRect(
                     new FlexSize(35),
-                    new Size(1)));
+                    new Size(1)),
+                "{red/}remove selected listitem!");
             removeList.Click += (s, e) =>
             {
                 list.RemoveElementUnderCursor();
@@ -107,10 +107,10 @@ namespace MooTUI_Test
                 vScrollbarVisibility: ScrollBox.ScrollBarVisibility.DISABLED);
 
             Button setText = new Button(
-                "set the text of the textInput",
                 new LayoutRect(
                     new FlexSize(35),
-                    new Size(1)));
+                    new Size(1)),
+                "set the text of the textInput");
             setText.Click += (s, e) => t.SetText("TEXT :)");
 
             Container.AddChild(b);

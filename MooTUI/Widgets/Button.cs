@@ -21,12 +21,13 @@ namespace MooTUI.Widgets
         public bool IsSimple { get; private set; }
 
         public Button(string text) 
-            : this(text,
-                  new LayoutRect(
-                      new FlexSize(text.Length + Enclosure.TotalWidth),
-                      new Size(1)))
+            : this(
+                new LayoutRect(
+                    new FlexSize(text.Length + Enclosure.TotalWidth),
+                    new Size(1)),
+                text)
         { }
-        public Button(string text, LayoutRect bounds, bool isSimple = false) : base(bounds)
+        public Button(LayoutRect bounds, string text, bool isSimple = false) : base(bounds)
         {
             Text = TextArea.FromString(
                 text, 
