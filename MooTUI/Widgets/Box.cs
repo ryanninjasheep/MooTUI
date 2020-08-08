@@ -43,6 +43,8 @@ namespace MooTUI.Widgets
             }
         }
 
+        protected internal override (int xOffset, int yOffset) GetChildOffset(Widget child) => (1, 1);
+
         protected override void DrawChild(Widget child)
         {
             Visual.Merge(child.Visual, 1, 1);
@@ -52,8 +54,6 @@ namespace MooTUI.Widgets
         {
             Bounds.TryResize(Content.Width + 2, Content.Height + 2);
         }
-
-        protected internal override (int xOffset, int yOffset) GetChildOffset(Widget child) => (1, 1);
 
         protected override void Input(InputEventArgs e) { }
 

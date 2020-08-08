@@ -280,7 +280,7 @@ namespace MooTUI.Widgets
         {
             if (child == Content)
             {
-                return (1, 1);
+                return (1 - HorizontalOffset, 1 - VerticalOffset);
             }
             else if (child == HScrollBar)
             {
@@ -316,11 +316,11 @@ namespace MooTUI.Widgets
         protected override void EnsureRegionVisible(int x, int y, int width = 1, int height = 1)
         {
             if (width > 1 || height > 1)
-                ScrollToPoint(x + width - 2, y + height - 2);
+                ScrollToPoint(x + HorizontalOffset + width - 2, y + VerticalOffset + height - 2);
 
-            ScrollToPoint(x - 1, y - 1);
+            ScrollToPoint(x + HorizontalOffset - 1, y + VerticalOffset - 1);
 
-            base.EnsureRegionVisible(x - HorizontalOffset, y - VerticalOffset, width, height);
+            base.EnsureRegionVisible(x, y, width, height);
         }
 
         protected override void Resize()

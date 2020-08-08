@@ -76,6 +76,7 @@ namespace MooTUI.IO
             }
             else if (e.IsHoverDependent())
             {
+                GetHoveredWidget();
                 HoveredWidget?.HandleInput(e);
             }
             else if (e.IsFocusDependent())
@@ -91,6 +92,7 @@ namespace MooTUI.IO
         private void HandleMouseMovement(InputEventArgs e)
         {
             SetHoveredWidget(GetHoveredWidget());
+            GetHoveredWidget();
             HoveredWidget.HandleInput(e.CopyWithNewInputType(InputTypes.MOUSE_MOVE));
         }
 
