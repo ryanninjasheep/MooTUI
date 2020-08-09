@@ -39,6 +39,16 @@ namespace MooTUI.Widgets
 
             LinkChild(tab);
             Tabs.Add(tab);
+
+            if (Tabs.Count == 1)
+            {
+                SelectTab(tab);
+            }
+            else
+            {
+                RefreshVisual();
+                Render();
+            }
         }
 
         public override Widget GetHoveredWidget((int x, int y) relativeMouseLocation)
@@ -70,7 +80,7 @@ namespace MooTUI.Widgets
             if (e is MouseClickInputEventArgs m && m.Button == MouseClickInputEventArgs.MouseButton.LEFT)
             {
                 (int x, int y) = m.Location;
-                if (y >= _contentOffsetY - 1)
+                if (y >= _contentOffsetY)
                     return;
                 int xOffset = 1;
                 foreach (Tab t in Tabs)
@@ -78,9 +88,7 @@ namespace MooTUI.Widgets
                     int width = t.LabelWidth + 2;
                     if (x >= xOffset && x <= xOffset + width)
                     {
-                        CurrentTab = t;
-                        RefreshVisual();
-                        Render();
+                        SelectTab(t);
                         e.Handled = true;
                         return;
                     }
@@ -112,6 +120,16 @@ namespace MooTUI.Widgets
                 t.Bounds.TryResize(MaxContentWidth, MaxContentHeight);
             }
             Lock = false;
+        }
+
+        private void SelectTab(Tab t)
+        {
+            if (!Tabs.Contains(t))
+                throw new InvalidOperationException("That tab doesn't exist?!");
+
+            CurrentTab = t;
+            RefreshVisual();
+            Render();
         }
 
         private void DrawTabs()
