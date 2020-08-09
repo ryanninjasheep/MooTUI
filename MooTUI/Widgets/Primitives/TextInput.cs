@@ -98,29 +98,29 @@ namespace MooTUI.Widgets.Primitives
 
         protected override void Input(InputEventArgs e)
         {
-            switch (e.InputType)
+            switch (e)
             {
-                case InputTypes.FOCUS:
+                case FocusInputEventArgs _:
                     IsFocused = true;
                     Render();
                     break;
-                case InputTypes.UNFOCUS:
+                case UnfocusInputEventArgs _:
                     IsFocused = false;
                     Render();
                     break;
-                case InputTypes.MOUSE_ENTER:
+                case MouseEnterInputEventArgs _:
                     IsHovered = true;
                     Render();
                     break;
-                case InputTypes.MOUSE_LEAVE:
+                case MouseLeaveInputEventArgs _:
                     IsHovered = false;
                     Render();
                     break;
-                case InputTypes.LEFT_CLICK:
-                    OnLeftClick(e);
+                case MouseClickInputEventArgs c:
+                    OnClick(c);
                     break;
-                case InputTypes.KEY_DOWN:
-                    OnKeyDown(e);
+                case KeyboardInputEventArgs k:
+                    OnKeyDown(k);
                     if (Cursor != -1)
                     {
                         (int x, int y) = GetCursorCoords();
@@ -203,21 +203,21 @@ namespace MooTUI.Widgets.Primitives
         }
 
 
-        private void OnLeftClick(InputEventArgs e)
+        private void OnClick(MouseClickInputEventArgs c)
         {
             OnClaimFocus(new FocusEventArgs(this));
 
-            SetCursorCoords(e.Mouse.Mouse.X, e.Mouse.Mouse.Y, e.Keyboard.Shift);
+            SetCursorCoords(c.Location.X, c.Location.Y, c.Shift);
 
-            e.Handled = true;
+            c.Handled = true;
         }
 
-        private void OnKeyDown(InputEventArgs e)
+        private void OnKeyDown(KeyboardInputEventArgs k)
         {
-            switch (e.Keyboard.LastKeyPressed)
+            switch (k.Key)
             {
                 case Sys.Key.Enter:
-                    e.Handled = HandleEnter();
+                    k.Handled = HandleEnter();
                     return;
                 case Sys.Key.Back:
                     if (IsSelectionActive)
@@ -235,70 +235,77 @@ namespace MooTUI.Widgets.Primitives
                         return;
                     }
                     OnTextChanged(EventArgs.Empty);
-                    e.Handled = true;
+                    k.Handled = true;
                     return;
                 case Sys.Key.Up:
-                    e.Handled = MoveCursor(0, -1, e.Keyboard.Shift);
+                    k.Handled = MoveCursor(0, -1, k.Shift);
                     return;
                 case Sys.Key.Down:
-                    e.Handled = MoveCursor(0, 1, e.Keyboard.Shift);
+                    k.Handled = MoveCursor(0, 1, k.Shift);
                     return;
                 case Sys.Key.Left:
-                    if (IsSelectionActive && !e.Keyboard.Shift && Cursor != SelectionStart)
+                    if (IsSelectionActive && !k.Shift && Cursor != SelectionStart)
                     {
                         Cursor = SelectionStart;
                         ClearSelection();
                         Render();
-                        e.Handled = true;
+                        k.Handled = true;
                     }
                     else
                     {
-                        e.Handled = MoveCursor(-1, 0, e.Keyboard.Shift);
+                        k.Handled = MoveCursor(-1, 0, k.Shift);
                     }
                     return;
                 case Sys.Key.Right:
-                    if (IsSelectionActive && !e.Keyboard.Shift && Cursor != SelectionEnd)
+                    if (IsSelectionActive && !k.Shift && Cursor != SelectionEnd)
                     {
                         Cursor = SelectionEnd;
                         ClearSelection();
                         Render();
-                        e.Handled = true;
+                        k.Handled = true;
                     }
                     else
                     {
-                        e.Handled = MoveCursor(1, 0, e.Keyboard.Shift);
+                        k.Handled = MoveCursor(1, 0, k.Shift);
                     }
                     return;
-            }
-
-            if (e.Keyboard.GetCommand() != Command.NONE)
-            {
-                switch (e.Keyboard.GetCommand())
-                {
-                    case Command.COPY:
+                case Sys.Key.C:
+                    if (k.Ctrl)
+                    {
                         Clipboard.SetText(GetSelectedText());
-                        break;
-                    case Command.CUT:
+
+                        Render();
+                        k.Handled = true;
+                        return;
+                    }
+                    break;
+                case Sys.Key.X:
+                    if (k.Ctrl)
+                    {
                         Clipboard.SetText(GetSelectedText());
                         DeleteSelection();
-                        break;
-                    case Command.PASTE:
-                        Write(Clipboard.GetText());
-                        break;
-                    default:
-                        // ok
-                        break;
-                }
 
-                Render();
-                e.Handled = true;
-                return;
+                        Render();
+                        k.Handled = true;
+                        return;
+                    }
+                    break;
+                case Sys.Key.V:
+                    if (k.Ctrl)
+                    {
+                        Write(Clipboard.GetText());
+
+                        Render();
+                        k.Handled = true;
+                        return;
+                    }
+                    break;
             }
 
-            if (e.Keyboard.KeyIsChar)
+            if (k.Char is char c)
             {
-                Write(e.Keyboard.GetCharInput().ToString());
-                e.Handled = true;
+                Write(c.ToString());
+                k.Handled = true;
                 return;
             }
         }

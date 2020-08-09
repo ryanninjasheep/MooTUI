@@ -5,27 +5,25 @@ using System.Windows.Input;
 
 namespace MooTUI.Input
 {
-    public enum Command { COPY, CUT, PASTE, NONE }
-
-    public class KeyboardContext
+    public class KeyboardInputEventArgs : InputEventArgs
     {
-        public Key LastKeyPressed { get; set; }
-        public bool KeyIsChar { get; set; }
+        public Key Key { get; }
 
-        public bool Caps { get; private set; }
-        public bool Shift { get; private set; }
-        public bool Ctrl { get; private set; }
-        public bool Alt { get; private set; }
+        public char? Char { get; }
 
-        /// <summary>
-        /// Converts key input to a char
-        /// </summary>
-        /// <param name='k'>Key input</param>
-        /// <returns>Returns the corresponding char. If char is invalid, returns "null char" (char.MinValue)</returns>
-        public char GetCharInput()
+        public KeyboardInputEventArgs(Key key)
         {
+            Key = key;
+            Char = TryGetChar(Key);
+        }
+
+        public char? TryGetChar(Key key)
+        {
+            if (Ctrl || Alt)
+                return null;
+
             bool capLetter = Shift ^ Caps;
-            switch (LastKeyPressed)
+            switch (key)
             {
                 case Key.D0:
                     if (Shift)
@@ -286,75 +284,7 @@ namespace MooTUI.Input
                 case Key.Space:
                     return ' ';
                 default:
-                    return char.MinValue;
-            }
-        }
-
-        public Command GetCommand()
-        {
-            if (!Ctrl)
-                return Command.NONE;
-
-            if (LastKeyPressed == Key.C)
-                return Command.COPY;
-            if (LastKeyPressed == Key.X)
-                return Command.CUT;
-            if (LastKeyPressed == Key.V)
-                return Command.PASTE;
-
-            return Command.NONE;
-        }
-
-        public void HandleKeyDown(KeyEventArgs e)
-        {
-            LastKeyPressed = e.Key;
-
-            if (GetCharInput() == char.MinValue)
-            {
-                KeyIsChar = false;
-
-                if (e.Key == Key.LeftShift || e.Key == Key.RightShift)
-                {
-                    Shift = true;
-                }
-                else if (e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl)
-                {
-                    Ctrl = true;
-                }
-                else if (e.Key == Key.LeftAlt || e.Key == Key.RightAlt)
-                {
-                    Alt = true;
-                }
-            }
-            else
-            {
-                KeyIsChar = true;
-            }
-        }
-        public void HandleKeyUp(KeyEventArgs e)
-        {
-            if (e.Key == Key.LeftShift || e.Key == Key.RightShift)
-            {
-                Shift = false;
-            }
-            else if (e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl)
-            {
-                Ctrl = false;
-            }
-            else if (e.Key == Key.LeftAlt || e.Key == Key.RightAlt)
-            {
-                Alt = false;
-            }
-            else if (e.Key == Key.CapsLock)
-            {
-                if (Caps)
-                {
-                    Caps = false;
-                }
-                else
-                {
-                    Caps = true;
-                }
+                    return null;
             }
         }
     }

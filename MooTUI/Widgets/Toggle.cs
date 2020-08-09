@@ -53,19 +53,22 @@ namespace MooTUI.Widgets
 
         protected override void Input(InputEventArgs e)
         {
-            switch (e.InputType)
+            switch (e)
             {
-                case InputTypes.MOUSE_ENTER:
+                case MouseEnterInputEventArgs _:
                     _isMouseOver = true;
                     Render();
                     break;
-                case InputTypes.MOUSE_LEAVE:
+                case MouseLeaveInputEventArgs _:
                     _isMouseOver = false;
                     Render();
                     break;
-                case InputTypes.LEFT_CLICK:
-                    OnClick(EventArgs.Empty);
-                    Render();
+                case MouseClickInputEventArgs c:
+                    if (c.Button == MouseClickInputEventArgs.MouseButton.LEFT)
+                    {
+                        OnClick(EventArgs.Empty);
+                        Render();
+                    }
                     break;
                 default:
                     // ok, just do nothing.

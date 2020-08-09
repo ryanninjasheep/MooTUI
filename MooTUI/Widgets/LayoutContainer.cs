@@ -171,11 +171,11 @@ namespace MooTUI.Widgets
             RefreshVisual();
         }
 
-        public override Widget GetHoveredWidget(MouseContext m)
+        public override Widget GetHoveredWidget((int x, int y) relativeMouseLocation)
         {
-            (int x, int y) = m.Mouse;
+            (int x, int y) = relativeMouseLocation;
 
-            foreach(WidgetWithLocation w in ChildrenWithLocation)
+            foreach (WidgetWithLocation w in ChildrenWithLocation)
             {
                 if (x >= w.X && x < w.X + w.Widget.Width
                     && y >= w.Y && y < w.Y + w.Widget.Height)

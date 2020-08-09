@@ -18,9 +18,9 @@ namespace MooTUI.Widgets.Primitives
         public Container(LayoutRect bounds) : base(bounds) { }
 
         /// <summary>
-        /// Updates relative mouse position and returns Widget directly under mouse.
+        /// Returns Widget directly under mouse.
         /// </summary>
-        public abstract Widget GetHoveredWidget(MouseContext m);
+        public abstract Widget GetHoveredWidget((int x, int y) relativeMouseLocation);
         /// <summary>
         /// Returns an unordered list of all logical children.  When implementing, ensure
         /// that the method doesn't return null and also that none of the elements in
@@ -76,8 +76,11 @@ namespace MooTUI.Widgets.Primitives
         }
         private void Child_BubbleInput(object sender, InputEventArgs e)
         {
-            (int xOffset, int yOffset) = GetChildOffset(sender as Widget);
-            e.Mouse.SetRelativeMouse(xOffset, yOffset);
+            if (e is MouseInputEventArgs m)
+            {
+                (int, int) offset = GetChildOffset(sender as Widget);
+                m.SetRelativeMouse(offset);
+            }
             HandleInput(e);
         }
         private void Child_BubbleFocus(object sender, FocusEventArgs e) => OnClaimFocus(e);

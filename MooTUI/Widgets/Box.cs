@@ -29,9 +29,9 @@ namespace MooTUI.Widgets
             SetContent(w);
         }
 
-        public override Widget GetHoveredWidget(MouseContext m)
+        public override Widget GetHoveredWidget((int x, int y) relativeMouseLocation)
         {
-            (int x, int y) = m.Mouse;
+            (int x, int y) = relativeMouseLocation;
 
             if (Content.HitTest(x - 1, y - 1))
             {

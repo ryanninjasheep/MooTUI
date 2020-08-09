@@ -11,9 +11,6 @@ namespace MooTUI.Core
     {
         void SetVisual(Visual v);
 
-        MouseContext GetMouseContext();
-        KeyboardContext GetKeyboardContext();
-
         event EventHandler<InputEventArgs> InputEventHandler;
     }
 }

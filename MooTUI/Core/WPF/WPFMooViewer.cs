@@ -22,8 +22,7 @@ namespace MooTUI.Core.WPF
         private Visual Visual { get; set; }
         private Theme Theme { get; set; }
 
-        public MouseContext MouseContext { get; private set; }
-        public KeyboardContext KeyboardContext { get; private set; }
+        private (int x, int y) AbsoluteMouseLocation { get; set; }
 
         /// <summary>
         /// Width and height in terms of CELLS, not pixels.
@@ -36,9 +35,6 @@ namespace MooTUI.Core.WPF
                 SystemInput.Keyboard.KeyDownEvent, new SystemInput.KeyEventHandler(OnKeyDown), true);
             EventManager.RegisterClassHandler(typeof(Window), 
                 SystemInput.Keyboard.KeyUpEvent, new SystemInput.KeyEventHandler(OnKeyUp), true);
-
-            MouseContext = new MouseContext();
-            KeyboardContext = new KeyboardContext();
 
             Theme = theme;
 
@@ -59,10 +55,6 @@ namespace MooTUI.Core.WPF
             cellWidth = getCellWidth;
             cellHeight = getCellHeight;
         }
-
-        public MouseContext GetMouseContext() => MouseContext;
-
-        public KeyboardContext GetKeyboardContext() => KeyboardContext;
 
         public void SetSize(int width, int height)
         {
@@ -120,7 +112,8 @@ namespace MooTUI.Core.WPF
                 DrawGlyphRun(cursorX, j, Visual.Width - cursorX, dc);
             }
         }
-        private void DrawGlyphRun(int xIndex, int yIndex, int length, Media.DrawingContext dc) // Assumes all glyphs are the same color
+        private void DrawGlyphRun(int xIndex, int yIndex, int length, Media.DrawingContext dc)
+            // Assumes all glyphs are the same color
         {
             char[] chars = new char[length];
             for (int i = 0; i < length; i++)
@@ -151,13 +144,15 @@ namespace MooTUI.Core.WPF
                 g.FontRenderingEmSize = fontSize;
                 g.GlyphIndices = charIndexes;
                 g.AdvanceWidths = advanceWidths;
-                g.BaselineOrigin = new Point(xIndex * cellWidth, yIndex * cellHeight + glyphTypeface.Baseline * fontSize);
+                g.BaselineOrigin = new Point(xIndex * cellWidth, 
+                    yIndex * cellHeight + glyphTypeface.Baseline * fontSize);
             }
             isi.EndInit();
 
             dc.DrawGlyphRun(new Media.SolidColorBrush(GetColor(Visual[xIndex, yIndex].Fore)), g); ;
         }
-        private void DrawBackground(int xIndex, int yIndex, int length, Media.DrawingContext dc) // Assumes all same color
+        private void DrawBackground(int xIndex, int yIndex, int length, Media.DrawingContext dc)
+            // Assumes all same color
         {
             dc.DrawRectangle(new Media.SolidColorBrush(GetColor(Visual[xIndex, yIndex].Back)), null,
                 new Rect(xIndex * cellWidth, yIndex * cellHeight, length * cellWidth + 1, cellHeight + 1));
@@ -176,49 +171,47 @@ namespace MooTUI.Core.WPF
             handler?.Invoke(this, e);
         }
 
-        public InputEventArgs GenerateInputContext(InputTypes i) =>
-            new InputEventArgs(i, MouseContext, KeyboardContext);
-
         public void OnKeyDown(object sender, SystemInput.KeyEventArgs e)
         {
-            KeyboardContext.HandleKeyDown(e);
-            OnInputReceived(GenerateInputContext(InputTypes.KEY_DOWN));
+            InputEventArgs.HandleKeyDown(e.Key);
+            OnInputReceived(new KeyboardInputEventArgs(e.Key));
         }
         protected void OnKeyUp(object sender, SystemInput.KeyEventArgs e)
         {
-            KeyboardContext.HandleKeyUp(e);
+            InputEventArgs.HandleKeyUp(e.Key);
         }
 
-        protected override void OnMouseEnter(SystemInput.MouseEventArgs e)
-        {
-            base.OnMouseEnter(e);
+        // This may not be necessary if mouse move is still calledS
+        //protected override void OnMouseEnter(SystemInput.MouseEventArgs e)
+        //{
+        //    base.OnMouseEnter(e);
 
-            MouseContext.SetAbsoluteMouse(GetCellAtMousePosition());
+        //    AbsoluteMouse = GetCellAtMousePosition();
 
-            OnInputReceived(GenerateInputContext(InputTypes.MOUSE_ENTER));
+        //    OnInputReceived(GenerateInputContext(InputTypes.MOUSE_ENTER));
 
-        }
+        //}
         protected override void OnMouseLeave(SystemInput.MouseEventArgs e)
         {
             base.OnMouseLeave(e);
 
             // This may have to change!  It's basically an attempt to nullify the value.
-            MouseContext.SetAbsoluteMouse((-1, -1));
+            AbsoluteMouseLocation = (-1, -1);
 
-            OnInputReceived(GenerateInputContext(InputTypes.MOUSE_LEAVE));
+            OnInputReceived(new MouseLeaveInputEventArgs());
         }
         protected override void OnMouseMove(SystemInput.MouseEventArgs e)
         {
             base.OnMouseMove(e);
 
             var c = GetCellAtMousePosition();
-            if (c != MouseContext.AbsoluteMouse)
+            if (c != AbsoluteMouseLocation)
             {
                 // If cell changed...
 
-                MouseContext.SetAbsoluteMouse(c);
+                AbsoluteMouseLocation = c;
 
-                OnInputReceived(GenerateInputContext(InputTypes.MOUSE_MOVE));
+                OnInputReceived(new MouseMoveInputEventArgs(AbsoluteMouseLocation));
             }
         }
 
@@ -226,22 +219,22 @@ namespace MooTUI.Core.WPF
         {
             base.OnMouseLeftButtonDown(e);
 
-            OnInputReceived(GenerateInputContext(InputTypes.LEFT_CLICK));
+            OnInputReceived(new MouseClickInputEventArgs(AbsoluteMouseLocation,
+                MouseClickInputEventArgs.MouseButton.LEFT));
         }
         protected override void OnMouseRightButtonDown(SystemInput.MouseButtonEventArgs e)
         {
             base.OnMouseRightButtonDown(e);
 
-            OnInputReceived(GenerateInputContext(InputTypes.RIGHT_CLICK));
+            OnInputReceived(new MouseClickInputEventArgs(AbsoluteMouseLocation,
+                MouseClickInputEventArgs.MouseButton.RIGHT));
         }
 
         protected override void OnMouseWheel(SystemInput.MouseWheelEventArgs e)
         {
             base.OnMouseWheel(e);
 
-            MouseContext.SetScrollDelta(e.Delta);
-
-            OnInputReceived(GenerateInputContext(InputTypes.SCROLL));
+            OnInputReceived(new ScrollInputEventArgs(AbsoluteMouseLocation, e.Delta));
         }
 
         private (int x, int y) GetCellAtMousePosition()

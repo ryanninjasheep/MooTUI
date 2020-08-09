@@ -41,9 +41,9 @@ namespace MooTUI.Widgets
             Tabs.Add(tab);
         }
 
-        public override Widget GetHoveredWidget(MouseContext m)
+        public override Widget GetHoveredWidget((int x, int y) relativeMouseLocation)
         {
-            (int x, int y) = m.Mouse;
+            (int x, int y) = relativeMouseLocation;
 
             if (x >= _contentOffsetX && y >= _contentOffsetY
                 && CurrentTab != null && CurrentTab.HitTest(x - _contentOffsetX, y - _contentOffsetY))
@@ -67,9 +67,9 @@ namespace MooTUI.Widgets
 
         protected override void Input(InputEventArgs e)
         {
-            if (e.InputType == InputTypes.LEFT_CLICK)
+            if (e is MouseClickInputEventArgs m && m.Button == MouseClickInputEventArgs.MouseButton.LEFT)
             {
-                (int x, int y) = e.Mouse.Mouse;
+                (int x, int y) = m.Location;
                 if (y >= _contentOffsetY - 1)
                     return;
                 int xOffset = 1;
@@ -163,9 +163,9 @@ namespace MooTUI.Widgets
 
             public Visual DrawLabel() => _enclosure.DrawEnclosure(Label);
 
-            public override Widget GetHoveredWidget(MouseContext m)
+            public override Widget GetHoveredWidget((int x, int y) relativeMouseLocation)
             {
-                if (Content.HitTest(m.Mouse.X, m.Mouse.Y))
+                if (Content.HitTest(relativeMouseLocation.x, relativeMouseLocation.y))
                     return Content;
                 else
                     return this;

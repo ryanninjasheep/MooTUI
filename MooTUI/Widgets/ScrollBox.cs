@@ -255,9 +255,9 @@ namespace MooTUI.Widgets
             return toReturn;
         }
 
-        public override Widget GetHoveredWidget(MouseContext m)
+        public override Widget GetHoveredWidget((int x, int y) relativeMouseLocation)
         {
-            (int x, int y) = m.Mouse;
+            (int x, int y) = relativeMouseLocation;
 
             if (x > 0 && x < 1 + ViewportWidth && y > 0 && y < 1 + ViewportHeight
                 && Content.HitTest(x + HorizontalOffset - 1, y + VerticalOffset - 1))
@@ -355,13 +355,13 @@ namespace MooTUI.Widgets
             if (e.Handled)
                 return;
 
-            switch (e.InputType)
+            switch (e)
             {
-                case InputTypes.KEY_DOWN:
-                    OnKeyDown(e);
+                case KeyboardInputEventArgs k:
+                    OnKeyDown(k);
                     break;
-                case InputTypes.SCROLL:
-                    OnScroll(e);
+                case ScrollInputEventArgs s:
+                    OnScroll(s);
                     break;
                 default:
                     // ok
@@ -369,53 +369,53 @@ namespace MooTUI.Widgets
             }
         }
 
-        private void OnScroll(InputEventArgs e)
+        private void OnScroll(ScrollInputEventArgs s)
         {
-            int delta = e.Mouse.ScrollDelta;
+            int delta = s.Delta;
 
-            if (e.Keyboard.Shift || !IsVScrollBarVisible)
+            if (s.Shift || !IsVScrollBarVisible)
             {
                 if (delta < 0)
-                    e.Handled = ScrollX(e.Keyboard.Ctrl ? -5 : -1);
+                    s.Handled = ScrollX(s.Ctrl ? -5 : -1);
                 else
-                    e.Handled = ScrollX(e.Keyboard.Ctrl ? 5 : 1);
+                    s.Handled = ScrollX(s.Ctrl ? 5 : 1);
             }
             else
             {
                 if (delta < 0)
-                    e.Handled = ScrollY(e.Keyboard.Ctrl ? 5 : 1);
+                    s.Handled = ScrollY(s.Ctrl ? 5 : 1);
                 else
-                    e.Handled = ScrollY(e.Keyboard.Ctrl ? -5 : -1);
+                    s.Handled = ScrollY(s.Ctrl ? -5 : -1);
             }
         }
 
-        private void OnKeyDown(InputEventArgs e)
+        private void OnKeyDown(KeyboardInputEventArgs k)
         {
-            switch (e.Keyboard.LastKeyPressed)
+            switch (k.Key)
             {
                 case Keys.Key.PageUp:
-                    e.Handled = PageUp();
+                    k.Handled = PageUp();
                     return;
                 case Keys.Key.PageDown:
-                    e.Handled = PageDown();
+                    k.Handled = PageDown();
                     return;
                 case Keys.Key.Home:
-                    e.Handled = MinScroll();
+                    k.Handled = MinScroll();
                     return;
                 case Keys.Key.End:
-                    e.Handled = MaxScroll();
+                    k.Handled = MaxScroll();
                     return;
                 case Keys.Key.Left:
-                    e.Handled = ScrollX(-1);
+                    k.Handled = ScrollX(-1);
                     return;
                 case Keys.Key.Right:
-                    e.Handled = ScrollX(1);
+                    k.Handled = ScrollX(1);
                     return;
                 case Keys.Key.Up:
-                    e.Handled = ScrollY(-1);
+                    k.Handled = ScrollY(-1);
                     return;
                 case Keys.Key.Down:
-                    e.Handled = ScrollY(1);
+                    k.Handled = ScrollY(1);
                     return;
                 default:
                     return;
@@ -611,19 +611,20 @@ namespace MooTUI.Widgets
 
             protected override void Input(InputEventArgs e)
             {
-                switch (e.InputType)
+                switch (e)
                 {
-                    case InputTypes.MOUSE_MOVE:
-                        OnMouseMove(e);
+                    case MouseMoveInputEventArgs m:
+                        OnMouseMove(m);
                         break;
-                    case InputTypes.MOUSE_LEAVE:
+                    case MouseLeaveInputEventArgs _:
                         OnMouseLeave();
                         break;
-                    case InputTypes.LEFT_CLICK:
-                        OnLeftClick(e);
+                    case MouseClickInputEventArgs c:
+                        if (c.Button == MouseClickInputEventArgs.MouseButton.LEFT)
+                            OnLeftClick(c);
                         break;
-                    case InputTypes.SCROLL:
-                        OnScroll(e);
+                    case ScrollInputEventArgs s:
+                        OnScroll(s);
                         break;
                     default:
                         // ok
@@ -631,12 +632,12 @@ namespace MooTUI.Widgets
                 }
             }
 
-            private void OnMouseMove(InputEventArgs e)
+            private void OnMouseMove(MouseMoveInputEventArgs m)
             {
                 int index = Orientation switch
                 {
-                    Orientation.Horizontal => e.Mouse.Mouse.X,
-                    Orientation.Vertical => e.Mouse.Mouse.Y,
+                    Orientation.Horizontal => m.Location.X,
+                    Orientation.Vertical => m.Location.Y,
                     _ => throw new InvalidEnumArgumentException(),
                 };
 
@@ -677,35 +678,35 @@ namespace MooTUI.Widgets
                 Render();
             }
 
-            private void OnLeftClick(InputEventArgs e)
+            private void OnLeftClick(MouseClickInputEventArgs c)
             {
                 if (Orientation == Orientation.Horizontal)
                 {
                     if (Region == HoverRegion.LESS_BUTTON)
-                        e.Handled = Viewer.ScrollX(-1);
+                        c.Handled = Viewer.ScrollX(-1);
                     else if (Region == HoverRegion.MORE_BUTTON)
-                        e.Handled = Viewer.ScrollX(1);
+                        c.Handled = Viewer.ScrollX(1);
                     else if (Region == HoverRegion.LESS_TRACK)
-                        e.Handled = Viewer.PageLeft();
+                        c.Handled = Viewer.PageLeft();
                     else if (Region == HoverRegion.MORE_TRACK)
-                        e.Handled = Viewer.PageRight();
+                        c.Handled = Viewer.PageRight();
                 }
                 else if (Orientation == Orientation.Vertical)
                 {
                     if (Region == HoverRegion.LESS_BUTTON)
-                        e.Handled = Viewer.ScrollY(-1);
+                        c.Handled = Viewer.ScrollY(-1);
                     else if (Region == HoverRegion.MORE_BUTTON)
-                        e.Handled = Viewer.ScrollY(1);
+                        c.Handled = Viewer.ScrollY(1);
                     else if (Region == HoverRegion.LESS_TRACK)
-                        e.Handled = Viewer.PageUp();
+                        c.Handled = Viewer.PageUp();
                     else if (Region == HoverRegion.MORE_TRACK)
-                        e.Handled = Viewer.PageDown();
+                        c.Handled = Viewer.PageDown();
                 }
             }
 
-            private void OnScroll(InputEventArgs e)
+            private void OnScroll(ScrollInputEventArgs s)
             {
-                int delta = e.Mouse.ScrollDelta;
+                int delta = s.Delta;
 
                 if (Orientation == Orientation.Horizontal)
                 {
@@ -722,7 +723,7 @@ namespace MooTUI.Widgets
                         Viewer.ScrollY(-1);
                 }
 
-                e.Handled = true;
+                s.Handled = true;
             }
         }
     }

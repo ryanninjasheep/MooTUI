@@ -12,19 +12,15 @@ namespace MooTUI.IO
         public Widget Content { get; private set; }
         private IMooViewer Viewer { get; set; }
 
-        private MouseContext MouseContext { get; set; }
-        private KeyboardContext KeyboardContext { get; set; }
-
         public Widget HoveredWidget { get; private set; }
         public Widget FocusedWidget { get; private set; }
+
+        private (int, int) LastMouseLocation { get; set; }
 
         public MooInterface(IMooViewer viewer, Widget content)
         {
             SetContent(content);
             SetViewer(viewer);
-
-            MouseContext = Viewer.GetMouseContext();
-            KeyboardContext = Viewer.GetKeyboardContext();
         }
 
         public void SetContent(Widget w)
@@ -64,24 +60,24 @@ namespace MooTUI.IO
 
         private void Content_LayoutUpdated(object sender, System.EventArgs e)
         {
-            SetHoveredWidget(GetHoveredWidget());
+            SetHoveredWidget(GetHoveredWidget(new MouseMoveInputEventArgs(LastMouseLocation)));
             SetFocusedWidget(null);
         }
 
         private void Viewer_InputEventHandler(object sender, InputEventArgs e)
         {
-            if (e.IsMouseMovement())
+            if (e is MouseInputEventArgs m)
             {
-                HandleMouseMovement(e);
+                HandleMouseMovement(m);
             }
-            else if (e.IsHoverDependent())
+            else if (e is MouseLeaveInputEventArgs l)
             {
-                GetHoveredWidget();
-                HoveredWidget?.HandleInput(e);
+                HoveredWidget?.HandleInput(l);
+                SetHoveredWidget(null);
             }
-            else if (e.IsFocusDependent())
+            else if (e is KeyboardInputEventArgs k)
             {
-                FocusedWidget?.HandleInput(e);
+                FocusedWidget?.HandleInput(k);
             }
             else
             {
@@ -89,25 +85,22 @@ namespace MooTUI.IO
             }
         }
 
-        private void HandleMouseMovement(InputEventArgs e)
+        private void HandleMouseMovement(MouseInputEventArgs m)
         {
-            SetHoveredWidget(GetHoveredWidget());
-            GetHoveredWidget();
-            HoveredWidget.HandleInput(e.CopyWithNewInputType(InputTypes.MOUSE_MOVE));
+            SetHoveredWidget(GetHoveredWidget(m));
+            HoveredWidget.HandleInput(m);
         }
 
-        private Widget GetHoveredWidget()
+        private Widget GetHoveredWidget(MouseInputEventArgs m)
         {
-            // Kinda sketchy fix
-            MouseContext.SetAbsoluteMouse(MouseContext.AbsoluteMouse);
             Widget hovered = Content;
             while (hovered is Container c)
             {
-                hovered = c.GetHoveredWidget(MouseContext);
+                hovered = c.GetHoveredWidget(m.Location);
                 if (c == hovered)
                     break;
-                (int xOffset, int yOffset) = c.GetChildOffset(hovered);
-                MouseContext.SetRelativeMouse(-xOffset, -yOffset);
+                (int x, int y) offset = c.GetChildOffset(hovered);
+                m.SetRelativeMouse((-offset.x, -offset.y));
             }
 
             return hovered;
@@ -117,9 +110,9 @@ namespace MooTUI.IO
         {
             if (w != HoveredWidget)
             {
-                HoveredWidget?.HandleInput(new InputEventArgs(InputTypes.MOUSE_LEAVE, MouseContext, KeyboardContext));
+                HoveredWidget?.HandleInput(new MouseLeaveInputEventArgs());
                 HoveredWidget = w;
-                HoveredWidget?.HandleInput(new InputEventArgs(InputTypes.MOUSE_ENTER, MouseContext, KeyboardContext));
+                HoveredWidget?.HandleInput(new MouseEnterInputEventArgs());
             }
         }
 
@@ -127,9 +120,9 @@ namespace MooTUI.IO
         {
             if (w != FocusedWidget)
             {
-                FocusedWidget?.HandleInput(new InputEventArgs(InputTypes.UNFOCUS, MouseContext, KeyboardContext));
+                FocusedWidget?.HandleInput(new UnfocusInputEventArgs());
                 FocusedWidget = w;
-                FocusedWidget?.HandleInput(new InputEventArgs(InputTypes.FOCUS, MouseContext, KeyboardContext));
+                FocusedWidget?.HandleInput(new FocusInputEventArgs());
             }
         }
     }

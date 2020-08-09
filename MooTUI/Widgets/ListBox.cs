@@ -55,7 +55,7 @@ namespace MooTUI.Widgets
 
         public event EventHandler CursorMoved;
 
-        public override Widget GetHoveredWidget(MouseContext m) => Content;
+        public override Widget GetHoveredWidget((int x, int y) relativeMouseLocation) => Content;
 
         public void Add(string text, object reference = null)
         {
@@ -248,27 +248,27 @@ namespace MooTUI.Widgets
 
             protected override void Input(InputEventArgs e)
             {
-                switch (e.InputType)
+                switch (e)
                 {
-                    case InputTypes.MOUSE_ENTER:
+                    case MouseEnterInputEventArgs _:
                         IsMouseOver = true;
                         break;
-                    case InputTypes.MOUSE_LEAVE:
+                    case MouseLeaveInputEventArgs _:
                         IsMouseOver = false;
                         break;
-                    case InputTypes.LEFT_CLICK:
+                    case MouseClickInputEventArgs c:
                         ClaimFocus();
-                        _parent.SetCursorElement(this, e.Keyboard.Shift);
-                        e.Handled = true;
+                        _parent.SetCursorElement(this, c.Shift);
+                        c.Handled = true;
                         break;
-                    case InputTypes.KEY_DOWN:
-                        switch (e.Keyboard.LastKeyPressed)
+                    case KeyboardInputEventArgs k:
+                        switch (k.Key)
                         {
                             case Sys.Key.Up:
-                                e.Handled = _parent.TryMoveCursorUp(e.Keyboard.Shift);
+                                k.Handled = _parent.TryMoveCursorUp(k.Shift);
                                 break;
                             case Sys.Key.Down:
-                                e.Handled = _parent.TryMoveCursorDown(e.Keyboard.Shift);
+                                k.Handled = _parent.TryMoveCursorDown(k.Shift);
                                 break;
                             default:
                                 break;
