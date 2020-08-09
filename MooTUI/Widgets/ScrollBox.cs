@@ -590,6 +590,10 @@ namespace MooTUI.Widgets
                         Visual.SetColors(0, 0, Style.GetColorPair("Hover"));
                         break;
                     case HoverRegion.LESS_TRACK:
+                        if (Orientation == Orientation.Horizontal)
+                            Visual.FillColors(Style.GetColorPair("Hover"), 1, 0, GripStart - 1, 1);
+                        else if (Orientation == Orientation.Vertical)
+                            Visual.FillColors(Style.GetColorPair("Hover"), 0, 1, 1, GripStart - 1);
                         break;
                     case HoverRegion.GRIP:
                         if (Orientation == Orientation.Horizontal)
@@ -598,6 +602,12 @@ namespace MooTUI.Widgets
                             Visual.FillColors(Style.GetColorPair("Hover"), 0, GripStart, 1, GripLength);
                         break;
                     case HoverRegion.MORE_TRACK:
+                        if (Orientation == Orientation.Horizontal)
+                            Visual.FillColors(Style.GetColorPair("Hover"), GripStart + GripLength, 0, 
+                                Width - GripStart - GripLength - 1, 1);
+                        else if (Orientation == Orientation.Vertical)
+                            Visual.FillColors(Style.GetColorPair("Hover"), 0, GripStart + GripLength,
+                                1, Height - GripStart - GripLength - 1);
                         break;
                     case HoverRegion.MORE_BUTTON:
                         Visual.SetColors(Width - 1, Height - 1, Style.GetColorPair("Hover"));
