@@ -12,17 +12,17 @@ namespace MooTUI.Widgets
     {
         public TextArea Text { get; private set; }
 
-        public TextBlock(TextArea text, LayoutRect bounds) : base(bounds)
+        public TextBlock(LayoutRect bounds, TextArea text) : base(bounds)
         {
             Text = text;
         }
-        public TextBlock(string text, LayoutRect bounds)
-            : this(TextArea.FromString(text, bounds.Width), bounds) { }
+        public TextBlock(LayoutRect bounds, string text)
+            : this(bounds, TextArea.FromString(text, bounds.Width)) { }
 
         public static TextBlock FromSpan(TextArea text)
         {
             Visual v = text.Draw();
-            return new TextBlock(text, new LayoutRect(v.Width, v.Height));
+            return new TextBlock(new LayoutRect(v.Width, v.Height), text);
         }
 
         protected override void RefreshVisual()
