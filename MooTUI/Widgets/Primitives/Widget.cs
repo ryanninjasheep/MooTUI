@@ -36,7 +36,7 @@ namespace MooTUI.Widgets.Primitives
 
         public Widget(LayoutRect bounds)
         {
-            Bounds = bounds;
+            Bounds = bounds ?? throw new ArgumentNullException(nameof(bounds));
             Visual = new Visual(Width, Height);
         }
 
