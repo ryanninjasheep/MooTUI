@@ -32,7 +32,7 @@ namespace MooTUI.Core
                 Enum.TryParse(backText, true, out back);
                 return new ColorPair(fore, back);
             }
-            else
+            else if (style != null)
             {
                 try
                 {
@@ -42,6 +42,10 @@ namespace MooTUI.Core
                 {
                     return new ColorPair();
                 }
+            }
+            else
+            {
+                return new ColorPair();
             }
         }
 

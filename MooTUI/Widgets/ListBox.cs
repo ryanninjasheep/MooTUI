@@ -37,7 +37,7 @@ namespace MooTUI.Widgets
         private int SelectionFrom { get; set; }
         private int SelectionTo { get; set; }
 
-        public ListBox(LayoutRect bounds, string title = "", 
+        public ListBox(LayoutRect bounds, TextSpan title = null, 
             bool selectionEnabled = false, BoxDrawing lineStyle = null) : base(bounds)
         {
             LayoutContainer container = new LayoutContainer(

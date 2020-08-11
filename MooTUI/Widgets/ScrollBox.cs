@@ -63,7 +63,7 @@ namespace MooTUI.Widgets
         public ScrollBox(LayoutRect bounds, Widget w,
             ScrollBarVisibility hScrollbarVisibility = ScrollBarVisibility.AUTO,
             ScrollBarVisibility vScrollbarVisibility = ScrollBarVisibility.AUTO,
-            string text = "", BoxDrawing lineStyle = null)
+            TextSpan text = null, BoxDrawing lineStyle = null)
             : base(bounds, w, text, lineStyle)
         {
             HScrollBarVisibility = hScrollbarVisibility;

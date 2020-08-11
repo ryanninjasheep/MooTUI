@@ -17,13 +17,13 @@ namespace MooTUI.Widgets
         public static TextAreaEnclosure Enclosure { get; set; } =
             new TextAreaEnclosure("{ ", " }", new ColorPair());
 
-        public Box(Widget w, string text = "", BoxDrawing lineStyle = null)
+        public Box(Widget w, TextSpan text = null, BoxDrawing lineStyle = null)
             : this(w.Bounds.WithRelativeSize(2, 2),
                   w, text, lineStyle)
         { }
-        private protected Box(LayoutRect bounds, Widget w, string text, BoxDrawing lineStyle) : base(bounds)
+        private protected Box(LayoutRect bounds, Widget w, TextSpan text, BoxDrawing lineStyle) : base(bounds)
         {
-            Text = TextSpan.Parse(text);
+            Text = text;
             LineStyle = lineStyle ?? BoxDrawing.Default;
 
             SetContent(w);
@@ -83,7 +83,7 @@ namespace MooTUI.Widgets
 
         private void DrawText()
         {
-            if (Text.Text.Length > 0)
+            if (Text != null && Text.Length > 0)
                 Visual.Merge(Enclosure.DrawEnclosure(Text), 
                     1, 0, 
                     0, 0,

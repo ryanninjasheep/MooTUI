@@ -20,16 +20,16 @@ namespace MooTUI.Widgets
 
         public bool IsSimple { get; private set; }
 
-        public Button(string text) 
+        public Button(TextSpan text) 
             : this(
                 new LayoutRect(
                     new FlexSize(text.Length + Enclosure.TotalWidth),
                     new Size(1)),
                 text)
         { }
-        public Button(LayoutRect bounds, string text, bool isSimple = false) : base(bounds)
+        public Button(LayoutRect bounds, TextSpan text, bool isSimple = false) : base(bounds)
         {
-            Text = TextArea.Parse(
+            Text = new TextArea(
                 text, 
                 Width - Enclosure.TotalWidth, 
                 justification: HJustification.CENTER);

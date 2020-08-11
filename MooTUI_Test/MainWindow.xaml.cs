@@ -55,7 +55,7 @@ namespace MooTUI_Test
             tabs.AddTab(scroll, TextSpan.Parse("{base03/altyellow}Tab 01"));
 
             Button bigboi = new Button(new LayoutRect(new FlexSize(30), new FlexSize(10)),
-                "This is a beeg boi");
+                new TextSpan("This is a beeg boi"));
 
             tabs.AddTab(bigboi, TextSpan.Parse("This tab has a button"));
 
@@ -63,7 +63,7 @@ namespace MooTUI_Test
                 new LayoutRect(
                     new FlexSize(20),
                     new Size(10)),
-                "List!",
+                new TextSpan("List!"),
                 true);
 
             Container.AddChild(list);
@@ -72,7 +72,7 @@ namespace MooTUI_Test
                 new LayoutRect(
                     new FlexSize(35),
                     new Size(1)),
-                "{green/}add an item to the list!");
+                TextSpan.Parse("{green/}add an item to the list!"));
             addToList.Click += (s, e) =>
             {
                 list.Add("This is a {yellow/}listitem!");
@@ -81,7 +81,7 @@ namespace MooTUI_Test
                 new LayoutRect(
                     new FlexSize(35),
                     new Size(1)),
-                "{red/}remove selected listitem!");
+                TextSpan.Parse("{red/}remove selected listitem!"));
             removeList.Click += (s, e) =>
             {
                 list.RemoveElementUnderCursor();
@@ -107,7 +107,7 @@ namespace MooTUI_Test
                 new LayoutRect(
                     new FlexSize(35),
                     new Size(1)),
-                "set the text of the textInput");
+                new TextSpan("set the text of the textInput"));
             setText.Click += (s, e) => t.SetText("TEXT :)");
 
             Container.AddChild(b);
