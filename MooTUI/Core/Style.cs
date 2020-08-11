@@ -2,9 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using MooTUI.Core;
 
-namespace MooTUI.IO
+namespace MooTUI.Core
 {
     public class Style
     {
