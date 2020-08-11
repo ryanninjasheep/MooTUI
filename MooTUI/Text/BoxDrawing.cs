@@ -14,7 +14,7 @@ namespace MooTUI.Text
         public char DR { get; private set; }
         public char LR { get; private set; }
 
-        public static BoxDrawing Default = Square.Value;
+        public static BoxDrawing Default;
 
         public static readonly Lazy<BoxDrawing> Square = new Lazy<BoxDrawing>(() => new BoxDrawing
         {

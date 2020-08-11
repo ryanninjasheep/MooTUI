@@ -13,7 +13,7 @@ namespace MooTUI.Widgets.Primitives
     {
         private LayoutRect _bounds;
 
-        public static Style Style { get; set; } = Style.Dark.Value;
+        public static Style Style { get; set; } = Style.Dark;
 
         public LayoutRect Bounds
         {

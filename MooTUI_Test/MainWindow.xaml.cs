@@ -32,12 +32,12 @@ namespace MooTUI_Test
             InitializeComponent();
 
             Widget.Style = MooTUI.Core.Style.HighContrast.Value;
+            BoxDrawing.Default = BoxDrawing.Leaf.Value;
 
             TabBox tabs = new TabBox(
                 new LayoutRect(
                     new FlexSize(80),
-                    new FlexSize(40)),
-                BoxDrawing.Leaf);
+                    new FlexSize(40)));
 
             WPFMooTUIBuilder.GenerateViewer(this, tabs, Theme.Basic);
 
@@ -50,8 +50,7 @@ namespace MooTUI_Test
 
             ScrollBox scroll = new ScrollBox(
                 new LayoutRect(75, 30),
-                Container,
-                lineStyle: BoxDrawing.Leaf);
+                Container);
 
             tabs.AddTab(scroll, TextSpan.Parse("{base03/altyellow}Tab 01"));
 
@@ -65,8 +64,7 @@ namespace MooTUI_Test
                     new FlexSize(20),
                     new Size(10)),
                 "List!",
-                true,
-                BoxDrawing.Leaf);
+                true);
 
             Container.AddChild(list);
 
