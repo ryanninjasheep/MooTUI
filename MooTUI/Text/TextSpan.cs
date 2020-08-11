@@ -125,7 +125,7 @@ namespace MooTUI.Text
                 }
                 else if (c == '}')
                 {
-                    colors = ParseColorArgument(text);
+                    colors = ColorPair.Parse(text);
                     text = "";
                 }
                 else
@@ -135,37 +135,6 @@ namespace MooTUI.Text
             }
 
             Append(text, colors);
-        }
-
-        /// <summary>
-        /// First, ensures argument is properly formatted, then returns the appropriate ColorPair.  If the argument
-        /// is not formatted properly, returns the empty ColorPair.
-        /// </summary>
-        private static ColorPair ParseColorArgument(string s)
-        {
-            int i = s.IndexOf('/');
-            if (i != -1)
-            {
-                string foreText = s.Substring(0, i);
-                string backText = s.Substring(i + 1);
-
-                Color fore = Color.None;
-                Color back = Color.None;
-                Enum.TryParse(foreText, true, out fore);
-                Enum.TryParse(backText, true, out back);
-                return new ColorPair(fore, back);
-            }
-            else
-            {
-                try
-                {
-                    return Widget.Style.GetColorPair(s);
-                }
-                catch
-                {
-                    return new ColorPair();
-                }
-            }
         }
 
         private void OnTextChanged(EventArgs e)

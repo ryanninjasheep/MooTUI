@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MooTUI.IO;
+using System;
 
 namespace MooTUI.Core
 {
@@ -11,6 +12,37 @@ namespace MooTUI.Core
         {
             Fore = fore;
             Back = back;
+        }
+
+        /// <summary>
+        /// First, ensures argument is properly formatted ('red/green'), then returns the appropriate ColorPair.  If the
+        /// argument is not formatted properly, returns the empty ColorPair.
+        /// </summary>
+        public static ColorPair Parse(string s, Style style = null)
+        {
+            int i = s.IndexOf('/');
+            if (i != -1)
+            {
+                string foreText = s.Substring(0, i);
+                string backText = s.Substring(i + 1);
+
+                Color fore = Color.None;
+                Color back = Color.None;
+                Enum.TryParse(foreText, true, out fore);
+                Enum.TryParse(backText, true, out back);
+                return new ColorPair(fore, back);
+            }
+            else
+            {
+                try
+                {
+                    return style.GetColorPair(s);
+                }
+                catch
+                {
+                    return new ColorPair();
+                }
+            }
         }
 
         public ColorPair Invert() => new ColorPair(Back, Fore);

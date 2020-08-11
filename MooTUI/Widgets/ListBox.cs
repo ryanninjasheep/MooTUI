@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using System.Windows;
 
 namespace MooTUI.Widgets
 {
@@ -17,6 +18,8 @@ namespace MooTUI.Widgets
         public object CursorObject => CursorElement?.Object;
 
         public int Count => Container.Children.Count;
+
+        public IEnumerable<object> Objects => Container.Children.Select(w => (w as ListBoxElement).Object);
 
         public bool IsSelectionEnabled { get; }
 
@@ -69,6 +72,14 @@ namespace MooTUI.Widgets
         {
             Container.RemoveChild(CursorElement);
             SetCursorIndex(CursorIndex);
+        }
+
+        public void Clear()
+        {
+            foreach(Widget w in Container.Children.ToList())
+            {
+                Container.RemoveChild(w);
+            }
         }
 
         public void SetCursorIndex(int index, bool selectionActive = false)

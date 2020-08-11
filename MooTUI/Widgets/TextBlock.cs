@@ -25,9 +25,16 @@ namespace MooTUI.Widgets
             return new TextBlock(new LayoutRect(v.Width, v.Height), text);
         }
 
+        public void SetText(TextArea text)
+        {
+            Text = text;
+            RefreshVisual();
+            Render();
+        }
+
         protected override void RefreshVisual()
         {
-            Visual.FillColors(Style.GetColorPair("Default"));
+            Visual.FillCell(new Cell(' ', Style.GetColorPair("Default")));
             Visual.DrawTextArea(Text);
         }
 
