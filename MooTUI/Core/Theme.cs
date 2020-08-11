@@ -30,7 +30,8 @@ namespace MooTUI.Core
             return true;
         }
 
-        public static readonly Theme Solarized = new Theme(new Dictionary<Color, Media.Color>()
+        public static readonly Lazy<Theme> Solarized = new Lazy<Theme>(
+            () => new Theme(new Dictionary<Color, Media.Color>()
         {
             { Color.None,       Colors.Transparent },
             { Color.Base03,     Media.Color.FromRgb(0x00, 0x2B, 0x36) },
@@ -59,10 +60,10 @@ namespace MooTUI.Core
             { Color.AltBlue,    Media.Color.FromRgb(0x1C, 0x69, 0xA0) },
             { Color.AltPurple,  Media.Color.FromRgb(0x42, 0x47, 0xA5) },
             { Color.AltMagenta, Media.Color.FromRgb(0xA6, 0x23, 0x62) },
-        });
+        }));
 
-
-        public static readonly Theme Gruvbox = new Theme(new Dictionary<Color, Media.Color>()
+        public static readonly Lazy<Theme> Gruvbox = new Lazy<Theme>(
+            () => new Theme(new Dictionary<Color, Media.Color>()
         {
             { Color.None,       Colors.Transparent },
             { Color.Base03,     Media.Color.FromRgb(0x3c, 0x38, 0x36) },
@@ -91,9 +92,10 @@ namespace MooTUI.Core
             { Color.AltBlue,    Media.Color.FromRgb(0x83, 0xa5, 0x98) },
             { Color.AltPurple,  Media.Color.FromRgb(0xb1, 0x62, 0x86) },
             { Color.AltMagenta, Media.Color.FromRgb(0xd3, 0x86, 0x9b) },
-        });
+        }));
 
-        public static readonly Theme Basic = new Theme(new Dictionary<Color, Media.Color>()
+        public static readonly Lazy<Theme> Basic = new Lazy<Theme>(
+            () => new Theme(new Dictionary<Color, Media.Color>()
         {
             { Color.None,       Colors.Transparent },
             { Color.Base03,     Media.Color.FromRgb(0x00, 0x00, 0x00) },
@@ -122,7 +124,7 @@ namespace MooTUI.Core
             { Color.AltBlue,    Media.Color.FromRgb(0x00, 0x00, 0xC3) },
             { Color.AltPurple,  Media.Color.FromRgb(0x74, 0x00, 0xC3) },
             { Color.AltMagenta, Media.Color.FromRgb(0xC3, 0x00, 0xC3) },
-        });
+        }));
 
     }
 }
