@@ -15,6 +15,7 @@ namespace MooTUI.Text
 
         public HJustification Justification { get; set; }
         public int Width { get; private set; }
+        public int Height => Lines.Count;
 
         public List<TextSpan> Lines { get; private set; }
 
@@ -28,22 +29,22 @@ namespace MooTUI.Text
 
             Width = width;
             Justification = justification;
+
+            GenerateLines();
         }
 
         /// <summary>
         /// Attempts to color a given string using ColorPair parsing of arguments in brackets.
         /// </summary>
-        public static TextArea Parse(string s, int width, 
+        public static TextArea Parse(string s, int width, Style style = null, 
             HJustification justification = HJustification.LEFT) =>
-            new TextArea(TextSpan.Parse(s), width, justification);
+            new TextArea(TextSpan.Parse(s, style), width, justification);
 
         public event EventHandler TextChanged;
         public event EventHandler HeightChanged;
 
         public Visual Draw()
         {
-            GenerateLines();
-
             Visual visual = new Visual(Width, Lines.Count);
 
             for (int row = 0; row < Lines.Count; row++)
@@ -73,6 +74,8 @@ namespace MooTUI.Text
         {
             Span.Delete(0, Span.Length);
             Span.Append(text);
+
+            GenerateLines();
         }
 
         private void GenerateLines()

@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
-using System.Windows;
 
 namespace MooTUI.Text
 {
@@ -39,11 +38,11 @@ namespace MooTUI.Text
         /// <summary>
         /// Attempts to color a given string using ColorPair parsing of arguments in brackets.
         /// </summary>
-        public static TextSpan Parse(string s)
+        public static TextSpan Parse(string s, Style style = null)
         {
             TextSpan span = new TextSpan();
 
-            span.ParseAppend(s);
+            span.ParseAppend(s, style);
 
             return span;
         }
@@ -115,7 +114,7 @@ namespace MooTUI.Text
             Text = Text.Remove(index, length);
         }
 
-        protected void ParseAppend(string s)
+        protected void ParseAppend(string s, Style style)
         {
             ColorPair colors = new ColorPair();
             string text = "";
@@ -128,7 +127,7 @@ namespace MooTUI.Text
                 }
                 else if (c == '}')
                 {
-                    colors = ColorPair.Parse(text);
+                    colors = ColorPair.Parse(text, style);
                     text = "";
                 }
                 else

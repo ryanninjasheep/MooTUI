@@ -39,7 +39,7 @@ namespace MooTUI_Test
                     new FlexSize(80),
                     new FlexSize(40)));
 
-            WPFMooTUIBuilder.GenerateViewer(this, tabs, Theme.Basic);
+            WPFMooTUIBuilder.GenerateViewer(this, tabs, Theme.Basic.Value);
 
             Container = new LayoutContainer(
                 new LayoutRect(
