@@ -54,12 +54,12 @@ namespace MooTUI_Test
                 Container,
                 lineStyle: BoxDrawing.Leaf);
 
-            tabs.AddTab(scroll, TextSpan.FromString("{base03/altyellow}Tab 01"));
+            tabs.AddTab(scroll, TextSpan.Parse("{base03/altyellow}Tab 01"));
 
             Button bigboi = new Button(new LayoutRect(new FlexSize(30), new FlexSize(10)),
                 "This is a beeg boi");
 
-            tabs.AddTab(bigboi, TextSpan.FromString("This tab has a button"));
+            tabs.AddTab(bigboi, TextSpan.Parse("This tab has a button"));
 
             ListBox list = new ListBox(
                 new LayoutRect(
@@ -116,7 +116,7 @@ namespace MooTUI_Test
             Container.AddChild(b);
             Container.AddChild(setText);
 
-            Container.AddChild(new Toggle(TextSpan.FromString("Check?")));
+            Container.AddChild(new Toggle(TextSpan.Parse("Check?")));
         }
     }
 }

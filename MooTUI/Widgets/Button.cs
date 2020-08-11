@@ -29,7 +29,7 @@ namespace MooTUI.Widgets
         { }
         public Button(LayoutRect bounds, string text, bool isSimple = false) : base(bounds)
         {
-            Text = TextArea.FromString(
+            Text = TextArea.Parse(
                 text, 
                 Width - Enclosure.TotalWidth, 
                 justification: HJustification.CENTER);

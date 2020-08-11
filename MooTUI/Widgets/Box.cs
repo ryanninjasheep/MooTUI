@@ -23,7 +23,7 @@ namespace MooTUI.Widgets
         { }
         private protected Box(LayoutRect bounds, Widget w, string text, BoxDrawing lineStyle) : base(bounds)
         {
-            Text = TextSpan.FromString(text);
+            Text = TextSpan.Parse(text);
             LineStyle = lineStyle ?? BoxDrawing.Default;
 
             SetContent(w);

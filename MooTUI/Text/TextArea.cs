@@ -30,9 +30,12 @@ namespace MooTUI.Text
             Justification = justification;
         }
 
-        public static TextArea FromString(string s, int width, 
+        /// <summary>
+        /// Attempts to color a given string using ColorPair parsing of arguments in brackets.
+        /// </summary>
+        public static TextArea Parse(string s, int width, 
             HJustification justification = HJustification.LEFT) =>
-            new TextArea(TextSpan.FromString(s), width, justification);
+            new TextArea(TextSpan.Parse(s), width, justification);
 
         public event EventHandler TextChanged;
         public event EventHandler HeightChanged;

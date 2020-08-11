@@ -17,7 +17,7 @@ namespace MooTUI.Widgets
             Text = text;
         }
         public TextBlock(LayoutRect bounds, string text)
-            : this(bounds, TextArea.FromString(text, bounds.Width)) { }
+            : this(bounds, TextArea.Parse(text, bounds.Width)) { }
 
         public static TextBlock FromSpan(TextArea text)
         {

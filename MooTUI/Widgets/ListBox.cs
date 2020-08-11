@@ -249,7 +249,7 @@ namespace MooTUI.Widgets
             }
             public static ListBoxElement Generate(string text, int width, object reference, ListBox parent)
             {
-                TextArea span = TextArea.FromString(text, width);
+                TextArea span = TextArea.Parse(text, width);
                 LayoutRect bounds = new LayoutRect(
                     new FlexSize(span.Width),
                     new FlexSize(span.Draw().Height));

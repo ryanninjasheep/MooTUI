@@ -36,7 +36,10 @@ namespace MooTUI.Text
             Text = text;
         }
 
-        public static TextSpan FromString(string s)
+        /// <summary>
+        /// Attempts to color a given string using ColorPair parsing of arguments in brackets.
+        /// </summary>
+        public static TextSpan Parse(string s)
         {
             TextSpan span = new TextSpan();
 
