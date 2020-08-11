@@ -14,7 +14,9 @@ namespace MooTUI.Text
         public char DR { get; private set; }
         public char LR { get; private set; }
 
-        public static BoxDrawing Default = new BoxDrawing
+        public static BoxDrawing Default = Square.Value;
+
+        public static readonly Lazy<BoxDrawing> Square = new Lazy<BoxDrawing>(() => new BoxDrawing
         {
             UL = '┘',
             UD = '│',
@@ -22,8 +24,8 @@ namespace MooTUI.Text
             DL = '┐',
             DR = '┌',
             LR = '─'
-        };
-        public static BoxDrawing Double = new BoxDrawing
+        });
+        public static readonly Lazy<BoxDrawing> Double = new Lazy<BoxDrawing>(() => new BoxDrawing
         {
             UL = '╝',
             UD = '║',
@@ -31,8 +33,8 @@ namespace MooTUI.Text
             DL = '╗',
             DR = '╔',
             LR = '═'
-        };
-        public static BoxDrawing Rounded = new BoxDrawing
+        });
+        public static readonly Lazy<BoxDrawing> Rounded = new Lazy<BoxDrawing>(() => new BoxDrawing
         {
             UL = '╯',
             UD = '│',
@@ -40,8 +42,8 @@ namespace MooTUI.Text
             DL = '╮',
             DR = '╭',
             LR = '─'
-        };
-        public static BoxDrawing Leaf = new BoxDrawing
+        });
+        public static readonly Lazy<BoxDrawing> Leaf = new Lazy<BoxDrawing>(() => new BoxDrawing
         {
             UL = '╯',
             UD = '│',
@@ -49,8 +51,8 @@ namespace MooTUI.Text
             DL = '┐',
             DR = '╭',
             LR = '─'
-        };
-        public static BoxDrawing BubbleLeft = new BoxDrawing
+        });
+        public static readonly Lazy<BoxDrawing> BubbleLeft = new Lazy<BoxDrawing>(() => new BoxDrawing
         {
             UL = '╯',
             UD = '│',
@@ -58,8 +60,8 @@ namespace MooTUI.Text
             DL = '╮',
             DR = '╭',
             LR = '─'
-        };
-        public static BoxDrawing BubbleRight = new BoxDrawing
+        });
+        public static readonly Lazy<BoxDrawing> BubbleRight = new Lazy<BoxDrawing>(() => new BoxDrawing
         {
             UL = '┘',
             UD = '│',
@@ -67,7 +69,7 @@ namespace MooTUI.Text
             DL = '╮',
             DR = '╭',
             LR = '─'
-        };
+        });
 
         public void DrawBox(Visual v, int width, int height, int xOffset = 0, int yOffset = 0)
         {

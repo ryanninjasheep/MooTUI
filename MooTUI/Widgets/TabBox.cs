@@ -152,8 +152,8 @@ namespace MooTUI.Widgets
                 int width = t.LabelWidth + 2;
                 if (t == CurrentTab)
                 {
-                    Visual.SetChar(xOffset, _contentOffsetY - 1, BoxDrawing.Default.UL);
-                    Visual.SetChar(xOffset + width - 1, _contentOffsetY - 1, BoxDrawing.Default.UR);
+                    Visual.SetChar(xOffset, _contentOffsetY - 1, BoxDrawing.Square.Value.UL);
+                    Visual.SetChar(xOffset + width - 1, _contentOffsetY - 1, BoxDrawing.Square.Value.UR);
                     Visual.FillChar(' ', xOffset + 1, _contentOffsetY - 1, width - 2, 1);
                     return;
                 }
