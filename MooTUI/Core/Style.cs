@@ -12,7 +12,7 @@ namespace MooTUI.Core
 
         public Style(Dictionary<string, ColorPair> style, Style overflow = null)
         {
-            ColorSchemes = style;
+            ColorSchemes = new Dictionary<string, ColorPair>(style, StringComparer.OrdinalIgnoreCase);
             if (this != Dark)
             {
                 Overflow = overflow ?? Dark;
