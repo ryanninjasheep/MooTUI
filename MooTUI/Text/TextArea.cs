@@ -160,6 +160,8 @@ namespace MooTUI.Text
 
         private void Span_TextChanged(object sender, EventArgs e)
         {
+            GenerateLines();
+
             EventHandler handler = TextChanged;
             handler?.Invoke(sender, e);
         }
