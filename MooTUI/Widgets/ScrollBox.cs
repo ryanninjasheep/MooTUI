@@ -313,15 +313,12 @@ namespace MooTUI.Widgets
 
         protected override void EnsureRegionVisible(int x, int y, int width = 1, int height = 1)
         {
-            int xOffset, yOffset;
+            (int xOffset, int yOffset) = GetChildOffset(Content);
 
             if (width > 1 || height > 1)
             {
-                (xOffset, yOffset) = GetChildOffset(Content);
                 ScrollToPoint(x + width - xOffset - 1, y + height - yOffset - 1);
             }
-
-            (xOffset, yOffset) = GetChildOffset(Content);
 
             ScrollToPoint(x - xOffset, y - yOffset);
 
