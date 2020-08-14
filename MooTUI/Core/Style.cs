@@ -42,10 +42,10 @@ namespace MooTUI.Core
             { "Active",    new ColorPair(Color.Base0,    Color.Base02)   },
             { "Cursor",    new ColorPair(Color.Base03,   Color.Base0)    },
             { "Selection", new ColorPair(Color.Base03,   Color.Base01)   },
-            { "Message",   new ColorPair(Color.Base0,    Color.Base02)   },
-            { "Error",     new ColorPair(Color.Red,      Color.Base02)   },
-            { "Warning",   new ColorPair(Color.Yellow,   Color.Base02)   },
-            { "Info",      new ColorPair(Color.Cyan,     Color.Base02)   },
+            { "Message",   new ColorPair(Color.Base0,    Color.Base03)   },
+            { "Error",     new ColorPair(Color.Red,      Color.Base03)   },
+            { "Warning",   new ColorPair(Color.Yellow,   Color.Base03)   },
+            { "Info",      new ColorPair(Color.Cyan,     Color.Base03)   },
         });
         public static readonly Lazy<Style> Light = new Lazy<Style>(
             () => new Style(new Dictionary<string, ColorPair>()
