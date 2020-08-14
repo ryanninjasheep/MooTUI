@@ -305,8 +305,6 @@ namespace MooTUI.Widgets
 
         protected override void OnChildResized(Widget child)
         {
-            CalculateScrollInfo();
-
             MinScroll();
 
             RefreshVisual();
@@ -315,10 +313,17 @@ namespace MooTUI.Widgets
 
         protected override void EnsureRegionVisible(int x, int y, int width = 1, int height = 1)
         {
-            if (width > 1 || height > 1)
-                ScrollToPoint(x + HorizontalOffset + width - 2, y + VerticalOffset + height - 2);
+            int xOffset, yOffset;
 
-            ScrollToPoint(x + HorizontalOffset - 1, y + VerticalOffset - 1);
+            if (width > 1 || height > 1)
+            {
+                (xOffset, yOffset) = GetChildOffset(Content);
+                ScrollToPoint(x + width - xOffset - 1, y + height - yOffset - 1);
+            }
+
+            (xOffset, yOffset) = GetChildOffset(Content);
+
+            ScrollToPoint(x - xOffset, y - yOffset);
 
             base.EnsureRegionVisible(x, y, width, height);
         }
