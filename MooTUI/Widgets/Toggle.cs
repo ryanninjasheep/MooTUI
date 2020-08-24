@@ -1,4 +1,4 @@
-﻿using MooTUI.Core;
+﻿using MooTUI.Drawing;
 using MooTUI.Input;
 using MooTUI.Layout;
 using MooTUI.Text;

@@ -1,6 +1,5 @@
-﻿using MooTUI.Input;
-using MooTUI.Core.WPF;
-using MooTUI.Core;
+﻿using MooTUI.Core.WPF;
+using MooTUI.Drawing;
 using MooTUI.Layout;
 using MooTUI.Widgets;
 using MooTUI.Widgets.Primitives;
@@ -31,7 +30,7 @@ namespace MooTUI_Test
         {
             InitializeComponent();
 
-            Widget.Style = MooTUI.Core.Style.HighContrast.Value;
+            Widget.Style = MooTUI.Drawing.Style.HighContrast.Value;
             BoxDrawing.Default = BoxDrawing.Leaf.Value;
 
             TabBox tabs = new TabBox(

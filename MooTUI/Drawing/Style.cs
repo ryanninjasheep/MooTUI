@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MooTUI.Core
+namespace MooTUI.Drawing
 {
     public class Style
     {

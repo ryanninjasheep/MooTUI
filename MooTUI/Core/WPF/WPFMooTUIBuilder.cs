@@ -1,9 +1,9 @@
 ﻿using MooTUI.Widgets.Primitives;
+using MooTUI.Drawing;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
-using MooTUI.IO;
 using System.Windows.Media;
 
 namespace MooTUI.Core.WPF
@@ -14,7 +14,7 @@ namespace MooTUI.Core.WPF
         {
             WPFMooViewer viewer = new WPFMooViewer(widget.Width, widget.Height, t);
             window.Content = viewer;
-            window.Background = new SolidColorBrush(t.Palette[Color.Base03]);
+            window.Background = new SolidColorBrush(t.Palette[MooTUI.Drawing.Color.Base03]);
 
             new MooInterface(viewer, widget);
         }

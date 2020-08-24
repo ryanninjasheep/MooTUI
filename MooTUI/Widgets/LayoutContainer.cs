@@ -1,6 +1,5 @@
-﻿using MooTUI.Core;
+﻿using MooTUI.Drawing;
 using MooTUI.Input;
-using MooTUI.IO;
 using MooTUI.Layout;
 using MooTUI.Widgets.Primitives;
 using System;

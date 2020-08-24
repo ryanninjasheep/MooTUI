@@ -1,4 +1,4 @@
-﻿using MooTUI.Core;
+﻿using MooTUI.Drawing;
 using MooTUI.Input;
 using MooTUI.Layout;
 using MooTUI.Text;
@@ -7,7 +7,6 @@ using Keys = System.Windows.Input;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Markup;
-using MooTUI.IO;
 using System;
 using System.ComponentModel;
 

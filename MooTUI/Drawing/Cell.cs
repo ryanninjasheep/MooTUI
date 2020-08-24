@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MooTUI.Core
+namespace MooTUI.Drawing
 {
     public readonly struct Cell
     {

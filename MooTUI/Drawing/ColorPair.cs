@@ -1,7 +1,6 @@
-﻿using MooTUI.IO;
-using System;
+﻿using System;
 
-namespace MooTUI.Core
+namespace MooTUI.Drawing
 {
     public struct ColorPair : IEquatable<ColorPair>
     {

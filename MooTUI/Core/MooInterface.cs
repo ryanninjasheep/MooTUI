@@ -5,7 +5,7 @@ using MooTUI.Core;
 using MooTUI.Widgets.Primitives;
 using MooTUI.Input;
 
-namespace MooTUI.IO
+namespace MooTUI.Core
 {
     public class MooInterface
     {
@@ -53,7 +53,7 @@ namespace MooTUI.IO
             Viewer.SetVisual(Content.Visual);
         }
 
-        private void Content_ClaimFocus(object sender, EventArgs.FocusEventArgs e)
+        private void Content_ClaimFocus(object sender, ClaimFocusEventArgs e)
         {
             SetFocusedWidget(e.Sender);
         }

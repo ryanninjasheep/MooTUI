@@ -1,14 +1,9 @@
-﻿using MooTUI.Core;
+﻿using MooTUI.Drawing;
 using MooTUI.Input;
-using MooTUI.IO.EventArgs;
 using MooTUI.Layout;
 using MooTUI.Text;
-using MooTUI.Widgets.Primitives;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows;
-using System.Windows.Documents;
 using Sys = System.Windows.Input;
 
 namespace MooTUI.Widgets.Primitives
@@ -73,7 +68,7 @@ namespace MooTUI.Widgets.Primitives
                 return;
 
             if (IsSelectionActive)
-                ClearSelection();
+                DeleteSelection();
 
             if (CharLimit is int limit && TextArea.Text.Length + s.Length > limit)
                 s = s.Substring(0, limit - TextArea.Text.Length);
@@ -86,8 +81,8 @@ namespace MooTUI.Widgets.Primitives
 
         public void SetText(string s)
         {
-            Cursor = -1;
             TextArea.SetText(s);
+            RemoveCursor();
             Render();
         }
 
@@ -102,10 +97,16 @@ namespace MooTUI.Widgets.Primitives
             {
                 case FocusInputEventArgs _:
                     IsFocused = true;
+                    if (Cursor == -1)
+                    {
+                        SetCursorCoords(0, 0);
+                        MoveCursor(Text.Length, 0, true);
+                    }
                     Render();
                     break;
                 case UnfocusInputEventArgs _:
                     IsFocused = false;
+                    RemoveCursor();
                     Render();
                     break;
                 case MouseEnterInputEventArgs _:
@@ -205,7 +206,7 @@ namespace MooTUI.Widgets.Primitives
 
         private void OnClick(MouseClickInputEventArgs c)
         {
-            OnClaimFocus(new FocusEventArgs(this));
+            OnClaimFocus(new ClaimFocusEventArgs(this));
 
             SetCursorCoords(c.Location.X, c.Location.Y, c.Shift);
 
@@ -308,6 +309,17 @@ namespace MooTUI.Widgets.Primitives
                 k.Handled = true;
                 return;
             }
+        }
+
+        private void RemoveCursor()
+        {
+            Cursor = -1;
+            ClearSelection();
+        }
+        private void DefaultCursor()
+        {
+            Cursor = 0;
+            ClearSelection();
         }
 
         private bool MoveCursor(int deltaX, int deltaY, bool selectionActive = false)

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace MooTUI.IO
+namespace MooTUI.Layout
 {
     internal class SizeException : Exception
     {

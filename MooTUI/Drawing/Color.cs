@@ -1,7 +1,7 @@
 ﻿using System.Data.Common;
 using System.Text;
 
-namespace MooTUI.Core
+namespace MooTUI.Drawing
 {
     public enum Color
     {

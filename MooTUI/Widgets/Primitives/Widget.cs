@@ -1,11 +1,10 @@
-﻿using MooTUI.IO;
-using MooTUI.Layout;
+﻿using MooTUI.Layout;
 using MooTUI.Input;
+using MooTUI.Drawing;
+using MooTUI.Control;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using MooTUI.Core;
-using MooTUI.IO.EventArgs;
 
 namespace MooTUI.Widgets.Primitives
 {
@@ -75,7 +74,7 @@ namespace MooTUI.Widgets.Primitives
             OnBubbleInput(e);
         }
 
-        public void ClaimFocus() => OnClaimFocus(new FocusEventArgs(this));
+        public void ClaimFocus() => OnClaimFocus(new ClaimFocusEventArgs(this));
 
         public bool HitTest(int x, int y) =>
             (x >= 0 && x < Width) && (y >= 0 && y < Height);
@@ -136,9 +135,9 @@ namespace MooTUI.Widgets.Primitives
             EventHandler<InputEventArgs> handler = BubbleInput;
             handler?.Invoke(this, e);
         }
-        internal void OnClaimFocus(FocusEventArgs e)
+        internal void OnClaimFocus(ClaimFocusEventArgs e)
         {
-            EventHandler<FocusEventArgs> handler = BubbleFocus;
+            EventHandler<ClaimFocusEventArgs> handler = BubbleFocus;
             handler?.Invoke(this, e);
         }
         internal void OnLayoutUpdated(EventArgs e)
@@ -153,7 +152,7 @@ namespace MooTUI.Widgets.Primitives
         }
 
         internal event EventHandler<InputEventArgs> BubbleInput;
-        internal event EventHandler<FocusEventArgs> BubbleFocus;
+        internal event EventHandler<ClaimFocusEventArgs> BubbleFocus;
         internal event EventHandler LayoutUpdated;
         internal event EventHandler<RegionEventArgs> EnsureVisible;
 

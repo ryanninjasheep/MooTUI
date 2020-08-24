@@ -1,6 +1,4 @@
-﻿using MooTUI.Core;
-using MooTUI.IO;
-using MooTUI.Widgets.Primitives;
+﻿using MooTUI.Drawing;
 using System;
 using System.Collections.Generic;
 using System.Linq;

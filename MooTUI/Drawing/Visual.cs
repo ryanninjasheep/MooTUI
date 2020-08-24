@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 using MooTUI.Layout;
 using System.Windows;
 
-namespace MooTUI.Core
+namespace MooTUI.Drawing
 {
     public class Visual
     {

@@ -1,5 +1,5 @@
 ﻿using MooTUI.Input;
-using MooTUI.IO.EventArgs;
+using MooTUI.Control;
 using MooTUI.Layout;
 using System;
 using System.Collections.Generic;
@@ -83,7 +83,7 @@ namespace MooTUI.Widgets.Primitives
             }
             HandleInput(e);
         }
-        private void Child_BubbleFocus(object sender, FocusEventArgs e) => OnClaimFocus(e);
+        private void Child_BubbleFocus(object sender, ClaimFocusEventArgs e) => OnClaimFocus(e);
         private void Child_Resized(object sender, EventArgs e) 
         {
             if (Lock)
@@ -95,7 +95,7 @@ namespace MooTUI.Widgets.Primitives
         private void Child_EnsureVisible(object sender, RegionEventArgs e)
         {
             (int xOffset, int yOffset) = GetChildOffset(sender as Widget);
-            EnsureRegionVisible(e.XStart + xOffset, e.YStart + yOffset, e.Width, e.Height);
+            EnsureRegionVisible(e.X + xOffset, e.Y + yOffset, e.Width, e.Height);
         }
     }
 }

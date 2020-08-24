@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows.Media;
 using Media = System.Windows.Media;
 
-namespace MooTUI.Core
+namespace MooTUI.Drawing
 {
     public class Theme
     {
