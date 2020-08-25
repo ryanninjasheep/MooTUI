@@ -18,4 +18,3 @@ Long-Term:
  - Outline label acts as button?
  - Perhaps separate mouseDown and mouseUp to allow for dragging
     - When something is clicked, it receives the mouseUp signal even if the mouse has moved away!
- - Look into further separating input from display.

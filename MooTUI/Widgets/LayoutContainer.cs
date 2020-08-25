@@ -89,11 +89,13 @@ namespace MooTUI.Widgets
             if (Lock)
                 return;
 
+            int totalSpace = GetMinContentSize();
+
             if (MainJustification == MainAxisJustification.FIT
                 && Bounds.GetSizeInMainAxis(Orientation) is FlexSize size)
             {
                 Lock = true;
-                size.SetMin(Math.Max(GetMinContentSize(), 1));
+                size.SetMin(Math.Max(totalSpace, 1));
             }
 
             AssertMinSizesFit();
@@ -101,20 +103,11 @@ namespace MooTUI.Widgets
             Lock = true;
 
             List<WidgetWithLocation> widgets = Children.Select((w) => new WidgetWithLocation(w)).ToList();
-            List<FlexSize> flexible = new List<FlexSize>();
 
             foreach (WidgetWithLocation w in widgets)
             {
                 SetIndividualCrossSize(w);
-
-                if (w.Widget.Bounds.GetSizeInMainAxis(Orientation) is FlexSize f)
-                {
-                    f.Reset();
-                    flexible.Add(f);
-                }
             }
-
-            int totalSpace = Children.Sum((s) => s.Bounds.GetSizeInMainAxis(Orientation).ActualSize);
 
             if (MainJustification == MainAxisJustification.START 
                 || MainJustification == MainAxisJustification.FIT
@@ -122,9 +115,9 @@ namespace MooTUI.Widgets
                 || MainJustification == MainAxisJustification.END 
                 || MainJustification == MainAxisJustification.STRETCH)
             {
-                if (MainJustification == MainAxisJustification.STRETCH ||
-                    totalSpace > OrientationSize)
-                    UpdateFlexSizeToFit(flexible, OrientationSize - totalSpace);
+                if (MainJustification == MainAxisJustification.STRETCH &&
+                    totalSpace < OrientationSize)
+                    UpdateSizesToFit(Children, OrientationSize, Orientation);
 
                 int index = MainJustification switch
                 {
@@ -228,7 +221,7 @@ namespace MooTUI.Widgets
         private void AssertMinSizesFit()
         {
             if (GetMinContentSize() > OrientationSize)
-                throw new InvalidOperationException("The given objects cannot fit!");
+                throw new SizeException("The given Widgets will not fit in this LayoutContainer.");
         }
 
         private int GetMinContentSize()
@@ -246,7 +239,7 @@ namespace MooTUI.Widgets
 
                 if ((c is FlexSize g && g.Min > Bounds.GetSizeInCrossAxis(Orientation).ActualSize) ||
                     (!(c is FlexSize) && c.ActualSize > Bounds.GetSizeInCrossAxis(Orientation).ActualSize))
-                    throw new SizeException("The given objects cannot fit!");
+                    throw new SizeException("The given Widgets will not fit in this LayoutContainer.");
             }
 
             return min;
@@ -301,34 +294,55 @@ namespace MooTUI.Widgets
             }
         }
 
-        private void UpdateFlexSizeToFit(List<FlexSize> flexible, int freeSpace)
+        private static void UpdateSizesToFit(List<Widget> toResize, int totalSpace, Orientation orientation)
         {
-            for (int i = 0; i < 10; i++)
+            // Step 1: setup data
+            int freeSpace = totalSpace;
+            int totalMin = 0;
+            List<SizeHelper> flexible = new List<SizeHelper>();
+            foreach (Widget w in toResize)
             {
-                if (freeSpace == 0 || flexible.Count == 0)
-                    return;
-
-                if (freeSpace < 0)
-                    flexible = flexible
-                        .Where((f) => f.ActualSize > f.Min)
-                        .ToList();
-
-                foreach (FlexSize f in flexible)
+                Size s = w.Bounds.GetSizeInMainAxis(orientation);
+                if (s is FlexSize f)
                 {
-                    float totalMin = flexible.Sum((f) => f.Min);
-
-                    float sizeRatio = f.Min / totalMin;
-                    float growth = sizeRatio * freeSpace;
-                    int newSize = f.ActualSize + (int)Math.Round(growth);
-
-                    f.TryResize(newSize);
+                    flexible.Add(new SizeHelper(f));
+                    freeSpace -= f.Min;
+                    totalMin += f.Min;
                 }
+                else
+                {
+                    freeSpace -= s.ActualSize;
+                }
+            }
+            if (flexible.Count == 0)
+                return;
+            flexible = flexible.OrderBy((s) => s.Min).ToList();
 
-                freeSpace = OrientationSize -
-                    Children.Sum((s) => s.Bounds.GetSizeInMainAxis(Orientation).ActualSize);
+            // Step 2: floor function
+            int totalGrowth = 0;
+            foreach (SizeHelper s in flexible)
+            {
+                float sizeRatio = (float)s.Min / totalMin;
+                float growth = sizeRatio * freeSpace; // should be positive bc freeSpace is positive
+                int intGrowth = (int)Math.Floor(growth);
+
+                s.Curr += intGrowth;
+                totalGrowth += intGrowth;
+            }
+            freeSpace -= totalGrowth;
+
+            // Step 3: distribute remaining space
+            for (int i = 0; i < freeSpace; i++)
+            {
+                // Because flexible was already sorted, this will be distributed to the largest ones first
+                flexible[i % flexible.Count].Curr += 1;
             }
 
-            Debug.WriteLine("Failed to fit sizes perfectly");
+            // Step 4: zip
+            foreach (SizeHelper s in flexible)
+            {
+                s.Zip();
+            }
         }
 
         private class WidgetWithLocation
@@ -342,6 +356,22 @@ namespace MooTUI.Widgets
             {
                 Widget = w;
             }
+        }
+        private class SizeHelper
+        {
+            private FlexSize size;
+
+            public int Min { get; }
+            public int Curr { get; set; }
+
+            public SizeHelper(FlexSize f)
+            {
+                size = f;
+                Min = f.Min;
+                Curr = f.Min;
+            }
+
+            public void Zip() => size.TryResize(Curr);
         }
     }
 
