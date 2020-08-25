@@ -8,7 +8,7 @@ using System.Text;
 
 namespace MooTUI.Widgets.Primitives
 {
-    public abstract class Widget
+    public abstract partial class Widget
     {
         private LayoutRect _bounds;
 
@@ -30,8 +30,6 @@ namespace MooTUI.Widgets.Primitives
 
         public int Width => Bounds.Width;
         public int Height => Bounds.Height;
-
-        internal bool HasParent { get; private set; }
 
         public Widget(LayoutRect bounds)
         {
@@ -129,6 +127,16 @@ namespace MooTUI.Widgets.Primitives
             EventHandler handler = Resized;
             handler?.Invoke(this, e);
         }
+    }
+
+    public abstract partial class Widget
+    {
+        internal bool HasParent { get; private set; }
+
+        internal event EventHandler<InputEventArgs> BubbleInput;
+        internal event EventHandler<ClaimFocusEventArgs> BubbleFocus;
+        internal event EventHandler LayoutUpdated;
+        internal event EventHandler<RegionEventArgs> EnsureVisible;
 
         internal void OnBubbleInput(InputEventArgs e)
         {
@@ -150,11 +158,6 @@ namespace MooTUI.Widgets.Primitives
             EventHandler<RegionEventArgs> handler = EnsureVisible;
             handler?.Invoke(this, e);
         }
-
-        internal event EventHandler<InputEventArgs> BubbleInput;
-        internal event EventHandler<ClaimFocusEventArgs> BubbleFocus;
-        internal event EventHandler LayoutUpdated;
-        internal event EventHandler<RegionEventArgs> EnsureVisible;
 
         /// <summary>
         /// !!! ONLY CALL FROM Container.LinkChild !!!

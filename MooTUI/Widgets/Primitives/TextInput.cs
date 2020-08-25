@@ -8,37 +8,8 @@ using Sys = System.Windows.Input;
 
 namespace MooTUI.Widgets.Primitives
 {
-    public abstract class TextInput : Widget
+    public abstract partial class TextInput : Widget
     {
-        private TextArea _text;
-
-        public string Text => TextArea.Text;
-        public int Cursor { get; private set; }
-
-        public int SelectionStart => Math.Min(SelectionFrom, SelectionTo);
-        public int SelectionEnd => Math.Max(SelectionFrom, SelectionTo);
-        public bool IsSelectionActive => SelectionFrom != SelectionTo;
-
-        protected TextArea TextArea
-        {
-            get => _text;
-            private set
-            {
-                _text = value;
-                OnTextChanged(EventArgs.Empty);
-            }
-        }
-
-        private int SelectionFrom { get; set; }
-        private int SelectionTo { get; set; }
-
-        private bool IsFocused { get; set; }
-        private bool IsHovered { get; set; }
-
-        private int? CharLimit { get; }
-
-        private TextArea Prompt { get; set; }
-
         public TextInput(LayoutRect bounds, int? charLimit, string promptText = "") : base(bounds)
         {
             TextArea = new TextArea("", Width);
@@ -48,42 +19,6 @@ namespace MooTUI.Widgets.Primitives
                 new ColorPair(Style.GetFore("Disabled"), Color.None));
 
             CharLimit = charLimit;
-        }
-
-        public event EventHandler TextChanged;
-
-        public (int x, int y) GetCursorCoords() => GetCoordsAtIndex(Cursor);
-
-        public string GetSelectedText() => Text.Substring(SelectionStart, SelectionEnd - SelectionStart);
-
-        public void ClearSelection()
-        {
-            SelectionFrom = Cursor;
-            SelectionTo = Cursor;
-        }
-
-        public void Write(string s)
-        {
-            if (Cursor == -1)
-                return;
-
-            if (IsSelectionActive)
-                DeleteSelection();
-
-            if (CharLimit is int limit && TextArea.Text.Length + s.Length > limit)
-                s = s.Substring(0, limit - TextArea.Text.Length);
-
-            TextArea.Span.Insert(Cursor, s);
-            MoveCursor(s.Length, 0);
-
-            OnTextChanged(EventArgs.Empty);
-        }
-
-        public void SetText(string s)
-        {
-            TextArea.SetText(s);
-            RemoveCursor();
-            Render();
         }
 
         protected override void Resize()
@@ -309,6 +244,74 @@ namespace MooTUI.Widgets.Primitives
                 k.Handled = true;
                 return;
             }
+        }
+    }
+
+    public abstract partial class TextInput
+    {
+        private TextArea _text;
+
+        public string Text => TextArea.Text;
+        public int Cursor { get; private set; }
+
+        public int SelectionStart => Math.Min(SelectionFrom, SelectionTo);
+        public int SelectionEnd => Math.Max(SelectionFrom, SelectionTo);
+        public bool IsSelectionActive => SelectionFrom != SelectionTo;
+
+        protected TextArea TextArea
+        {
+            get => _text;
+            private set
+            {
+                _text = value;
+                OnTextChanged(EventArgs.Empty);
+            }
+        }
+
+        private int SelectionFrom { get; set; }
+        private int SelectionTo { get; set; }
+
+        private bool IsFocused { get; set; }
+        private bool IsHovered { get; set; }
+
+        private int? CharLimit { get; }
+
+        private TextArea Prompt { get; set; }
+
+        public event EventHandler TextChanged;
+
+        public (int x, int y) GetCursorCoords() => GetCoordsAtIndex(Cursor);
+
+        public string GetSelectedText() => Text.Substring(SelectionStart, SelectionEnd - SelectionStart);
+
+        public void ClearSelection()
+        {
+            SelectionFrom = Cursor;
+            SelectionTo = Cursor;
+        }
+
+        public void Write(string s)
+        {
+            if (Cursor == -1)
+                return;
+
+            if (IsSelectionActive)
+                DeleteSelection();
+
+            if (CharLimit is int limit && TextArea.Text.Length + s.Length > limit)
+                s = s.Substring(0, limit - TextArea.Text.Length);
+
+            TextArea.Span.Insert(Cursor, s);
+            MoveCursor(s.Length, 0);
+
+            OnTextChanged(EventArgs.Empty);
+        }
+
+        public void SetText(string s)
+        {
+            TextArea.SetText(s);
+            RemoveCursor();
+            Render();
         }
 
         private void RemoveCursor()
