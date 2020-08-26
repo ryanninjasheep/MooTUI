@@ -8,9 +8,9 @@ namespace MooTUI.Drawing
     public class Style
     {
         private Dictionary<string, ColorPair> ColorSchemes { get; }
-        private Style Overflow { get; }
+        private Style? Overflow { get; }
 
-        public Style(Dictionary<string, ColorPair> style, Style overflow = null)
+        public Style(Dictionary<string, ColorPair> style, Style? overflow = null)
         {
             ColorSchemes = new Dictionary<string, ColorPair>(style, StringComparer.OrdinalIgnoreCase);
             if (this != Dark)
@@ -27,8 +27,10 @@ namespace MooTUI.Drawing
         {
             if (ColorSchemes.ContainsKey(key))
                 return ColorSchemes[key];
-            else
+            else if (Overflow != null)
                 return Overflow.GetColorPair(key);
+            else
+                throw new KeyNotFoundException("Cannot find ColorPair for that key.");
         }
         public Color GetFore(string key) => GetColorPair(key).Fore;
         public Color GetBack(string key) => GetColorPair(key).Back;

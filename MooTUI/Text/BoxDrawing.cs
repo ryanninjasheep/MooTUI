@@ -14,9 +14,9 @@ namespace MooTUI.Text
         public char DR { get; private set; }
         public char LR { get; private set; }
 
-        public static BoxDrawing Default;
+        public static BoxDrawing Default = Square;
 
-        public static readonly Lazy<BoxDrawing> Square = new Lazy<BoxDrawing>(() => new BoxDrawing
+        public static readonly BoxDrawing Square = new BoxDrawing
         {
             UL = '┘',
             UD = '│',
@@ -24,7 +24,7 @@ namespace MooTUI.Text
             DL = '┐',
             DR = '┌',
             LR = '─'
-        });
+        };
         public static readonly Lazy<BoxDrawing> Double = new Lazy<BoxDrawing>(() => new BoxDrawing
         {
             UL = '╝',

@@ -24,7 +24,7 @@ namespace MooTUI.Layout
         public LayoutRect(int width, int height) 
             : this(new Size(width), new Size(height)) { }
 
-        public event EventHandler SizeChanged;
+        public event EventHandler? SizeChanged;
 
         public LayoutRect Clone() => new LayoutRect(WidthData.Clone(), HeightData.Clone());
 
@@ -48,7 +48,7 @@ namespace MooTUI.Layout
 
         private void BubbleSizeChanged(object sender, EventArgs e)
         {
-            EventHandler handler = SizeChanged;
+            EventHandler? handler = SizeChanged;
             handler?.Invoke(sender, e);
         }
     }

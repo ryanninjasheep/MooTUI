@@ -10,6 +10,8 @@ namespace MooTUI.Text
 {
     public class TextArea
     {
+        private List<TextSpan> lines;
+
         public TextSpan Span { get; private set; }
         public string Text => Span.Text;
 
@@ -17,7 +19,19 @@ namespace MooTUI.Text
         public int Width { get; private set; }
         public int Height => Lines.Count;
 
-        public List<TextSpan> Lines { get; private set; }
+        public List<TextSpan> Lines 
+        {
+            get => lines; 
+            private set
+            {
+                bool heightChanged = Lines?.Count != lines.Count;
+
+                lines = value;
+
+                if (heightChanged)
+                    OnHeightChanged(EventArgs.Empty);
+            }
+        }
 
         public TextArea(string text, int width, ColorPair c = new ColorPair(),
             HJustification justification = HJustification.LEFT)
@@ -30,18 +44,18 @@ namespace MooTUI.Text
             Width = width;
             Justification = justification;
 
-            GenerateLines();
+            lines = GenerateLines();
         }
 
         /// <summary>
         /// Attempts to color a given string using ColorPair parsing of arguments in brackets.
         /// </summary>
-        public static TextArea Parse(string s, int width, Style style = null, 
+        public static TextArea Parse(string s, int width, Style? style = null,
             HJustification justification = HJustification.LEFT) =>
             new TextArea(TextSpan.Parse(s, style), width, justification);
 
-        public event EventHandler TextChanged;
-        public event EventHandler HeightChanged;
+        public event EventHandler? TextChanged;
+        public event EventHandler? HeightChanged;
 
         public Visual Draw()
         {
@@ -54,7 +68,7 @@ namespace MooTUI.Text
                 int trimmedLength = currentLine.Text.Trim().Length;
                 int xOffset = Justification.GetOffset(trimmedLength, Width);
 
-                for(int column = 0; column < currentLine.Length; column++)
+                for (int column = 0; column < currentLine.Length; column++)
                 {
                     if (column + xOffset < Width)
                         visual[column + xOffset, row] = currentLine[column];
@@ -78,22 +92,17 @@ namespace MooTUI.Text
             GenerateLines();
         }
 
-        private void GenerateLines()
+        private List<TextSpan> GenerateLines()
         {
             List<TextSpan> lines = new List<TextSpan>();
 
             List<TextSpan> hardLineBreaks = GetHardLineBreaks();
-            foreach(TextSpan s in hardLineBreaks)
+            foreach (TextSpan s in hardLineBreaks)
             {
                 lines.AddRange(GetSoftLineBreaks(s));
             }
 
-            bool heightChanged = Lines?.Count != lines.Count;
-
-            Lines = lines;
-
-            if (heightChanged)
-                OnHeightChanged(EventArgs.Empty);
+            return lines;
         }
 
         private List<TextSpan> GetHardLineBreaks()
@@ -160,15 +169,15 @@ namespace MooTUI.Text
 
         private void Span_TextChanged(object sender, EventArgs e)
         {
-            GenerateLines();
+            Lines = GenerateLines();
 
-            EventHandler handler = TextChanged;
+            EventHandler? handler = TextChanged;
             handler?.Invoke(sender, e);
         }
 
         private void OnHeightChanged(EventArgs e)
         {
-            EventHandler handler = HeightChanged;
+            EventHandler? handler = HeightChanged;
             handler?.Invoke(this, e);
         }
     }

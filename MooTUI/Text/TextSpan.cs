@@ -30,13 +30,13 @@ namespace MooTUI.Text
         public TextSpan(string text = "", ColorPair c = new ColorPair())
         {
             ColorInfo = new TextSpanColorInfo(c);
-            Text = text;
+            this.text = text;
         }
 
         /// <summary>
         /// Attempts to color a given string using ColorPair parsing of arguments in brackets.
         /// </summary>
-        public static TextSpan Parse(string s, Style style = null)
+        public static TextSpan Parse(string s, Style? style = null)
         {
             TextSpan span = new TextSpan();
 
@@ -45,7 +45,7 @@ namespace MooTUI.Text
             return span;
         }
 
-        public event EventHandler TextChanged;
+        public event EventHandler? TextChanged;
 
         public TextSpan SubSpan(int start, int length)
         {
@@ -112,7 +112,7 @@ namespace MooTUI.Text
             Text = Text.Remove(index, length);
         }
 
-        protected void ParseAppend(string s, Style style)
+        protected void ParseAppend(string s, Style? style)
         {
             ColorPair colors = new ColorPair();
             string text = "";
@@ -139,7 +139,7 @@ namespace MooTUI.Text
 
         private void OnTextChanged(EventArgs e)
         {
-            EventHandler handler = TextChanged;
+            EventHandler? handler = TextChanged;
             handler?.Invoke(this, e);
         }
 

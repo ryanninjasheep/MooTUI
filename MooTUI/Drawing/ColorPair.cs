@@ -17,7 +17,7 @@ namespace MooTUI.Drawing
         /// First, ensures argument is properly formatted ('red/green'), then returns the appropriate ColorPair.  If the
         /// argument is not formatted properly, returns the empty ColorPair.
         /// </summary>
-        public static ColorPair Parse(string s, Style style = null)
+        public static ColorPair Parse(string s, Style? style = null)
         {
             int i = s.IndexOf('/');
             if (i != -1)

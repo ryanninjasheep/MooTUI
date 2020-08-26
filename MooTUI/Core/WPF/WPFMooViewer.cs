@@ -20,7 +20,7 @@ namespace MooTUI.Core.WPF
         private double cellWidth;
         private double cellHeight;
 
-        private Visual Visual { get; set; }
+        private Visual? Visual { get; set; }
         private Theme Theme { get; set; }
 
         private (int x, int y) AbsoluteMouseLocation { get; set; }
@@ -30,7 +30,7 @@ namespace MooTUI.Core.WPF
         /// </summary>
         public WPFMooViewer(int width, int height, Theme theme)
         {
-            LoadTypeface("Consolas", 13, 7, 15);
+            glyphTypeface = LoadTypeface("Consolas", 13, 7, 15);
 
             EventManager.RegisterClassHandler(typeof(Window), 
                 SystemInput.Keyboard.KeyDownEvent, new SystemInput.KeyEventHandler(OnKeyDown), true);
@@ -42,8 +42,10 @@ namespace MooTUI.Core.WPF
             SetSize(width, height);
         }
 
-        private void LoadTypeface(string getFamily, int getFontSize, int getCellWidth, int getCellHeight)
+        private Media.GlyphTypeface LoadTypeface(string getFamily, int getFontSize, int getCellWidth, int getCellHeight)
         {
+            Media.GlyphTypeface glyphTypeface;
+
             Media.FontFamily family = new Media.FontFamily(getFamily);
             Media.Typeface typeface = new Media.Typeface(family,
                 FontStyles.Normal,
@@ -55,6 +57,8 @@ namespace MooTUI.Core.WPF
             fontSize = getFontSize;
             cellWidth = getCellWidth;
             cellHeight = getCellHeight;
+
+            return glyphTypeface;
         }
 
         public void SetSize(int width, int height)
@@ -119,7 +123,7 @@ namespace MooTUI.Core.WPF
             char[] chars = new char[length];
             for (int i = 0; i < length; i++)
             {
-                chars[i] = Visual[xIndex + i, yIndex].Char ?? ' ';
+                chars[i] = Visual![xIndex + i, yIndex].Char ?? ' ';
             }
 
             ushort[] charIndexes = new ushort[length];
@@ -150,12 +154,12 @@ namespace MooTUI.Core.WPF
             }
             isi.EndInit();
 
-            dc.DrawGlyphRun(new Media.SolidColorBrush(GetColor(Visual[xIndex, yIndex].Fore)), g); ;
+            dc.DrawGlyphRun(new Media.SolidColorBrush(GetColor(Visual![xIndex, yIndex].Fore)), g); ;
         }
         private void DrawBackground(int xIndex, int yIndex, int length, Media.DrawingContext dc)
             // Assumes all same color
         {
-            dc.DrawRectangle(new Media.SolidColorBrush(GetColor(Visual[xIndex, yIndex].Back)), null,
+            dc.DrawRectangle(new Media.SolidColorBrush(GetColor(Visual![xIndex, yIndex].Back)), null,
                 new Rect(xIndex * cellWidth, yIndex * cellHeight, length * cellWidth + 1, cellHeight + 1));
         }
 
@@ -165,10 +169,10 @@ namespace MooTUI.Core.WPF
 
         #region INPUT HANDLING
 
-        public event EventHandler<InputEventArgs> InputEventHandler;
+        public event EventHandler<InputEventArgs>? InputEventHandler;
         protected void OnInputReceived(InputEventArgs e)
         {
-            EventHandler<InputEventArgs> handler = InputEventHandler;
+            EventHandler<InputEventArgs>? handler = InputEventHandler;
             handler?.Invoke(this, e);
         }
 

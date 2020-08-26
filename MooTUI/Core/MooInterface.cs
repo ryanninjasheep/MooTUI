@@ -9,42 +9,23 @@ namespace MooTUI.Core
 {
     public class MooInterface
     {
-        public Widget Content { get; private set; }
-        private IMooViewer Viewer { get; set; }
+        public Widget Content { get; }
+        private IMooViewer Viewer { get; }
 
-        public Widget HoveredWidget { get; private set; }
-        public Widget FocusedWidget { get; private set; }
+        public Widget? HoveredWidget { get; private set; }
+        public Widget? FocusedWidget { get; private set; }
 
         private (int, int) LastMouseLocation { get; set; }
 
         public MooInterface(IMooViewer viewer, Widget content)
         {
-            SetContent(content);
-            SetViewer(viewer);
-        }
-
-        public void SetContent(Widget w)
-        {
-            if (Content != null)
-            {
-                Content.Release();
-
-                Content.Rendered -= Content_RenderEventHandler;
-                Content.BubbleFocus -= Content_ClaimFocus;
-                Content.LayoutUpdated -= Content_LayoutUpdated;
-            }
-
-            w.Bind();
-
-            Content = w;
+            content.Bind();
+            Content = content;
             Content.Rendered += Content_RenderEventHandler;
             Content.BubbleFocus += Content_ClaimFocus;
             Content.LayoutUpdated += Content_LayoutUpdated;
-        }
 
-        private void SetViewer(IMooViewer v)
-        {
-            Viewer = v;
+            Viewer = viewer;
             Viewer.InputEventHandler += Viewer_InputEventHandler;
         }
 
@@ -88,7 +69,7 @@ namespace MooTUI.Core
         private void HandleMouseMovement(MouseInputEventArgs m)
         {
             SetHoveredWidget(GetHoveredWidget(m));
-            HoveredWidget.HandleInput(m);
+            HoveredWidget?.HandleInput(m);
         }
 
         private Widget GetHoveredWidget(MouseInputEventArgs m)
@@ -106,7 +87,7 @@ namespace MooTUI.Core
             return hovered;
         }
 
-        private void SetHoveredWidget(Widget w)
+        private void SetHoveredWidget(Widget? w)
         {
             if (w != HoveredWidget)
             {
@@ -116,7 +97,7 @@ namespace MooTUI.Core
             }
         }
 
-        private void SetFocusedWidget(Widget w)
+        private void SetFocusedWidget(Widget? w)
         {
             if (w != FocusedWidget)
             {

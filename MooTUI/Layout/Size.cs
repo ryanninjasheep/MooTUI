@@ -23,14 +23,14 @@ namespace MooTUI.Layout
             _actualSize = size;
         }
 
-        public event EventHandler ActualSizeChanged;
+        public event EventHandler? ActualSizeChanged;
 
         public virtual Size WithRelativeSize(int difference) => new Size(ActualSize + difference);
         public virtual Size Clone() => new Size(ActualSize);
 
         private void OnActualSizeChanged(EventArgs e)
         {
-            EventHandler handler = ActualSizeChanged;
+            EventHandler? handler = ActualSizeChanged;
             handler?.Invoke(this, e);
         }
     }
