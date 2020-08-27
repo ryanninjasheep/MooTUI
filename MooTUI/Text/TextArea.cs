@@ -81,7 +81,7 @@ namespace MooTUI.Text
         public void Resize(int width)
         {
             Width = width;
-            GenerateLines();
+            Lines = GenerateLines();
         }
 
         public void SetText(string text)
@@ -89,7 +89,7 @@ namespace MooTUI.Text
             Span.Delete(0, Span.Length);
             Span.Append(text);
 
-            GenerateLines();
+            Lines = GenerateLines();
         }
 
         private List<TextSpan> GenerateLines()
