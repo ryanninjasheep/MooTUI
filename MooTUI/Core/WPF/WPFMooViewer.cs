@@ -1,27 +1,21 @@
-using System;
-using MooTUI.Drawing;
-using System.Windows;
-using Media = System.Windows.Media;
-using SystemInput = System.Windows.Input;
-using System.ComponentModel;
-using System.Windows.Navigation;
+﻿using MooTUI.Drawing;
 using MooTUI.Input;
+using System;
 using System.Collections.Generic;
+using System.Text;
+using System.Windows;
+using SystemInput = System.Windows.Input;
+using Media = System.Windows.Media;
 
 namespace MooTUI.Core.WPF
 {
-    /// <summary>
-    /// Intermediary between WPF and MooTUI
-    /// </summary>
-    public class WPFMooViewer : FrameworkElement, IMooViewer
+    public abstract class WPFMooViewer : FrameworkElement, IMooViewer
     {
-        private Media.GlyphTypeface glyphTypeface;
-        private double fontSize;
-        private double cellWidth;
-        private double cellHeight;
+        public Visual? Visual { get; private set; }
+        public Theme Theme { get; private set; }
 
-        private Visual? Visual { get; set; }
-        private Theme Theme { get; set; }
+        public int CellWidth { get; protected set; }
+        public int CellHeight { get; protected set; }
 
         private (int x, int y) AbsoluteMouseLocation { get; set; }
 
@@ -30,11 +24,9 @@ namespace MooTUI.Core.WPF
         /// </summary>
         public WPFMooViewer(int width, int height, Theme theme)
         {
-            glyphTypeface = LoadTypeface("Consolas", 13, 7, 15);
-
-            EventManager.RegisterClassHandler(typeof(Window), 
+            EventManager.RegisterClassHandler(typeof(Window),
                 SystemInput.Keyboard.KeyDownEvent, new SystemInput.KeyEventHandler(OnKeyDown), true);
-            EventManager.RegisterClassHandler(typeof(Window), 
+            EventManager.RegisterClassHandler(typeof(Window),
                 SystemInput.Keyboard.KeyUpEvent, new SystemInput.KeyEventHandler(OnKeyUp), true);
 
             Theme = theme;
@@ -42,132 +34,23 @@ namespace MooTUI.Core.WPF
             SetSize(width, height);
         }
 
-        private Media.GlyphTypeface LoadTypeface(string getFamily, int getFontSize, int getCellWidth, int getCellHeight)
-        {
-            Media.GlyphTypeface glyphTypeface;
-
-            Media.FontFamily family = new Media.FontFamily(getFamily);
-            Media.Typeface typeface = new Media.Typeface(family,
-                FontStyles.Normal,
-                FontWeights.Normal,
-                FontStretches.Normal);
-
-            typeface.TryGetGlyphTypeface(out glyphTypeface);
-
-            fontSize = getFontSize;
-            cellWidth = getCellWidth;
-            cellHeight = getCellHeight;
-
-            return glyphTypeface;
-        }
-
         public void SetSize(int width, int height)
         {
-            Width = width * cellWidth;
-            Height = height * cellHeight;
+            Width = width * CellWidth;
+            Height = height * CellHeight;
         }
 
-        #region RENDERING
-
-        public void SetVisual(Visual v)
+        public void SetVisual(Drawing.Visual v)
         {
             Visual = v;
             InvalidateVisual();
         }
 
-        protected override void OnRender(Media.DrawingContext dc)
-        {
-            base.OnRender(dc);
+        protected sealed override void OnRender(Media.DrawingContext drawingContext) => Render(drawingContext);
 
-            dc.DrawRectangle(
-                new Media.SolidColorBrush(Theme.Palette[Color.Base03]),
-                null, new Rect(0, 0, Width, Height)
-                );
+        protected abstract void Render(Media.DrawingContext dc);
 
-            if (Visual is null)
-                return;
-
-            // Background
-            for (int j = 0; j < Visual.Height; j++) // Go row by row
-            {
-                int cursorX = 0;
-                for (int i = 0; i < Visual.Width; i++)
-                {
-                    if (Visual[i, j].Back != Visual[cursorX, j].Back)
-                    {
-                        DrawBackground(cursorX, j, i - cursorX, dc);
-                        cursorX = i;
-                    }
-                }
-                DrawBackground(cursorX, j, Visual.Width - cursorX, dc); ;
-            }
-
-            // Foreground
-            for (int j = 0; j < Visual.Height; j++) // Go row by row
-            {
-                int cursorX = 0;
-                for (int i = 0; i < Visual.Width; i++)
-                {
-                    if (Visual[i, j].Fore != Visual[cursorX, j].Fore)
-                    {
-                        DrawGlyphRun(cursorX, j, i - cursorX, dc);
-                        cursorX = i;
-                    }
-                }
-                DrawGlyphRun(cursorX, j, Visual.Width - cursorX, dc);
-            }
-        }
-        private void DrawGlyphRun(int xIndex, int yIndex, int length, Media.DrawingContext dc)
-            // Assumes all glyphs are the same color
-        {
-            char[] chars = new char[length];
-            for (int i = 0; i < length; i++)
-            {
-                chars[i] = Visual![xIndex + i, yIndex].Char ?? ' ';
-            }
-
-            ushort[] charIndexes = new ushort[length];
-            double[] advanceWidths = new double[length];
-            for (int i = 0; i < length; i++)
-            {
-                try
-                {
-                    charIndexes[i] = glyphTypeface.CharacterToGlyphMap[chars[i]];
-                }
-                catch (KeyNotFoundException)
-                {
-                    charIndexes[i] = glyphTypeface.CharacterToGlyphMap[' '];
-                }
-                advanceWidths[i] = cellWidth;
-            }
-
-            Media.GlyphRun g = new Media.GlyphRun((float)1.25);
-            ISupportInitialize isi = g;
-            isi.BeginInit();
-            {
-                g.GlyphTypeface = glyphTypeface;
-                g.FontRenderingEmSize = fontSize;
-                g.GlyphIndices = charIndexes;
-                g.AdvanceWidths = advanceWidths;
-                g.BaselineOrigin = new Point(xIndex * cellWidth, 
-                    yIndex * cellHeight + glyphTypeface.Baseline * fontSize);
-            }
-            isi.EndInit();
-
-            dc.DrawGlyphRun(new Media.SolidColorBrush(GetColor(Visual![xIndex, yIndex].Fore)), g); ;
-        }
-        private void DrawBackground(int xIndex, int yIndex, int length, Media.DrawingContext dc)
-            // Assumes all same color
-        {
-            dc.DrawRectangle(new Media.SolidColorBrush(GetColor(Visual![xIndex, yIndex].Back)), null,
-                new Rect(xIndex * cellWidth, yIndex * cellHeight, length * cellWidth + 1, cellHeight + 1));
-        }
-
-        private Media.Color GetColor(Color c) => Theme.Palette[c];
-
-        #endregion
-
-        #region INPUT HANDLING
+        protected Media.Color GetColor(Color c) => Theme.Palette[c];
 
         public event EventHandler<InputEventArgs>? InputEventHandler;
         protected void OnInputReceived(InputEventArgs e)
@@ -245,11 +128,9 @@ namespace MooTUI.Core.WPF
         private (int x, int y) GetCellAtMousePosition()
         {
             Point p = SystemInput.Mouse.GetPosition(this);
-            int x = (int)Math.Floor(p.X / cellWidth);
-            int y = (int)Math.Floor(p.Y / cellHeight);
+            int x = (int)Math.Floor(p.X / CellWidth);
+            int y = (int)Math.Floor(p.Y / CellHeight);
             return (x, y);
         }
-
-        #endregion
     }
 }

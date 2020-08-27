@@ -16,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MooTUI.Text;
+using MooTUI.Core;
 
 namespace MooTUI_Test
 {
@@ -31,14 +32,18 @@ namespace MooTUI_Test
             InitializeComponent();
 
             Widget.Style = MooTUI.Drawing.Style.HighContrast.Value;
-            BoxDrawing.Default = BoxDrawing.Leaf.Value;
+            BoxDrawing.Default = BoxDrawing.Square;
 
             TabBox tabs = new TabBox(
                 new LayoutRect(
                     new FlexSize(80),
                     new FlexSize(40)));
 
-            WPFMooTUIBuilder.GenerateViewer(this, tabs, Theme.Basic.Value);
+            WPFBitmapViewer viewer = new WPFBitmapViewer(tabs.Width, tabs.Height, Theme.Basic.Value);
+            Content = viewer;
+            Background = new SolidColorBrush(Theme.Basic.Value.Palette[MooTUI.Drawing.Color.Base03]);
+
+            new MooInterface(viewer, tabs);
 
             Container = new LayoutContainer(
                 new LayoutRect(

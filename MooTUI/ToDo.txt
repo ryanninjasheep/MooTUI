@@ -1,4 +1,5 @@
 ﻿Short-Term:
+ - Experiment with joining together adjacent glyphs in bitmapviewer
 
 Long-Term:
  - Add more controls
@@ -18,3 +19,4 @@ Long-Term:
  - Outline label acts as button?
  - Perhaps separate mouseDown and mouseUp to allow for dragging
     - When something is clicked, it receives the mouseUp signal even if the mouse has moved away!
+ - Experiment w/ png-based glyph rendering
