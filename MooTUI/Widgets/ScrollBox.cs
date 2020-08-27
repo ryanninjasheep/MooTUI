@@ -430,7 +430,7 @@ namespace MooTUI.Widgets
 
         private void DrawText()
         {
-            if (Text.Text.Length > 0)
+            if (Text?.Text.Length > 0)
                 Visual.Merge(Enclosure.DrawEnclosure(Text),
                     1, 0,
                     0, 0,

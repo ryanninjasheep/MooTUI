@@ -22,7 +22,7 @@ namespace MooTUI.Widgets
         private List<Tab> Tabs { get; set; }
         private Tab CurrentTab { get; set; }
 
-        public TabBox(LayoutRect bounds, BoxDrawing lineStyle = null) : base(bounds)
+        public TabBox(LayoutRect bounds, BoxDrawing? lineStyle = null) : base(bounds)
         {
             Tabs = new List<Tab>();
             LineStyle = lineStyle ?? BoxDrawing.Default;
