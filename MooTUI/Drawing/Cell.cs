@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MooTUI.Drawing
 {
-    public readonly struct Cell
+    public readonly struct Cell : IEquatable<Cell>
     {
         public char? Char { get; }
         public Color Fore { get; }
@@ -29,5 +29,13 @@ namespace MooTUI.Drawing
                 c.Fore == Color.None ? Fore : c.Fore,
                 c.Back == Color.None ? Back : c.Back
             );
+
+        public override bool Equals(object obj) => obj is ColorPair c ? Equals(c) : false;
+        public override int GetHashCode() => (int)Fore ^ (int)Back ^ Char ?? 0;
+
+        public bool Equals(Cell other) => Fore == other.Fore && Back == other.Back && Char == other.Char;
+
+        public static bool operator ==(Cell a, Cell b) => a.Equals(b);
+        public static bool operator !=(Cell a, Cell b) => !a.Equals(b);
     }
 }
