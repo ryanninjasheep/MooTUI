@@ -5,8 +5,8 @@ using System.Text;
 
 namespace MooTUI.Control
 {
-    public class ClaimFocusEventArgs : BubblingEventArgs
+    public class ResizedEventArgs : BubblingEventArgs
     {
-        public ClaimFocusEventArgs(Widget origin) : base(origin) { }
+        public ResizedEventArgs(Widget origin) : base(origin) { }
     }
 }

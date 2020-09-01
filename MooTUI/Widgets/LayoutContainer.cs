@@ -1,4 +1,5 @@
-﻿using MooTUI.Drawing;
+﻿using MooTUI.Control;
+using MooTUI.Drawing;
 using MooTUI.Input;
 using MooTUI.Layout;
 using MooTUI.Widgets.Primitives;
@@ -158,7 +159,7 @@ namespace MooTUI.Widgets
 
             Lock = false;
 
-            OnLayoutUpdated(EventArgs.Empty);
+            OnBubbleEvent(new LayoutUpdatedEventArgs());
 
             RefreshVisual();
         }

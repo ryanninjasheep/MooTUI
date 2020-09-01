@@ -1,6 +1,7 @@
 ﻿using MooTUI.Drawing;
 using MooTUI.Input;
 using MooTUI.Layout;
+using MooTUI.Control;
 using MooTUI.Text;
 using System;
 using System.Windows;
@@ -141,7 +142,7 @@ namespace MooTUI.Widgets.Primitives
 
         private void OnClick(MouseClickInputEventArgs c)
         {
-            OnClaimFocus(new ClaimFocusEventArgs(this));
+            OnBubbleEvent(new ClaimFocusEventArgs(this));
 
             SetCursorCoords(c.Location.X, c.Location.Y, c.Shift);
 

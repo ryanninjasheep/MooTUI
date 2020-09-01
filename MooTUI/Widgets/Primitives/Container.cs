@@ -43,12 +43,7 @@ namespace MooTUI.Widgets.Primitives
         {
             child.Bind();
 
-            child.Rendered += Child_Rendered;
-            child.BubbleInput += Child_BubbleInput;
-            child.BubbleFocus += Child_BubbleFocus;
-            child.Resized += Child_Resized;
-            child.LayoutUpdated += Child_LayoutUpdated;
-            child.EnsureVisible += Child_EnsureVisible;
+            child.BubbleEvent += Child_BubbleEvent;
         }
 
         protected void UnlinkChild(Widget child)
@@ -58,44 +53,59 @@ namespace MooTUI.Widgets.Primitives
 
             child.Release();
 
-            child.Rendered -= Child_Rendered;
-            child.BubbleInput -= Child_BubbleInput;
-            child.BubbleFocus -= Child_BubbleFocus;
-            child.Resized -= Child_Resized;
-            child.LayoutUpdated -= Child_LayoutUpdated;
-            child.EnsureVisible -= Child_EnsureVisible;
+            child.BubbleEvent -= Child_BubbleEvent;
         }
 
-        private void Child_Rendered(object sender, EventArgs e)
+        private void Child_BubbleEvent(object sender, BubblingEventArgs e)
+        {
+            switch (e)
+            {
+                case RenderEventArgs r:
+                    Child_Rendered(r);
+                    break;
+                case InputEventArgs i:
+                    Child_BubbleInput(i);
+                    break;
+                case ResizedEventArgs r:
+                    Child_Resized(r);
+                    break;
+                case RegionEventArgs r:
+                    Child_EnsureVisible(r);
+                    break;
+            }
+
+            e.Previous = this;
+            OnBubbleEvent(e);
+        }
+
+        private void Child_Rendered(RenderEventArgs r)
         {
             if (Lock)
                 return;
 
-            DrawChild(sender as Widget);
+            DrawChild(r.Previous!);
             Render();
         }
-        private void Child_BubbleInput(object sender, InputEventArgs e)
+        private void Child_BubbleInput(InputEventArgs e)
         {
-            if (e is MouseInputEventArgs m)
+            if (e is MouseInputEventArgs m && e.Previous is Widget child)
             {
-                (int, int) offset = GetChildOffset(sender as Widget);
+                (int, int) offset = GetChildOffset(child);
                 m.SetRelativeMouse(offset);
             }
             HandleInput(e);
         }
-        private void Child_BubbleFocus(object sender, ClaimFocusEventArgs e) => OnClaimFocus(e);
-        private void Child_Resized(object sender, EventArgs e) 
+        private void Child_Resized(ResizedEventArgs r) 
         {
             if (Lock)
                 return; 
             
-            OnChildResized(sender as Widget);
+            OnChildResized(r.Previous!);
         }
-        private void Child_LayoutUpdated(object sender, EventArgs e) => OnLayoutUpdated(e);
-        private void Child_EnsureVisible(object sender, RegionEventArgs e)
+        private void Child_EnsureVisible(RegionEventArgs r)
         {
-            (int xOffset, int yOffset) = GetChildOffset(sender as Widget);
-            EnsureRegionVisible(e.X + xOffset, e.Y + yOffset, e.Width, e.Height);
+            (int xOffset, int yOffset) = GetChildOffset(r.Origin!);
+            EnsureRegionVisible(r.X + xOffset, r.Y + yOffset, r.Width, r.Height);
         }
     }
 }

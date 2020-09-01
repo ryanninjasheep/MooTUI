@@ -58,6 +58,7 @@ namespace MooTUI.Widgets.Primitives
             Draw();
 
             OnRendered(EventArgs.Empty);
+            OnBubbleEvent(new RenderEventArgs(this));
         }
 
         /// <summary>
@@ -68,11 +69,10 @@ namespace MooTUI.Widgets.Primitives
             Input(e);
 
             OnInputReceived(e);
-
-            OnBubbleInput(e);
+            OnBubbleEvent(e);
         }
 
-        public void ClaimFocus() => OnClaimFocus(new ClaimFocusEventArgs(this));
+        public void ClaimFocus() => OnBubbleEvent(new ClaimFocusEventArgs(this));
 
         public bool HitTest(int x, int y) =>
             (x >= 0 && x < Width) && (y >= 0 && y < Height);
@@ -96,7 +96,7 @@ namespace MooTUI.Widgets.Primitives
         protected virtual void Resize() { }
 
         protected virtual void EnsureRegionVisible(int x, int y, int width = 1, int height = 1) =>
-            OnEnsureVisible(new RegionEventArgs(x, y, width, height));
+            OnBubbleEvent(new RegionEventArgs(this, x, y, width, height));
 
         private void Bounds_SizeChanged(object sender, EventArgs e) => OnSizeChanged();
 
@@ -133,29 +133,10 @@ namespace MooTUI.Widgets.Primitives
     {
         internal bool HasParent { get; private set; }
 
-        internal event EventHandler<InputEventArgs> BubbleInput;
-        internal event EventHandler<ClaimFocusEventArgs> BubbleFocus;
-        internal event EventHandler LayoutUpdated;
-        internal event EventHandler<RegionEventArgs> EnsureVisible;
-
-        internal void OnBubbleInput(InputEventArgs e)
+        internal event EventHandler<BubblingEventArgs>? BubbleEvent;
+        internal void OnBubbleEvent(BubblingEventArgs e)
         {
-            EventHandler<InputEventArgs> handler = BubbleInput;
-            handler?.Invoke(this, e);
-        }
-        internal void OnClaimFocus(ClaimFocusEventArgs e)
-        {
-            EventHandler<ClaimFocusEventArgs> handler = BubbleFocus;
-            handler?.Invoke(this, e);
-        }
-        internal void OnLayoutUpdated(EventArgs e)
-        {
-            EventHandler handler = LayoutUpdated;
-            handler?.Invoke(this, e);
-        }
-        internal void OnEnsureVisible(RegionEventArgs e)
-        {
-            EventHandler<RegionEventArgs> handler = EnsureVisible;
+            EventHandler<BubblingEventArgs>? handler = BubbleEvent;
             handler?.Invoke(this, e);
         }
 
