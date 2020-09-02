@@ -3,13 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MooTUI.Input
+namespace MooTUI.Control
 {
-    public class ClaimFocusEventArgs : EventArgs
+    public class ClaimFocusEventArgs : BubblingEventArgs
     {
         public Widget Sender { get; }
 
-        public ClaimFocusEventArgs(Widget sender)
+        public ClaimFocusEventArgs(Widget sender) : base(null)
         {
             Sender = sender;
         }

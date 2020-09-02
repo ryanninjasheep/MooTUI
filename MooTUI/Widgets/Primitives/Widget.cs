@@ -37,42 +37,7 @@ namespace MooTUI.Widgets.Primitives
             Visual = new Visual(Width, Height);
         }
 
-        /// <summary>
-        /// Called after the View is drawn; bubbles up logical tree.
-        /// </summary>
-        public event EventHandler Rendered;
-        /// <summary>
-        /// Called after this Widget handles input, but before it is propagated up the  logical tree.
-        /// </summary>
-        public event EventHandler<InputEventArgs> InputReceived;
-        /// <summary>
-        /// Called whenever this widget changes size.
-        /// </summary>
-        public event EventHandler Resized;
-
-        /// <summary>
-        /// Draw View and bubble up logical tree, making parents render too.
-        /// </summary>
-        public void Render()
-        {
-            Draw();
-
-            OnRendered(EventArgs.Empty);
-        }
-
-        /// <summary>
-        /// Attempt to handle the given InputEventArgs, bubbling input up the logical tree.
-        /// </summary>
-        public void HandleInput(InputEventArgs e)
-        {
-            Input(e);
-
-            OnInputReceived(e);
-
-            OnBubbleInput(e);
-        }
-
-        public void ClaimFocus() => OnClaimFocus(new ClaimFocusEventArgs(this));
+        public void ClaimFocus() => OnBubbleEvent(new ClaimFocusEventArgs(this));
 
         public bool HitTest(int x, int y) =>
             (x >= 0 && x < Width) && (y >= 0 && y < Height);
@@ -106,26 +71,10 @@ namespace MooTUI.Widgets.Primitives
 
             Resize();
 
-            OnResized(EventArgs.Empty);
+            OnBubbleEvent(new ResizeEventArgs(this));
 
             RefreshVisual();
             Render();
-        }
-
-        private void OnRendered(EventArgs e)
-        {
-            EventHandler handler = Rendered;
-            handler?.Invoke(this, e);
-        }
-        private void OnInputReceived(InputEventArgs e)
-        {
-            EventHandler<InputEventArgs> handler = InputReceived;
-            handler?.Invoke(this, e);
-        }
-        private void OnResized(EventArgs e)
-        {
-            EventHandler handler = Resized;
-            handler?.Invoke(this, e);
         }
     }
 
@@ -133,26 +82,8 @@ namespace MooTUI.Widgets.Primitives
     {
         internal bool HasParent { get; private set; }
 
-        internal event EventHandler<InputEventArgs> BubbleInput;
-        internal event EventHandler<ClaimFocusEventArgs> BubbleFocus;
-        internal event EventHandler LayoutUpdated;
         internal event EventHandler<RegionEventArgs> EnsureVisible;
 
-        internal void OnBubbleInput(InputEventArgs e)
-        {
-            EventHandler<InputEventArgs> handler = BubbleInput;
-            handler?.Invoke(this, e);
-        }
-        internal void OnClaimFocus(ClaimFocusEventArgs e)
-        {
-            EventHandler<ClaimFocusEventArgs> handler = BubbleFocus;
-            handler?.Invoke(this, e);
-        }
-        internal void OnLayoutUpdated(EventArgs e)
-        {
-            EventHandler handler = LayoutUpdated;
-            handler?.Invoke(this, e);
-        }
         internal void OnEnsureVisible(RegionEventArgs e)
         {
             EventHandler<RegionEventArgs> handler = EnsureVisible;
@@ -175,5 +106,76 @@ namespace MooTUI.Widgets.Primitives
         /// !!! ONLY CALL FROM Container.UnlinkChild !!!
         /// </summary>
         internal void Release() => HasParent = false;
+    }
+
+    public partial class Widget
+    {
+        /// <summary>
+        /// This should only be accessed by the Widget's direct parent.
+        /// </summary>
+        internal EventHandler<BubblingEventArgs>? BubbleEvent;
+
+        /// <summary>
+        /// Used to propagate events up the logical tree.
+        /// </summary>
+        protected void OnBubbleEvent(BubblingEventArgs e)
+        {
+            EventHandler<BubblingEventArgs>? handler = BubbleEvent;
+            handler?.Invoke(this, e);
+        }
+
+        /// <summary>
+        /// Called after the View is drawn.
+        /// </summary>
+        public event EventHandler Rendered;
+        /// <summary>
+        /// Called after this Widget handles input, but before it is propagated up the logical tree.
+        /// </summary>
+        public event EventHandler<InputEventArgs> InputReceived;
+        /// <summary>
+        /// Called whenever this widget changes size.
+        /// </summary>
+        public event EventHandler Resized;
+
+        /// <summary>
+        /// Draw View and bubble up logical tree, making parents render too.
+        /// </summary>
+        public void Render() => Render(new RenderEventArgs(this));
+        protected void Render(RenderEventArgs r)
+        {
+            Draw();
+            OnRendered(EventArgs.Empty);
+            if (r.Previous == this)
+                OnBubbleEvent(r);
+        }
+
+        /// <summary>
+        /// Attempt to handle the given InputEventArgs, bubbling input up the logical tree.
+        /// </summary>
+        public void HandleInput(InputEventArgs e)
+        {
+            Input(e);
+
+            OnInputReceived(e);
+
+            if (e.Previous == null)
+                OnBubbleEvent(e);
+        }
+
+        private void OnRendered(EventArgs e)
+        {
+            EventHandler handler = Rendered;
+            handler?.Invoke(this, e);
+        }
+        private void OnInputReceived(InputEventArgs e)
+        {
+            EventHandler<InputEventArgs> handler = InputReceived;
+            handler?.Invoke(this, e);
+        }
+        private void OnResized(EventArgs e)
+        {
+            EventHandler handler = Resized;
+            handler?.Invoke(this, e);
+        }
     }
 }

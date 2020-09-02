@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MooTUI.Control;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Windows.Input;
 
 namespace MooTUI.Input
 {
-    public abstract class InputEventArgs : EventArgs
+    public abstract class InputEventArgs : BubblingEventArgs
     {
         private static bool _shift;
         private static bool _ctrl;
@@ -20,7 +21,7 @@ namespace MooTUI.Input
         public bool Alt => _alt;
         public bool Caps => _caps;
 
-        public InputEventArgs()
+        public InputEventArgs() : base(null)
         {
             Handled = false;
         }

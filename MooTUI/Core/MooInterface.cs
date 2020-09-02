@@ -4,6 +4,7 @@ using System.Text;
 using MooTUI.Core;
 using MooTUI.Widgets.Primitives;
 using MooTUI.Input;
+using MooTUI.Control;
 
 namespace MooTUI.Core
 {
@@ -22,11 +23,24 @@ namespace MooTUI.Core
             content.Bind();
             Content = content;
             Content.Rendered += Content_RenderEventHandler;
-            Content.BubbleFocus += Content_ClaimFocus;
-            Content.LayoutUpdated += Content_LayoutUpdated;
+
+            Content.BubbleEvent += Content_BubbleEvent;
 
             Viewer = viewer;
             Viewer.InputEventHandler += Viewer_InputEventHandler;
+        }
+
+        private void Content_BubbleEvent(object sender, BubblingEventArgs e)
+        {
+            switch (e)
+            {
+                case ClaimFocusEventArgs c:
+                    SetFocusedWidget(c.Sender);
+                    break;
+                case LayoutUpdatedEventArgs l:
+                    Content_LayoutUpdated();
+                    break;
+            }
         }
 
         private void Content_RenderEventHandler(object sender, System.EventArgs e)
@@ -34,12 +48,7 @@ namespace MooTUI.Core
             Viewer.SetVisual(Content.Visual);
         }
 
-        private void Content_ClaimFocus(object sender, ClaimFocusEventArgs e)
-        {
-            SetFocusedWidget(e.Sender);
-        }
-
-        private void Content_LayoutUpdated(object sender, System.EventArgs e)
+        private void Content_LayoutUpdated()
         {
             SetHoveredWidget(GetHoveredWidget(new MouseMoveInputEventArgs(LastMouseLocation)));
             SetFocusedWidget(null);

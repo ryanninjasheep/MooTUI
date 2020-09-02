@@ -141,7 +141,7 @@ namespace MooTUI.Widgets.Primitives
 
         private void OnClick(MouseClickInputEventArgs c)
         {
-            OnClaimFocus(new ClaimFocusEventArgs(this));
+            ClaimFocus();
 
             SetCursorCoords(c.Location.X, c.Location.Y, c.Shift);
 
