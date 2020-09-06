@@ -56,6 +56,8 @@ namespace MooTUI.Widgets.Primitives
             child.BubbleEvent -= Child_BubbleEvent;
         }
 
+        protected virtual void HandleBubbleEvent(BubblingEventArgs e) { }
+
         private void Child_BubbleEvent(object sender, BubblingEventArgs e)
         {
             switch (e)
@@ -71,6 +73,9 @@ namespace MooTUI.Widgets.Primitives
                     break;
                 case EnsureRegionVisibleEventArgs r:
                     Child_EnsureVisible(r);
+                    break;
+                default:
+                    HandleBubbleEvent(e);
                     break;
             }
 
