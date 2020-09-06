@@ -71,6 +71,7 @@ namespace MooTUI.Widgets.Primitives
 
             Resize();
 
+            OnResized(EventArgs.Empty);
             OnBubbleEvent(new ResizeEventArgs(this));
 
             RefreshVisual();
@@ -127,15 +128,15 @@ namespace MooTUI.Widgets.Primitives
         /// <summary>
         /// Called after the View is drawn.
         /// </summary>
-        public event EventHandler Rendered;
+        public event EventHandler? Rendered;
         /// <summary>
         /// Called after this Widget handles input, but before it is propagated up the logical tree.
         /// </summary>
-        public event EventHandler<InputEventArgs> InputReceived;
+        public event EventHandler<InputEventArgs>? InputReceived;
         /// <summary>
         /// Called whenever this widget changes size.
         /// </summary>
-        public event EventHandler Resized;
+        public event EventHandler? Resized;
 
         /// <summary>
         /// Draw View and bubble up logical tree, making parents render too.
@@ -164,17 +165,17 @@ namespace MooTUI.Widgets.Primitives
 
         private void OnRendered(EventArgs e)
         {
-            EventHandler handler = Rendered;
+            EventHandler? handler = Rendered;
             handler?.Invoke(this, e);
         }
         private void OnInputReceived(InputEventArgs e)
         {
-            EventHandler<InputEventArgs> handler = InputReceived;
+            EventHandler<InputEventArgs>? handler = InputReceived;
             handler?.Invoke(this, e);
         }
         private void OnResized(EventArgs e)
         {
-            EventHandler handler = Resized;
+            EventHandler? handler = Resized;
             handler?.Invoke(this, e);
         }
     }
