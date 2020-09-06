@@ -43,8 +43,6 @@ namespace MooTUI.Widgets.Primitives
         {
             child.Bind();
 
-            child.EnsureVisible += Child_EnsureVisible;
-
             child.BubbleEvent += Child_BubbleEvent;
         }
 
@@ -54,8 +52,6 @@ namespace MooTUI.Widgets.Primitives
                 throw new ArgumentException("The given Widget is not a child of this container.");
 
             child.Release();
-
-            child.EnsureVisible -= Child_EnsureVisible;
 
             child.BubbleEvent -= Child_BubbleEvent;
         }
@@ -73,12 +69,14 @@ namespace MooTUI.Widgets.Primitives
                 case ResizeEventArgs r:
                     Child_Resized(r);
                     break;
+                case EnsureRegionVisibleEventArgs r:
+                    Child_EnsureVisible(r);
+                    break;
             }
 
             if (e is ConditionalBubblingEventArgs c && !c.Continue)
                 return;
 
-            e.Previous = this;
             OnBubbleEvent(e);
         }
 
@@ -87,7 +85,7 @@ namespace MooTUI.Widgets.Primitives
             if (Lock)
                 return;
 
-            DrawChild(r.Previous);
+            DrawChild(r.Previous!);
             Render(r);
         }
         private void Child_BubbleInput(InputEventArgs i)
@@ -104,11 +102,11 @@ namespace MooTUI.Widgets.Primitives
             if (Lock)
                 return; 
             
-            OnChildResized(r.Sender);
+            OnChildResized(r.Previous!);
         }
-        private void Child_EnsureVisible(object sender, RegionEventArgs e)
+        private void Child_EnsureVisible(EnsureRegionVisibleEventArgs e)
         {
-            (int xOffset, int yOffset) = GetChildOffset(sender as Widget);
+            (int xOffset, int yOffset) = GetChildOffset(e.Previous!);
             EnsureRegionVisible(e.X + xOffset, e.Y + yOffset, e.Width, e.Height);
         }
     }

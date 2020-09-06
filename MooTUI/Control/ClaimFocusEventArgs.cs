@@ -9,7 +9,7 @@ namespace MooTUI.Control
     {
         public Widget Sender { get; }
 
-        public ClaimFocusEventArgs(Widget sender) : base(null)
+        public ClaimFocusEventArgs(Widget sender)
         {
             Sender = sender;
         }

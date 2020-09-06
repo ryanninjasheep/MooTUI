@@ -21,7 +21,7 @@ namespace MooTUI.Input
         public bool Alt => _alt;
         public bool Caps => _caps;
 
-        public InputEventArgs() : base(null)
+        public InputEventArgs()
         {
             Handled = false;
         }

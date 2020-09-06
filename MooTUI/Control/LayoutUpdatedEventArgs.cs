@@ -6,6 +6,6 @@ namespace MooTUI.Control
 {
     public class LayoutUpdatedEventArgs : BubblingEventArgs
     {
-        public LayoutUpdatedEventArgs() : base(null) { }
+        public LayoutUpdatedEventArgs() { }
     }
 }

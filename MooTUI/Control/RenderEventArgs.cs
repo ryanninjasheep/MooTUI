@@ -7,8 +7,6 @@ namespace MooTUI.Control
 {
     public class RenderEventArgs : BubblingEventArgs
     {
-        public new Widget Previous => base.Previous!;
-
-        public RenderEventArgs(Widget w) : base(w) { }
+        public RenderEventArgs() { }
     }
 }

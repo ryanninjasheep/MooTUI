@@ -9,6 +9,6 @@ namespace MooTUI.Control
     {
         public bool Continue { get; set; }
 
-        public ConditionalBubblingEventArgs(Widget? w) : base(w) { }
+        public ConditionalBubblingEventArgs() { }
     }
 }

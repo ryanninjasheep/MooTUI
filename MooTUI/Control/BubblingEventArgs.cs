@@ -9,9 +9,6 @@ namespace MooTUI.Control
     {
         public Widget? Previous { get; set; }
 
-        public BubblingEventArgs(Widget? previous)
-        {
-            Previous = previous;
-        }
+        public BubblingEventArgs() { }
     }
 }

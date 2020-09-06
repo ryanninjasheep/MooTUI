@@ -7,9 +7,7 @@ namespace MooTUI.Control
 {
     public class ResizeEventArgs : ConditionalBubblingEventArgs
     {
-        public Widget Sender => Previous!;
-
-        public ResizeEventArgs(Widget sender) : base(sender)
+        public ResizeEventArgs()
         {
             Continue = false;
         }

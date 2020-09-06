@@ -61,7 +61,7 @@ namespace MooTUI.Widgets.Primitives
         protected virtual void Resize() { }
 
         protected virtual void EnsureRegionVisible(int x, int y, int width = 1, int height = 1) =>
-            OnEnsureVisible(new RegionEventArgs(x, y, width, height));
+            OnBubbleEvent(new EnsureRegionVisibleEventArgs(x, y, width, height));
 
         private void Bounds_SizeChanged(object sender, EventArgs e) => OnSizeChanged();
 
@@ -72,7 +72,7 @@ namespace MooTUI.Widgets.Primitives
             Resize();
 
             OnResized(EventArgs.Empty);
-            OnBubbleEvent(new ResizeEventArgs(this));
+            OnBubbleEvent(new ResizeEventArgs());
 
             RefreshVisual();
             Render();
@@ -82,14 +82,6 @@ namespace MooTUI.Widgets.Primitives
     public abstract partial class Widget
     {
         internal bool HasParent { get; private set; }
-
-        internal event EventHandler<RegionEventArgs> EnsureVisible;
-
-        internal void OnEnsureVisible(RegionEventArgs e)
-        {
-            EventHandler<RegionEventArgs> handler = EnsureVisible;
-            handler?.Invoke(this, e);
-        }
 
         /// <summary>
         /// !!! ONLY CALL FROM Container.LinkChild !!!
@@ -121,6 +113,8 @@ namespace MooTUI.Widgets.Primitives
         /// </summary>
         protected void OnBubbleEvent(BubblingEventArgs e)
         {
+            e.Previous = this;
+
             EventHandler<BubblingEventArgs>? handler = BubbleEvent;
             handler?.Invoke(this, e);
         }
@@ -141,12 +135,12 @@ namespace MooTUI.Widgets.Primitives
         /// <summary>
         /// Draw View and bubble up logical tree, making parents render too.
         /// </summary>
-        public void Render() => Render(new RenderEventArgs(this));
+        public void Render() => Render(new RenderEventArgs());
         protected void Render(RenderEventArgs r)
         {
             Draw();
             OnRendered(EventArgs.Empty);
-            if (r.Previous == this)
+            if (r.Previous == null)
                 OnBubbleEvent(r);
         }
 
