@@ -12,7 +12,7 @@ namespace MooTUI.Core.WPF
     {
         public static void GenerateViewer(Window window, Widget widget, Theme t)
         {
-            WPFGlyphTypefaceViewer viewer = new WPFGlyphTypefaceViewer(widget.Width, widget.Height, t);
+            WPFMooViewer viewer = new WPFFormattedTextViewer(widget.Width, widget.Height, t);
             window.Content = viewer;
             window.Background = new SolidColorBrush(t.Palette[MooTUI.Drawing.Color.Base03]);
 

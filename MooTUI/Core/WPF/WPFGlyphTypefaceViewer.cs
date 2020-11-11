@@ -111,7 +111,7 @@ namespace MooTUI.Core.WPF
                 advanceWidths[i] = CellWidth;
             }
 
-            Media.GlyphRun g = new Media.GlyphRun((float)1.25);
+            Media.GlyphRun g = new Media.GlyphRun((float)1);
             ISupportInitialize isi = g;
             isi.BeginInit();
             {
@@ -120,7 +120,7 @@ namespace MooTUI.Core.WPF
                 g.GlyphIndices = charIndexes;
                 g.AdvanceWidths = advanceWidths;
                 g.BaselineOrigin = new Point(xIndex * CellWidth, 
-                    yIndex * CellHeight + glyphTypeface.Baseline * fontSize);
+                    (int)(yIndex * CellHeight + glyphTypeface.Baseline * fontSize));
             }
             isi.EndInit();
 
