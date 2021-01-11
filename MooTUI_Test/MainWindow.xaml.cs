@@ -31,7 +31,7 @@ namespace MooTUI_Test
         {
             InitializeComponent();
 
-            Widget.Style = MooTUI.Drawing.Style.HighContrast.Value;
+            Widget.Style = MooTUI.Drawing.Style.Light.Value;
             BoxDrawing.Default = BoxDrawing.Square;
 
             TabBox tabs = new TabBox(
@@ -39,7 +39,7 @@ namespace MooTUI_Test
                     new FlexSize(80),
                     new FlexSize(40)));
 
-            WPFBitmapViewer viewer = new WPFBitmapViewer(tabs.Width, tabs.Height, Theme.Basic.Value);
+            WPFMooViewer viewer = new WPFFormattedTextViewer(tabs.Width, tabs.Height, Theme.Basic.Value);
             Content = viewer;
             Background = new SolidColorBrush(Theme.Basic.Value.Palette[MooTUI.Drawing.Color.Base03]);
 
