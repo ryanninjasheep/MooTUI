@@ -43,7 +43,7 @@ namespace MooTUI.Core.WPF
         public void SetVisual(Drawing.Visual v)
         {
             Visual = v;
-            InvalidateVisual();
+            Dispatcher.Invoke(() => InvalidateVisual());
         }
 
         protected sealed override void OnRender(Media.DrawingContext drawingContext) => Render(drawingContext);

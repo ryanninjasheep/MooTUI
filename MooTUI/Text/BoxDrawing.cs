@@ -14,7 +14,7 @@ namespace MooTUI.Text
         public char DR { get; private set; }
         public char LR { get; private set; }
 
-        public static BoxDrawing Default = Square;
+        public static BoxDrawing Default;
 
         public static readonly BoxDrawing Square = new BoxDrawing
         {
@@ -70,6 +70,11 @@ namespace MooTUI.Text
             DR = '╭',
             LR = '─'
         });
+
+        static BoxDrawing()
+        {
+            Default = Square;
+        }
 
         public void DrawBox(Visual v, int width, int height, int xOffset = 0, int yOffset = 0)
         {
