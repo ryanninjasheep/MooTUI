@@ -99,8 +99,6 @@ namespace MooTUI.Console
             Buffer.Merge(oldBuffer);
 
             InputBuffer = null;
-
-            EnsureRegionVisible(0, Height - 1);
         }
 
         protected override void Draw()
@@ -112,6 +110,8 @@ namespace MooTUI.Console
             {
                 Visual.Merge(InputBuffer, 0, CursorY);
             }
+
+            EnsureRegionVisible(CursorX, CursorY);
         }
     }
 }
