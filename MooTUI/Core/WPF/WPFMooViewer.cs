@@ -30,8 +30,6 @@ namespace MooTUI.Core.WPF
                 SystemInput.Keyboard.KeyUpEvent, new SystemInput.KeyEventHandler(OnKeyUp), true);
 
             Theme = theme;
-
-            SetSize(width, height);
         }
 
         public void SetSize(int width, int height)
