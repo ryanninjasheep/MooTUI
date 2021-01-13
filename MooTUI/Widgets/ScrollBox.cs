@@ -320,8 +320,6 @@ namespace MooTUI.Widgets
             }
 
             ScrollToPoint(x - xOffset, y - yOffset);
-
-            base.EnsureRegionVisible(x, y, width, height);
         }
 
         protected override void Resize()
