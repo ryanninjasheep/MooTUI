@@ -20,21 +20,28 @@ namespace MooTUI.Console
         /// </summary>
         /// <param name="width">The width of the console (must be at least 8)</param>
         /// <param name="height">The height of the console (must be at least 4)</param>
-        public Console(int width, int height) : this(width, height, Drawing.Theme.Basic.Value) { }
+        public Console(int width, int height) : this(width, height, null, Drawing.Theme.Basic.Value) { }
+        /// <summary>
+        /// Generates and displays a new Console.
+        /// </summary>
+        /// <param name="width">The width of the console (must be at least 8)</param>
+        /// <param name="height">The height of the console (must be at least 4)</param>
+        public Console(int width, int height, TextSpan title)
+            : this(width, height, title, Drawing.Theme.Basic.Value) { }
         /// <summary>
         /// Generates and displays a new Console.
         /// </summary>
         /// <param name="width">The width of the console (must be at least 8)</param>
         /// <param name="height">The height of the console (must be at least 4)</param>
         /// <param name="theme">The color scheme of the console (optional)</param>
-        public Console(int width, int height, Drawing.Theme theme)
+        public Console(int width, int height, TextSpan? title, Drawing.Theme theme)
         {
             if (width < 8)
                 throw new ArgumentOutOfRangeException(nameof(width), "Width must be at least 8.");
             if (height < 4)
                 throw new ArgumentOutOfRangeException(nameof(height), "Height must be at least 4.");
 
-            Widget = new ConsoleWidget(new Layout.LayoutRect(width, height));
+            Widget = new ConsoleWidget(new Layout.LayoutRect(width, height), title);
 
             Thread thread = new Thread(() => DisplayWindow(width, height, theme ?? Drawing.Theme.Basic.Value));
             thread.SetApartmentState(ApartmentState.STA);
