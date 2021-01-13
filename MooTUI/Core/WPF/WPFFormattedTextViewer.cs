@@ -18,18 +18,28 @@ namespace MooTUI.Core.WPF
     {
         private Media.Typeface typeface;
 
+        private double emSize;
+
         /// <summary>
         /// Width and height in terms of CELLS, not pixels.
         /// </summary>
-        public WPFFormattedTextViewer(int width, int height, Theme theme) : base(width, height, theme)
+        public WPFFormattedTextViewer(int width, int height, 
+            int cellWidth, int cellHeight, double emSize, 
+            Theme theme)
+            : base(width, height, theme)
         {
             typeface = new Media.Typeface("Consolas");
 
-            CellWidth = 7;
-            CellHeight = 15;
+            CellWidth = cellWidth;
+            CellHeight = cellHeight;
+
+            this.emSize = emSize;
 
             SetSize(width, height);
         }
+
+        public WPFFormattedTextViewer(int width, int height, Theme theme)
+            : this(width, height, 7, 15, 12.725, theme) { }
 
         protected override void Render(Media.DrawingContext dc)
         {
@@ -65,7 +75,7 @@ namespace MooTUI.Core.WPF
                     CultureInfo.GetCultureInfo("en-us"),
                     FlowDirection.LeftToRight,
                     typeface,
-                    CellWidth + 5.725, // Magic number
+                    emSize,
                     new Media.SolidColorBrush(GetColor(Visual![0, j].Fore)),
                     100
                     );

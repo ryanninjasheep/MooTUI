@@ -39,7 +39,8 @@ namespace MooTUI_Test
                     new FlexSize(80),
                     new FlexSize(40)));
 
-            WPFMooViewer viewer = new WPFFormattedTextViewer(tabs.Width, tabs.Height, Theme.Basic.Value);
+            WPFMooViewer viewer = new WPFFormattedTextViewer(tabs.Width, tabs.Height, 8, 17, 14.725,
+                Theme.Basic.Value);
             Content = viewer;
             Background = new SolidColorBrush(Theme.Basic.Value.Palette[MooTUI.Drawing.Color.Base03]);
 
