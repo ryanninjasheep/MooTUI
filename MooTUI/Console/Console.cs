@@ -76,7 +76,8 @@ namespace MooTUI.Console
 
         private void DisplayWindow(int width, int height, Drawing.Theme theme)
         {
-            WPFFormattedTextViewer viewer = new WPFFormattedTextViewer(width, height, theme);
+            WPFFormattedTextViewer viewer = 
+                new WPFFormattedTextViewer(width, height, 8, 17, 14.5, theme);
 
             Window window = new Window();
             window.Content = viewer;
