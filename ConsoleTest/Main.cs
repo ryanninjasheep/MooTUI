@@ -17,7 +17,7 @@ namespace ConsoleTest
 
             while (true)
             {
-                string s = c.ReadLine();
+            string s = c.ReadLine();
                 c.WriteLineParse(s);
             }
         }

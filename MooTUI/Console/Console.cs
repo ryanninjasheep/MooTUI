@@ -69,6 +69,7 @@ namespace MooTUI.Console
 
         public string ReadLine()
         {
+            string result = "";
             char c;
             do
             {
@@ -95,7 +96,10 @@ namespace MooTUI.Console
             Widget.ClaimFocus();
             Widget.Render();
 
+            //System.Console.WriteLine("Showing window");
+            Widget.Render();
             window.ShowDialog();
+            //System.Console.WriteLine("Window closed");
         }
     }
 }

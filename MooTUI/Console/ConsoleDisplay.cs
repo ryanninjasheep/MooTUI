@@ -71,6 +71,8 @@ namespace MooTUI.Console
 
             Buffer[CursorX, CursorY] = new Cell(c, fore, back);
             CursorX++;
+
+            Render();
         }
 
         public void Write(string s)
@@ -99,6 +101,8 @@ namespace MooTUI.Console
             Buffer.Merge(oldBuffer);
 
             InputBuffer = null;
+
+            EnsureRegionVisible(0, Height - 1);
         }
 
         protected override void Draw()
