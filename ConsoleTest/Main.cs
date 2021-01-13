@@ -13,12 +13,13 @@ namespace ConsoleTest
     {
         public static void Main(string[] args)
         {
-            M.Console c = new M.Console(80, 20);
+            M.Console c = new M.Console(120, 40, new TextSpan("CONSOLE"));
 
-            string s = c.ReadLine();
-            c.WriteLine(new TextSpan(s, new ColorPair(Color.Red, Color.None)));
-            c.ReadLine();
-            c.WriteLineParse("{green/}Hello, {/altcyan}World!");
+            while (true)
+            {
+                string s = c.ReadLine();
+                c.WriteLineParse(s);
+            }
         }
     }
 }
